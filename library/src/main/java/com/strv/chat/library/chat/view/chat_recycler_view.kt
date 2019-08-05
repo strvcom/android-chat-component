@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.business.ChatClient
 import com.strv.chat.library.chat.domain.ChatItem
+import java.lang.Exception
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -15,19 +16,32 @@ class ChatRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr), ChatClient.Listener {
 
-    private var chatAdapter: ListAdapter<ChatItem, ViewHolder>?
-    get() = adapter as ListAdapter<ChatItem, ViewHolder>
+    //not good
+    private var chatClient: ChatClient<Any>? = null
     set(value) {
-        adapter = value
+        field = value
+        //when to unregistrate listener?
+        field?.registerListener(this)
     }
+
+    override fun onMessagesFetchFailed(exception: Exception) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private val chatAdapter: ListAdapter<ChatItem, ViewHolder>?
+    get() = adapter as ListAdapter<ChatItem, ViewHolder>
 
     init {
         View.inflate(context, R.layout.chat_recycler_view, this)
     }
 
-    override fun onChatChanged(chatItems: List<ChatItem>) {
+    override fun onMessagesChanged(chatItems: List<ChatItem>) {
         chatAdapter?.submitList(chatItems)
     }
+
+
+
+
 
 
 

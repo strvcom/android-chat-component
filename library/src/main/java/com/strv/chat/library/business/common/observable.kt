@@ -20,5 +20,5 @@ abstract class ObservableComponent<T>(
         listeners.remove(listener)
     }
 
-    fun listeners() = listeners.toSet()
+    fun notify(action: T.() -> Unit) = listeners.forEach(action)
 }
