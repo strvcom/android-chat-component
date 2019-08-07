@@ -1,24 +1,24 @@
 package com.strv.chat.library.business.common
 
-interface Observable<T> {
+interface Observable<Listener> {
 
-    fun registerListener(listener: T)
+    fun registerListener(listener: Listener)
 
-    fun unregisterListener(listener: T)
+    fun unregisterListener(listener: Listener)
 }
 
-abstract class ObservableComponent<T>(
-): Observable<T> {
+abstract class ObservableComponent<Listener>(
+) : Observable<Listener> {
 
-    private val listeners: HashSet<T> = hashSetOf()
+    private val listeners: HashSet<Listener> = hashSetOf()
 
-    override fun registerListener(listener: T) {
+    override fun registerListener(listener: Listener) {
         listeners.add(listener)
     }
 
-    override fun unregisterListener(listener: T) {
+    override fun unregisterListener(listener: Listener) {
         listeners.remove(listener)
     }
 
-    fun notify(action: T.() -> Unit) = listeners.forEach(action)
+    fun notify(action: Listener.() -> Unit) = listeners.forEach(action)
 }
