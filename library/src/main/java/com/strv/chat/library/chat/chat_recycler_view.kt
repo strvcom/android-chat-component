@@ -1,12 +1,12 @@
-package com.strv.chat.library.chat.view
+package com.strv.chat.library.chat
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.library.business.ChatClient
-import com.strv.chat.library.chat.domain.ChatItem
+import com.strv.chat.library.data.model.ChatItem
+import com.strv.chat.library.domain.ChatClient
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,

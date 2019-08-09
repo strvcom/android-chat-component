@@ -1,4 +1,4 @@
-package com.strv.chat.library.business.common
+package com.strv.chat.library.common
 
 interface Observable<Listener> {
 

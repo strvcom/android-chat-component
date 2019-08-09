@@ -1,6 +1,6 @@
-package com.strv.chat.library.business.mapper
+package com.strv.chat.library.data.model.common
 
-interface Mapper<Domain, Entity> {
+interface Mapper<Entity, Domain> {
 
     fun mapToDomain(entity: Entity): Domain
 

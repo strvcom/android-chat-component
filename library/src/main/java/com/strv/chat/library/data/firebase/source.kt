@@ -1,19 +1,11 @@
-package com.strv.chat.library.business
+package com.strv.chat.library.data.firebase
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
-import com.strv.chat.library.business.data.SourceEntity
-
-interface ListSource<T : SourceEntity> {
-
-    fun get(onSuccess: (List<T>) -> Unit, onError: (Throwable) -> Unit)
-
-    fun remove()
-}
+import com.strv.chat.library.data.model.common.SourceEntity
+import com.strv.chat.library.domain.ListSource
 
 //todo maybe add some internal flag/anotation whatever
 data class FirebaseListSource<T : SourceEntity>(
@@ -49,36 +41,5 @@ data class FirebaseListSource<T : SourceEntity>(
 
     override fun remove() {
         source.removeEventListener(eventListener)
-    }
-}
-
-//todo maybe add some internal flag/anotation whatever
-data class FirestoreListSource<T : SourceEntity>(
-    private val source: Query,
-    private val clazz: Class<T>
-) : ListSource<T> {
-
-    private lateinit var listenerRegistration: ListenerRegistration
-
-    override fun get(onSuccess: (List<T>) -> Unit, onError: (Throwable) -> Unit) {
-        listenerRegistration = source.addSnapshotListener { result, exception ->
-            if (exception != null) {
-                onError(exception)
-            } else {
-                val list = arrayListOf<T>()
-
-                result?.mapTo(list) { snapShot ->
-                    snapShot.toObject(clazz).also { item ->
-                        item.key = snapShot.id
-                    }
-                }
-
-                onSuccess(list)
-            }
-        }
-    }
-
-    override fun remove() {
-        listenerRegistration.remove()
     }
 }

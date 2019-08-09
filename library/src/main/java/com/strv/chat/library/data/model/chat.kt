@@ -1,4 +1,4 @@
-package com.strv.chat.library.chat.domain
+package com.strv.chat.library.data.model
 
 import java.util.*
 
