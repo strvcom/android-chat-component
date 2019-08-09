@@ -1,6 +1,6 @@
 package com.strv.chat.library.domain
 
-import com.strv.chat.library.data.model.ChatItem
+import com.strv.chat.library.domain.model.ChatItem
 import com.strv.chat.library.common.Observable
 
 /*

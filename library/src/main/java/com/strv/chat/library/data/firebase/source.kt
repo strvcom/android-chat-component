@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.strv.chat.library.data.model.common.SourceEntity
+import com.strv.chat.library.data.model.SourceEntity
 import com.strv.chat.library.domain.ListSource
 
 //todo maybe add some internal flag/anotation whatever

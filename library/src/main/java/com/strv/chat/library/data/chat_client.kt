@@ -1,9 +1,9 @@
 package com.strv.chat.library.data
 
 import com.strv.chat.library.common.ObservableComponent
-import com.strv.chat.library.data.model.common.SourceEntity
-import com.strv.chat.library.data.model.common.Mapper
-import com.strv.chat.library.data.model.ChatItem
+import com.strv.chat.library.data.model.SourceEntity
+import com.strv.chat.library.data.model.Mapper
+import com.strv.chat.library.domain.model.ChatItem
 import com.strv.chat.library.domain.ChatClient
 import com.strv.chat.library.domain.ListSource
 

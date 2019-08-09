@@ -1,4 +1,4 @@
-package com.strv.chat.library.data.model.common
+package com.strv.chat.library.data.model
 
 interface Mapper<Entity, Domain> {
 

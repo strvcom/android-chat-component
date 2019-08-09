@@ -1,6 +1,6 @@
 package com.strv.chat.library.domain
 
-import com.strv.chat.library.data.model.common.SourceEntity
+import com.strv.chat.library.data.model.SourceEntity
 
 interface ListSource<T : SourceEntity> {
 

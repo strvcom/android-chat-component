@@ -2,7 +2,7 @@ package com.strv.chat.library.data.firestore
 
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import com.strv.chat.library.data.model.common.SourceEntity
+import com.strv.chat.library.data.model.SourceEntity
 import com.strv.chat.library.domain.ListSource
 
 //todo maybe add some internal flag/anotation whatever
