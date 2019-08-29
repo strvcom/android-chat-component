@@ -37,7 +37,7 @@ The `messages` is subcollection of `conversations` in firestore
 * `message_type` - *text* | *image* - type of the message, more types to be added in future
 * `data`
     * `message` - in case of a text message, the text of the message
-    * `image` - in case of an image message, the url of the image
+    * `image` - in case of an image message, this object contains image data
         * `width` - integer defining the width of the image in pixels
         * `height` - integer defining the height of the image in pixels
         * `thumbnail` - thumbnail of the image
