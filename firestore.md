@@ -18,9 +18,10 @@ The `conversations` is the top level collection in firestore
 * `last_message` - container for the minimum necessary info about the last message - the structure same as a standard message
     * ...
 * `members` [] - an array of users who are members of this conversation
-* `seen` - a list of users with the id of the last message they read
-    * `user123` - `messageId1`
-    * `user106` - `messageId2`
+* `seen` - a list of users with the id and timestamp of the last message they read
+    * `user123`
+    	* `message_id` - identifier of the last message read by user `user123`
+	* `timestamp` - timestamp of the last message read by user `user123`
 * `messages` - as a subcollection of the conversation that can be paged and queried independently
 
 #### Messages
