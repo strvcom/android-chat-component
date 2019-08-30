@@ -36,7 +36,7 @@ The `messages` is subcollection of `conversations` in firestore
     * `image` - in case of an image message, this object contains image data
         * `width` - integer defining the width of the image in pixels
         * `height` - integer defining the height of the image in pixels
-        * `thumbnail` - thumbnail of the image
+        * `thumbnail` - thumbnail of the image (leave for v2 as we don't have any BE to process the images)
         * `original` - original size of the image
 
 #### Users
