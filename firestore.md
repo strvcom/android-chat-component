@@ -18,10 +18,9 @@ The `conversations` is the top level collection in firestore
 * `last_message` - container for the minimum necessary info about the last message - the structure same as a standard message
     * ...
 * `members` [] - an array of users who are members of this conversation
-* `seen` - a list of users with the id and timestamp of the last message they read
-    * `user123`
-    	* `message_id` - identifier of the last message read by user `user123`
-	* `timestamp` - timestamp of the last message read by user `user123`
+* `seen` - a sub-collection of users as documents saving the last message they read
+    * `message_id` - identifier of the last message read by user with `userId == documentId`
+	* `timestamp` - timestamp of the last message read by user with `userId == documentId`
 * `messages` - as a subcollection of the conversation that can be paged and queried independently
 
 #### Messages
@@ -66,11 +65,12 @@ fun getFirestoreConversations() = firestoreDb //this is a reference to the fires
 ```
         
 ##### To obtain the last 50 messages for a specific conversation, use a code similar to this:
-//TODO here for adding a code snippet to fetch the messages as a subcollection
+
 ```
 fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firestore database that I'm connected to
+        .collection("conversations") 
+        .document(conversationId) // the conversation whose messages I want
         .collection("messages") //here I want to look through collection of messages
-        .whereEqualTo("conversation_id", "xrrmeOJTkbvnb1TZwOy4") // you look for messages belonging to a specific bucket or 1to1 conversation id
         .limit(50) // limit messages to 50 in order not to load too much data unnecessarily - then we'll implement some paging 
         .orderBy("timestamp", Query.Direction.DESCENDING) // order from the newest
         .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
@@ -84,8 +84,9 @@ This is fairly easy, you just need to keep track of a timestamp of the oldest me
 //TODO here for adding a code snippet to fetch the messages as a subcollection
 ```
 fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firestore database that I'm connected to
+        .collection("conversations") 
+        .document(conversationId) // the conversation whose messages I want
         .collection("messages") //here I want to look through collection of messages
-        .whereEqualTo("conversation_id", "xrrmeOJTkbvnb1TZwOy4") // you look for messages belonging to a specific bucket or 1to1 conversation id
         .orderBy("timestamp", Query.Direction.DESCENDING) // order from the newest
         .startAfter(timestamp)					//This is the timestamp of the oldest message and you want to load older messages from this. The startAfter() arguments need to be the type of the one provided in orderBy()
         .limit(50) // limit messages to 50 in order not to load too much data unnecessarily - then we'll implement some paging 
@@ -97,35 +98,45 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
 ##### Sending a message
 
 The message sending works like this:
- - The conversation between two or more users has to be created beforehand and the client shouldn't be created by the client (TBD how this will work)
-If a user sends a message, the client (Android/iOS) has to complete two writes to Firestore:
+ - The conversation between two or more users has to be created beforehand, and the client shouldn't be created by the client (TBD how this will work)
+If a user sends a message, the client (Android/iOS) has to complete three writes to Firestore:
  1) creates a message with the respective data
- 2) overwrites the last message in the conversation they just added to and changes the array of `seen` to contain only their userId
+ 2) overwrites the last message in the conversation they just added 
+ 3) set the last seen message of the sending user to the one just sent in the `seen` sub-collection 
 
-These two actions are executed atomically in a transaction (or so called batch write action)
-//TODO here for adding a code snippet to create the message in the messages subcollection of the respective conversation
+These three actions are executed atomically in a transaction (or so called batch write action)
 ```
 val writeBatch = firestoreDb.batch()
-writeBatch.set(firestoreDb.collection("messages").document(), message)
-writeBatch.update(firestoreDb.collection("conversations").document(conversationId), // id of the conversation to update
-	"seen", arrayListOf(myUserId),						//pass in an array containing one element with my user id as a String
-	"last_message.sender_id", "83",		                //this has to be my user id to follow security rules
-	"last_message.message", "Hello world!",			    //text of the message
-	"last_message.timestamp", 157987879878,		    //timestamp of the message in millis
-	"last_message.message_type", "text")			//type of the message has to be set to "message"
+
+val conversationCollection = firestoreDb.collection("conversations")
+val conversationDocument = conversationCollection.document(conversationId) // a document of the conversation to update
+
+val messagesCollection = conversationDocument.collection("messages")
+val messagesDocument = messagesCollection.document() // creates an empty document to receive message_id to update seen-collection
+
+val seenCollection = conversationDocument.collection("seen")
+val seenSenderDocument = seenCollection.document(senderId)
+
+writeBatch.set(messagesDocument, message)
+writeBatch.update(conversationDocument, "last_message", message)
+writeBatch.set(seenSenderDocument, seenData)
 	
 //Commit the batch and set listeners for success and failure
-batch.commit()						
+writeBatch.commit()						
 		.addOnSuccessListener {}
 		.addOnFailureListener {}
 ```
 
 #### Setting a message as read
-//TODO set the last message id for my user id when reading the last message
-If a user sees a message, they add their userId to the list of `seen` 
+If a user sees a message, an appropriate document in the `seen` collection needs to be updated.
 This is the function I'm using to achieve that
 ```
-firestoreDb.collection("conversations").document(conversationId).update("seen", FieldValue.arrayUnion(myUserId) //myUserId is a String
+firestoreDb
+    .collection("conversations")
+    .document(conversationId)
+    .collection("seen")
+    .document(userId)
+    .set(seenData)
 ```
 
 #### Loading user metadata
