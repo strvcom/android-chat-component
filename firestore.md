@@ -81,14 +81,14 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
 ##### To lazy load more messages after you load the 50
 
 This is fairly easy, you just need to keep track of a timestamp of the oldest message that you loaded and then load additional 50 before that
-//TODO here for adding a code snippet to fetch the messages as a subcollection
+
 ```
 fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firestore database that I'm connected to
         .collection("conversations") 
         .document(conversationId) // the conversation whose messages I want
         .collection("messages") //here I want to look through collection of messages
         .orderBy("timestamp", Query.Direction.DESCENDING) // order from the newest
-        .startAfter(timestamp)					//This is the timestamp of the oldest message and you want to load older messages from this. The startAfter() arguments need to be the type of the one provided in orderBy()
+        .startAfter(documentSnapshot)	//This is the timestamp of the oldest message and you want to load older messages from this. The startAfter() arguments need to be the type of the one provided in orderBy()
         .limit(50) // limit messages to 50 in order not to load too much data unnecessarily - then we'll implement some paging 
         .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             log("document snapshot fetched: $documentSnapshot") // you get your messages here in the callback, need to parse the documentSnapshot
