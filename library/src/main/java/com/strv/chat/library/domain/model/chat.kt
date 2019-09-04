@@ -9,7 +9,7 @@ sealed class ChatItem {
     ): ChatItem()
 
     data class ChatMessage<T: Message>(
-        val userId: Long,
+        val userId: String,
         val userName: String,
         val userPhotoUrl: String,
         val message: T
