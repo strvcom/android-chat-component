@@ -4,34 +4,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.domain.model.ChatItem
 import com.strv.chat.library.domain.model.Message
 
-private val diffUtilCallback = object: DiffUtil.ItemCallback<ChatItem>() {
-    override fun areItemsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
-        return true
-    }
+abstract class ChatAdapter<VH: RecyclerView.ViewHolder>: RecyclerView.Adapter<VH>() {
 
-    override fun areContentsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
-        return true
-    }
+    abstract fun submitList(list: List<ChatItem>)
+
+    abstract fun getItem(position: Int): ChatItem
 }
 
-class ChatAdapter: ListAdapter<ChatItem, ChatViewHolder>(diffUtilCallback) {
+class DefaultChatAdapter(diffCallback: DiffUtil.ItemCallback<ChatItem>): ChatAdapter<DefaultChatViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder =
-        ChatViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_chat, parent, false))
+    private val differ = AsyncListDiffer(this, diffCallback)
 
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
+    override fun submitList(list: List<ChatItem>) {
+        differ.submitList(list)
+    }
+
+    override fun getItem(position: Int): ChatItem =
+        differ.currentList[position]
+
+    override fun getItemCount(): Int =
+        differ.currentList.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DefaultChatViewHolder =
+        DefaultChatViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_chat, parent, false))
+
+    override fun onBindViewHolder(holder: DefaultChatViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
 
-class ChatViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class DefaultChatViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
     private val messageText = view.findViewById<TextView>(R.id.tv_message)
 
