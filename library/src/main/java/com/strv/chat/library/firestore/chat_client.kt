@@ -1,13 +1,13 @@
 package com.strv.chat.library.firestore
 
-import com.google.firebase.firestore.FirebaseFirestore
+import  com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.strv.chat.library.data.dataSource.ListSource
-import com.strv.chat.library.data.dataSource.ListSourceObserver
+import com.strv.chat.library.data.source.ListSource
+import com.strv.chat.library.data.source.observers.ListSourceObserver
 import com.strv.chat.library.data.entity.SourceEntity
-import com.strv.chat.library.domain.ChatClient
-import com.strv.chat.library.domain.MessageId
-import com.strv.chat.library.domain.MessagesObserver
+import com.strv.chat.library.domain.client.ChatClient
+import com.strv.chat.library.domain.client.MessageId
+import com.strv.chat.library.domain.client.ChatObserver
 import com.strv.chat.library.firestore.entity.FirestoreMessage
 import com.strv.chat.library.firestore.mapper.MessageMapper
 import strv.ktools.logE
@@ -20,11 +20,11 @@ class FirestoreChatClient(
 
     private val observableSnapshots = LinkedList<ListSource<out SourceEntity>>()
 
-    override fun messages(limit: Long, startAfter: MessageId, observer: MessagesObserver) {
+    override fun messages(limit: Long, startAfter: MessageId, observer: ChatObserver) {
         //todo
     }
 
-    override fun subscribeMessages(limit: Long, observer: MessagesObserver) {
+    override fun subscribeMessages(limit: Long, observer: ChatObserver) {
         firestoreListSource(firestoreChatMessages(firebaseDb, conversationId))
             .subscribe(object : ListSourceObserver<FirestoreMessage> {
 

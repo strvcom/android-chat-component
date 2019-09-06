@@ -1,10 +1,10 @@
-package com.strv.chat.library.firestore.dataSource
+package com.strv.chat.library.firestore.source
 
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.data.entity.SourceEntity
-import com.strv.chat.library.data.dataSource.ListSource
-import com.strv.chat.library.data.dataSource.ListSourceObserver
+import com.strv.chat.library.data.source.ListSource
+import com.strv.chat.library.data.source.observers.ListSourceObserver
 
 internal data class FirestoreListSource<Entity : SourceEntity>(
     private val source: Query,

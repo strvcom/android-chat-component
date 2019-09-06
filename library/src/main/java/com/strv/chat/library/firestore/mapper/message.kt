@@ -1,31 +1,38 @@
 package com.strv.chat.library.firestore.mapper
 
-import com.strv.chat.library.data.mapper.Mapper
-import com.strv.chat.library.domain.model.ChatItem
-import com.strv.chat.library.domain.model.Message
-import com.strv.chat.library.firestore.entity.FirestoreMessage
-import com.strv.chat.library.firestore.entity.SENDER_ID
-import com.strv.chat.library.firestore.entity.TEXT_TYPE
+import com.strv.chat.library.data.entity.ID
+import com.strv.chat.library.domain.model.MessageModel
+import com.strv.chat.library.domain.model.MessageModel.*
+import com.strv.chat.library.firestore.entity.*
+import com.strv.chat.library.firestore.entity.MeesageTypeEnum.*
 import strv.ktools.logE
 
-object MessageMapper: Mapper<FirestoreMessage, ChatItem> {
+internal object MessageMapper {
 
-    override fun mapToDomain(entity: FirestoreMessage): ChatItem =
-        when (entity.messageType) {
-            TEXT_TYPE -> ChatItem.ChatMessage(
+    fun mapToDomain(entity: FirestoreMessage): MessageModel =
+        when (messageType(requireNotNull(entity.messageType) { "$MESSAGE_TYPE must be specified" })) {
+            TEXT_TYPE -> TextMessageModel(
+                requireNotNull(entity.id) { logE("$ID must be specified") },
+                requireNotNull(entity.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
                 requireNotNull(entity.senderId) { logE("$SENDER_ID must be specified") },
-                "Name",
-                "Url",
-                textMessage(entity)
+                entity.data?.message ?: ""
             )
-            else -> ChatItem.ChatHeader(entity.timestamp!!.toDate())
+            IMAGE_TYPE -> ImageMessageModel(
+                requireNotNull(entity.id) { logE("$ID must be specified") },
+                requireNotNull(entity.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
+                requireNotNull(entity.senderId) { logE("$SENDER_ID must be specified") },
+                image(requireNotNull(entity.data?.image) { logE("$IMAGE must be specified") })
+            )
         }
 
-    override fun mapToEntity(domain: ChatItem): FirestoreMessage {
+    fun mapToEntity(domain: MessageModel): FirestoreMessage {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun textMessage(entity: FirestoreMessage) =
-        Message.TextMessage(entity.timestamp!!.toDate(), entity.data?.message ?: "")
-
+    private fun image(data: FirestoreImageData) =
+        ImageMessageModel.Image(
+            data.width ?: 0.0,
+            data.height ?: 0.0,
+            requireNotNull(data.original) { logE("$ORIGINAL must be specified") }
+        )
 }

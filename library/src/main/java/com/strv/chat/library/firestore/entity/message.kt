@@ -18,12 +18,22 @@ const val WIDTH = "width"
 const val HEIGHT = "height"
 const val ORIGINAL = "original"
 
-const val TEXT_TYPE = "text"
-const val IMAGE_TYPE = "image"
+const val KEY_TEXT_TYPE = "text"
+const val KEY_IMAGE_TYPE = "image"
 
 @Retention(AnnotationRetention.SOURCE)
-@StringDef(TEXT_TYPE, IMAGE_TYPE)
+@StringDef(KEY_TEXT_TYPE, KEY_IMAGE_TYPE)
 annotation class MessageType
+
+enum class MeesageTypeEnum(val key: String) {
+    TEXT_TYPE(KEY_TEXT_TYPE),
+    IMAGE_TYPE(KEY_IMAGE_TYPE)
+}
+
+fun messageType(key: String): MeesageTypeEnum =
+    enumValues<MeesageTypeEnum>().first {
+        it.key.equals(key, true)
+    }
 
 data class FirestoreMessage(
     @get:PropertyName(SENDER_ID) @set:PropertyName(SENDER_ID) var senderId: String? = null,
@@ -37,7 +47,7 @@ data class FirestoreMessage(
         TIMESTAMP to FieldValue.serverTimestamp(),
         MESSAGE_TYPE to requireNotNull(messageType) { logE("$MESSAGE_TYPE must be specified") },
         DATA to requireNotNull(data) { logE("$DATA must be specified") }.run {
-            if (messageType == TEXT_TYPE) toTextMap() else toImageMap()
+            if (messageType == KEY_TEXT_TYPE) toTextMap() else toImageMap()
         }
     )
 
@@ -47,7 +57,7 @@ data class FirestoreMessage(
         TIMESTAMP to FieldValue.serverTimestamp(),
         MESSAGE_TYPE to requireNotNull(messageType) { logE("$MESSAGE_TYPE must be specified") },
         DATA to requireNotNull(data) { logE("$DATA must be specified") }.run {
-            if (messageType == TEXT_TYPE) toTextMap() else toImageMap()
+            if (messageType == KEY_TEXT_TYPE) toTextMap() else toImageMap()
         }
     )
 }
@@ -67,8 +77,8 @@ data class FirestoreData(
 }
 
 data class FirestoreImageData(
-    var width: Int? = null,
-    var height: Int? = null,
+    var width: Double? = null,
+    var height: Double? = null,
     var original: String? = null
 ) {
 

@@ -1,6 +1,7 @@
-package com.strv.chat.library.data.dataSource
+package com.strv.chat.library.data.source
 
 import com.strv.chat.library.data.entity.SourceEntity
+import com.strv.chat.library.data.source.observers.ListSourceObserver
 
 interface ListSource<Entity : SourceEntity> {
 

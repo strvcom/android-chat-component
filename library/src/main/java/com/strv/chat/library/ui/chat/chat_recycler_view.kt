@@ -6,17 +6,20 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.library.domain.ChatClient
-import com.strv.chat.library.domain.MessagesObserver
-import com.strv.chat.library.domain.model.ChatItem
-import strv.ktools.logE
+import com.strv.chat.library.domain.client.ChatClient
+import com.strv.chat.library.domain.client.ChatObserver
+import com.strv.chat.library.domain.model.MessageModel
+import com.strv.chat.library.ui.chat.mapper.ChatItemsMapper
+import com.strv.chat.library.ui.chat.view.ChatItemView
+import com.strv.chat.library.ui.chat.view.MemberView
 
-private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItem>() {
-    override fun areItemsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
+private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {
+
+    override fun areItemsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
         return true
     }
 
-    override fun areContentsTheSame(oldItem: ChatItem, newItem: ChatItem): Boolean {
+    override fun areContentsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
         return true
     }
 }
@@ -27,19 +30,19 @@ class ChatRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
-    private var chatClient: ChatClient? = null
-
-    private var adapter: ChatAdapter<ViewHolder>?
+    private var chatAdapter: ChatAdapter<ViewHolder>?
         get() = super.getAdapter() as ChatAdapter<ViewHolder>
-        set(value) = super.setAdapter(value)
+        private set(value) = super.setAdapter(value)
 
-    private val messagesObserver = object : MessagesObserver {
-        override fun onComplete(list: List<ChatItem>) {
-            onMessagesChanged(list)
-        }
+    private lateinit var chatClient: ChatClient
 
-        override fun onNext(list: List<ChatItem>) {
-            onMessagesChanged(list)
+    private lateinit var userId: String
+    private lateinit var members: List<MemberView>
+
+    private val messagesObserver = object : ChatObserver {
+
+        override fun onNext(list: List<MessageModel>) {
+            onMessagesChanged(ChatItemsMapper.mapToView(userId, members, list))
         }
 
         override fun onError(error: Throwable) {
@@ -47,33 +50,45 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
     }
 
-    init {
-        layoutManager = LinearLayoutManager(context).apply {
-            reverseLayout = true
-        }
-
-        setAdapter(DefaultChatAdapter(diffUtilCallback))
+    operator fun invoke(config: Builder.() -> Unit) {
+        Builder().apply(config).build()
     }
 
-    fun chatClient(config: () -> ChatClient) {
-        this.chatClient = config()
-    }
-
-    fun startObserving(observer: MessagesObserver = messagesObserver) {
-        requireNotNull(chatClient) { logE("ChatClient is not attached") }.run {
+    fun startObserving(observer: ChatObserver = messagesObserver) {
+        chatClient.run {
             subscribeMessages(observer = observer)
         }
     }
 
     fun stopObserving() {
-        chatClient?.unsubscribeMessages()
+        chatClient.unsubscribeMessages()
     }
 
-    private fun onMessagesChanged(chatItems: List<ChatItem>) {
-        adapter?.submitList(chatItems)
+    private fun onMessagesChanged(ChatItemViews: List<ChatItemView>) {
+        chatAdapter?.submitList(ChatItemViews)
     }
 
     private fun onMessagesFetchFailed(exception: Throwable) {
         Toast.makeText(context, "Error has occured", Toast.LENGTH_SHORT).show()
     }
+
+    inner class Builder(
+        var userId: String? = null,
+        var members: List<MemberView>? = null,
+        var adapter: ChatAdapter<ViewHolder>? = null,
+        var layoutManager: LinearLayoutManager? = null,
+        var chatClient: ChatClient? = null
+    ) {
+
+        fun build() {
+            require(members?.isNotEmpty() == true) { "Chat members can not be empty" }
+
+            setAdapter(adapter ?: DefaultChatAdapter(diffUtilCallback))
+            setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply { reverseLayout = true })
+            this@ChatRecyclerView.userId = requireNotNull(userId) { "userId must be specified" }
+            this@ChatRecyclerView.members = requireNotNull(members) { "otherMembers must be specified" }
+            this@ChatRecyclerView.chatClient = requireNotNull(chatClient) { "ChatClient must be specified" }
+        }
+    }
 }
+
