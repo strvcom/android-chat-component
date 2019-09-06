@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
-import com.strv.chat.library.ui.TimeTextView
-import com.strv.chat.library.ui.chat.view.ChatItemView
-import com.strv.chat.library.ui.chat.view.ChatItemView.MyTextMessage
-import com.strv.chat.library.ui.chat.view.ChatItemView.OtherTextMessage
+import com.strv.chat.library.ui.view.TimeTextView
+import com.strv.chat.library.ui.chat.data.ChatItemView
+import com.strv.chat.library.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.library.ui.chat.data.ChatItemView.OtherTextMessage
 import com.strv.chat.library.ui.imageCircle
 
 abstract class ChatAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {

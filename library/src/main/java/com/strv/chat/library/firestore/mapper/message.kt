@@ -1,38 +1,38 @@
 package com.strv.chat.library.firestore.mapper
 
-import com.strv.chat.library.data.entity.ID
-import com.strv.chat.library.domain.model.MessageModel
-import com.strv.chat.library.domain.model.MessageModel.*
-import com.strv.chat.library.firestore.entity.*
-import com.strv.chat.library.firestore.entity.MeesageTypeEnum.*
+import com.strv.chat.library.domain.model.MessageModel.ImageMessageModel
+import com.strv.chat.library.domain.model.MessageModel.TextMessageModel
+import com.strv.chat.library.firestore.entity.FirestoreImageData
+import com.strv.chat.library.firestore.entity.FirestoreMessage
+import com.strv.chat.library.firestore.entity.IMAGE
+import com.strv.chat.library.firestore.entity.MESSAGE_TYPE
+import com.strv.chat.library.firestore.entity.MeesageTypeEnum.TEXT_TYPE
+import com.strv.chat.library.firestore.entity.MeesageTypeEnum.IMAGE_TYPE
+import com.strv.chat.library.firestore.entity.ORIGINAL
+import com.strv.chat.library.firestore.entity.SENDER_ID
+import com.strv.chat.library.firestore.entity.TIMESTAMP
+import com.strv.chat.library.firestore.entity.messageType
 import strv.ktools.logE
 
-internal object MessageMapper {
+internal fun messageModel(list: List<FirestoreMessage>) = list.map { entity -> messageModel(entity) }
 
-    fun mapToDomain(entity: FirestoreMessage): MessageModel =
-        when (messageType(requireNotNull(entity.messageType) { "$MESSAGE_TYPE must be specified" })) {
-            TEXT_TYPE -> TextMessageModel(
-                requireNotNull(entity.id) { logE("$ID must be specified") },
-                requireNotNull(entity.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
-                requireNotNull(entity.senderId) { logE("$SENDER_ID must be specified") },
-                entity.data?.message ?: ""
-            )
-            IMAGE_TYPE -> ImageMessageModel(
-                requireNotNull(entity.id) { logE("$ID must be specified") },
-                requireNotNull(entity.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
-                requireNotNull(entity.senderId) { logE("$SENDER_ID must be specified") },
-                image(requireNotNull(entity.data?.image) { logE("$IMAGE must be specified") })
-            )
-        }
-
-    fun mapToEntity(domain: MessageModel): FirestoreMessage {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+private fun messageModel(message: FirestoreMessage) =
+    when (messageType(requireNotNull(message.messageType) { "$MESSAGE_TYPE must be specified" })) {
+        TEXT_TYPE -> TextMessageModel(
+            requireNotNull(message.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
+            requireNotNull(message.senderId) { logE("$SENDER_ID must be specified") },
+            message.data?.message ?: ""
+        )
+        IMAGE_TYPE -> ImageMessageModel(
+            requireNotNull(message.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
+            requireNotNull(message.senderId) { logE("$SENDER_ID must be specified") },
+            image(requireNotNull(message.data?.image) { logE("$IMAGE must be specified") })
+        )
     }
 
-    private fun image(data: FirestoreImageData) =
-        ImageMessageModel.Image(
-            data.width ?: 0.0,
-            data.height ?: 0.0,
-            requireNotNull(data.original) { logE("$ORIGINAL must be specified") }
-        )
-}
+private fun image(data: FirestoreImageData) =
+    ImageMessageModel.Image(
+        data.width ?: 0.0,
+        data.height ?: 0.0,
+        requireNotNull(data.original) { logE("$ORIGINAL must be specified") }
+    )

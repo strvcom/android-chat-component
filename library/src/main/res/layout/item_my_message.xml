@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Hello girl! How are you?" />
 
-    <com.strv.chat.library.ui.TimeTextView
+    <com.strv.chat.library.ui.view.TimeTextView
         android:id="@+id/tv_message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

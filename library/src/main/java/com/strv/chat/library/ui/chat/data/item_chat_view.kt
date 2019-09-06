@@ -1,4 +1,4 @@
-package com.strv.chat.library.ui.chat.view
+package com.strv.chat.library.ui.chat.data
 
 import java.util.*
 

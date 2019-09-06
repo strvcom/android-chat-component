@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ChatClient
-import com.strv.chat.library.domain.client.ChatObserver
+import com.strv.chat.library.domain.provider.MemberProvider
+import com.strv.chat.library.domain.client.observer.ClientObserver
 import com.strv.chat.library.domain.model.MessageModel
-import com.strv.chat.library.ui.chat.mapper.ChatItemsMapper
-import com.strv.chat.library.ui.chat.view.ChatItemView
-import com.strv.chat.library.ui.chat.view.MemberView
+import com.strv.chat.library.ui.chat.data.ChatItemView
+import com.strv.chat.library.ui.chat.mapper.chatItemView
 
 private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {
 
@@ -35,14 +35,11 @@ class ChatRecyclerView @JvmOverloads constructor(
         private set(value) = super.setAdapter(value)
 
     private lateinit var chatClient: ChatClient
+    private lateinit var memberProvider: MemberProvider
 
-    private lateinit var userId: String
-    private lateinit var members: List<MemberView>
-
-    private val messagesObserver = object : ChatObserver {
-
+    private val messagesObserver = object : ClientObserver {
         override fun onNext(list: List<MessageModel>) {
-            onMessagesChanged(ChatItemsMapper.mapToView(userId, members, list))
+            onMessagesChanged(chatItemView(list, memberProvider))
         }
 
         override fun onError(error: Throwable) {
@@ -54,7 +51,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         Builder().apply(config).build()
     }
 
-    fun startObserving(observer: ChatObserver = messagesObserver) {
+    fun startObserving(observer: ClientObserver = messagesObserver) {
         chatClient.run {
             subscribeMessages(observer = observer)
         }
@@ -73,22 +70,21 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var userId: String? = null,
-        //todo isnt it enough to set the users when the screen is opened?
-        var members: List<MemberView>? = null,
         var adapter: ChatAdapter<ViewHolder>? = null,
         var layoutManager: LinearLayoutManager? = null,
-        var chatClient: ChatClient? = null
+        var chatClient: ChatClient? = null,
+        var memberProvider: MemberProvider? = null
     ) {
 
         fun build() {
-            require(members?.isNotEmpty() == true) { "Chat members can not be empty" }
-
             setAdapter(adapter ?: DefaultChatAdapter(diffUtilCallback))
-            setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply { reverseLayout = true })
-            this@ChatRecyclerView.userId = requireNotNull(userId) { "userId must be specified" }
-            this@ChatRecyclerView.members = requireNotNull(members) { "otherMembers must be specified" }
-            this@ChatRecyclerView.chatClient = requireNotNull(chatClient) { "ChatClient must be specified" }
+            setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
+                reverseLayout = true
+            })
+            this@ChatRecyclerView.chatClient =
+                requireNotNull(chatClient) { "ChatClient must be specified" }
+            this@ChatRecyclerView.memberProvider =
+                requireNotNull(memberProvider) { "MemberProvider must be specified" }
         }
     }
 }

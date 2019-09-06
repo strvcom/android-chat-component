@@ -1,8 +1,8 @@
-package com.strv.chat.library.domain.client
+package com.strv.chat.library.domain.client.observer
 
 import com.strv.chat.library.domain.model.MessageModel
 
-interface ChatObserver {
+interface ClientObserver {
 
     fun onNext(list: List<MessageModel>)
 

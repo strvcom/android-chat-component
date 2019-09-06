@@ -1,7 +1,7 @@
 package com.strv.chat.library.data.source
 
 import com.strv.chat.library.data.entity.SourceEntity
-import com.strv.chat.library.data.source.observers.SourceObserver
+import com.strv.chat.library.data.source.observer.SourceObserver
 
 interface Source<Entity : SourceEntity> {
 

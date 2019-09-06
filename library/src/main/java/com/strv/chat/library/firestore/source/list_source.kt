@@ -4,7 +4,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.data.entity.SourceEntity
 import com.strv.chat.library.data.source.ListSource
-import com.strv.chat.library.data.source.observers.ListSourceObserver
+import com.strv.chat.library.data.source.observer.ListSourceObserver
 
 internal data class FirestoreListSource<Entity : SourceEntity>(
     private val source: Query,

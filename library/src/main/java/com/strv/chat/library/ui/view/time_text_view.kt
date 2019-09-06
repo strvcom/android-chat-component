@@ -1,4 +1,4 @@
-package com.strv.chat.library.ui
+package com.strv.chat.library.ui.view
 
 import android.content.Context
 import android.util.AttributeSet

@@ -1,59 +1,36 @@
 package com.strv.chat.library.ui.chat.mapper
 
 import com.strv.chat.library.domain.model.MessageModel
-import com.strv.chat.library.ui.chat.view.ChatItemView
-import com.strv.chat.library.ui.chat.view.ChatItemView.*
-import com.strv.chat.library.ui.chat.view.MemberView
+import com.strv.chat.library.domain.model.MessageModel.TextMessageModel
+import com.strv.chat.library.domain.provider.MemberModel
+import com.strv.chat.library.domain.provider.MemberProvider
+import com.strv.chat.library.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.library.ui.chat.data.ChatItemView.OtherTextMessage
+import com.strv.chat.library.ui.chat.data.MemberView
 
-object ChatItemsMapper {
+internal fun chatItemView(list: List<MessageModel>, memberProvider: MemberProvider) =
+    list.map { model -> chatItemView(model, memberProvider) }
 
-    fun mapToView(
-        userId: String,
-        members: List<MemberView>,
-        models: List<MessageModel>
-    ): List<ChatItemView> =
-        models.map { model ->
-            chatMessage(userId, members, model)
+private fun chatItemView(model: MessageModel, memberProvider: MemberProvider) =
+    when (model) {
+        is TextMessageModel -> {
+            if (memberProvider.currentUserId() == model.senderId) {
+                MyTextMessage(
+                    model.id,
+                    model.sentDate,
+                    model.text
+                )
+            } else {
+                OtherTextMessage(
+                    model.id,
+                    model.sentDate,
+                    memberView(memberProvider.member(model.senderId)),
+                    model.text
+                )
+            }
         }
-
-    fun mapToDomain(domain: List<ChatItemView>): List<MessageModel> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        is MessageModel.ImageMessageModel -> TODO()
     }
 
-    private fun chatMessage(userId: String, members: List<MemberView>, model: MessageModel) =
-        when (model) {
-            is MessageModel.TextMessageModel -> {
-                if (userId == model.senderId) {
-                    MyTextMessage(
-                        model.id,
-                        model.sentDate,
-                        model.text
-                    )
-                } else {
-                    OtherTextMessage(
-                        model.id,
-                        model.sentDate,
-                        members.first { model.senderId == it.userId },
-                        model.text
-                    )
-                }
-            }
-            is MessageModel.ImageMessageModel -> TODO()
-        }
-
-
-//    private fun addHeaders(chatMessages: List<ChatMessageView<Message>>): MutableList<ChatItemView> {
-//        var lastHeaderDate = Date(0)
-//        val chatItems = mutableListOf<ChatItemView>()
-//
-//        chatMessages.forEach { message ->
-//            if (!lastHeaderDate.isDayEqual(message.message.sentDate)) {
-//                chatItems.add(ChatHeaderView(message.message.sentDate))
-//                lastHeaderDate = message.message.sentDate
-//            }
-//            chatItems.add(message)
-//        }
-//
-//        return chatItems
-//    }
-}
+private fun memberView(memberModel: MemberModel) =
+    MemberView(memberModel.userId, memberModel.userName, memberModel.userPhotoUrl)

@@ -1,4 +1,4 @@
-package com.strv.chat.library.data.source.observers
+package com.strv.chat.library.data.source.observer
 
 import com.strv.chat.library.data.entity.SourceEntity
 
