@@ -74,6 +74,7 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     inner class Builder(
         var userId: String? = null,
+        //todo isnt it enough to set the users when the screen is opened?
         var members: List<MemberView>? = null,
         var adapter: ChatAdapter<ViewHolder>? = null,
         var layoutManager: LinearLayoutManager? = null,
