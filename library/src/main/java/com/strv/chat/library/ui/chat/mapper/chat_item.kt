@@ -16,13 +16,11 @@ private fun chatItemView(model: MessageModel, memberProvider: MemberProvider) =
         is TextMessageModel -> {
             if (memberProvider.currentUserId() == model.senderId) {
                 MyTextMessage(
-                    model.id,
                     model.sentDate,
                     model.text
                 )
             } else {
                 OtherTextMessage(
-                    model.id,
                     model.sentDate,
                     memberView(memberProvider.member(model.senderId)),
                     model.text

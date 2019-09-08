@@ -9,14 +9,12 @@ sealed class ChatItemView(sentDate: Date) {
     ): ChatItemView(sentDate)
 
     data class MyTextMessage(
-        val id: String,
         val sentDate: Date,
         val text: String,
         val showSentDate: Boolean = false
     ): ChatItemView(sentDate)
 
     data class OtherTextMessage(
-        val id: String,
         val sentDate: Date,
         val sender: MemberView,
         val text: String,
