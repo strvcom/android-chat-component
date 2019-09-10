@@ -9,5 +9,6 @@
     <dimen name="text_size_14">14sp</dimen>
 
     <dimen name="dimen_icon">40dp</dimen>
+    <dimen name="dimen_icon_small">32dp</dimen>
 
 </resources>

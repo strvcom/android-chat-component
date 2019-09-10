@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ChatClient
-import com.strv.chat.library.domain.provider.MemberProvider
-import com.strv.chat.library.domain.client.observer.ClientObserver
+import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.model.MessageModel
+import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
 
@@ -37,9 +37,9 @@ class ChatRecyclerView @JvmOverloads constructor(
     private lateinit var chatClient: ChatClient
     private lateinit var memberProvider: MemberProvider
 
-    private val messagesObserver = object : ClientObserver {
-        override fun onNext(list: List<MessageModel>) {
-            onMessagesChanged(chatItemView(list, memberProvider))
+    private val messagesObserver = object : Observer<List<MessageModel>> {
+        override fun onSuccess(response: List<MessageModel>) {
+            onMessagesChanged(chatItemView(response, memberProvider))
         }
 
         override fun onError(error: Throwable) {
@@ -47,11 +47,19 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
     }
 
+    init {
+        addOnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom && chatAdapter?.itemCount?.compareTo(0) == 1) {
+                postDelayed({ scrollToPosition(0) }, 50)
+            }
+        }
+    }
+
     operator fun invoke(config: Builder.() -> Unit) {
         Builder().apply(config).build()
     }
 
-    fun startObserving(observer: ClientObserver = messagesObserver) {
+    fun startObserving(observer: Observer<List<MessageModel>> = messagesObserver) {
         chatClient.run {
             subscribeMessages(observer = observer)
         }
@@ -61,8 +69,11 @@ class ChatRecyclerView @JvmOverloads constructor(
         chatClient.unsubscribeMessages()
     }
 
-    private fun onMessagesChanged(ChatItemViews: List<ChatItemView>) {
-        chatAdapter?.submitList(ChatItemViews)
+    private fun onMessagesChanged(items: List<ChatItemView>) {
+        chatAdapter?.run {
+            submitList(items)
+            if (items.isNotEmpty()) smoothScrollToPosition(0)
+        }
     }
 
     private fun onMessagesFetchFailed(exception: Throwable) {
@@ -80,6 +91,8 @@ class ChatRecyclerView @JvmOverloads constructor(
             setAdapter(adapter ?: DefaultChatAdapter(diffUtilCallback))
             setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
                 reverseLayout = true
+                stackFromEnd = true
+                setClipToPadding(false)
             })
             this@ChatRecyclerView.chatClient =
                 requireNotNull(chatClient) { "ChatClient must be specified" }

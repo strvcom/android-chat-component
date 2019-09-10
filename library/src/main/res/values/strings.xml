@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">library</string>
     <string name="now">Now</string>
+    <string name="write_your_message">Write your message...</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

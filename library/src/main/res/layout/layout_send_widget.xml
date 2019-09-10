@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <EditText
+        android:id="@+id/et_message_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginLeft="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginRight="@dimen/spacing_8"
+        android:layout_weight="1"
+        android:background="@null"
+        android:imeOptions="flagNoExtractUi"
+        android:inputType="textCapSentences|textMultiLine"
+        android:padding="@dimen/spacing_8"
+        android:paddingTop="@dimen/spacing_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/ib_send"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:hint="Write your message..." />
+    <!--    app:show="@{viewModel.inputType == ChatInputType.TEXT}"-->
+    <!--    app:layout_constraintTop_toTopOf="parent-->
+
+    <ImageButton
+        android:id="@+id/ib_send"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:paddingLeft="@dimen/spacing_8"
+        android:paddingRight="@dimen/spacing_8"
+        app:layout_constraintBottom_toBottomOf="@+id/et_message_input"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_message_input"
+        app:srcCompat="@drawable/ic_send" />
+    <!--    android:onClick="@{() -> view.sendMessage()}"-->
+    <!--    app:show="@{viewModel.inputType == ChatInputType.TEXT}"-->
+
+    <ImageButton
+        android:id="@+id/ib_text"
+        android:layout_width="@dimen/dimen_icon_small"
+        android:layout_height="@dimen/dimen_icon_small"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_message_input"
+        app:srcCompat="@drawable/ic_text" />
+    <!--    android:onClick="@{() -> view.showTextMessage()}"-->
+
+    <ImageButton
+        android:id="@+id/ib_camera"
+        android:layout_width="@dimen/dimen_icon_small"
+        android:layout_height="@dimen/dimen_icon_small"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/ib_text"
+        app:layout_constraintTop_toBottomOf="@+id/et_message_input"
+        app:srcCompat="@drawable/ic_camera" />
+    <!--    android:onClick="@{() -> view.pickImage()}"-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
