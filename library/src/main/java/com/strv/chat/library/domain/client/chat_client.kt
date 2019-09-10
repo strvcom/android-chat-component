@@ -1,13 +1,16 @@
 package com.strv.chat.library.domain.client
 
 import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.model.MessageModel
+import com.strv.chat.library.domain.model.MessageModelRequest
+import com.strv.chat.library.domain.model.MessageModelResponse
 
 interface ChatClient {
 
-    fun sendMessage(message: MessageModel, observer: Observer<Void?>)
+    fun sendMessage(message: MessageModelRequest, observer: Observer<Void?>)
 
-    fun subscribeMessages(observer: Observer<List<MessageModel>>, limit: Long = 50)
+    fun setSeen(userId: String, model: MessageModelResponse)
+
+    fun subscribeMessages(observer: Observer<List<MessageModelResponse>>, limit: Long = 50)
 
     fun unsubscribeMessages()
 }

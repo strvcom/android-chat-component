@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import com.strv.chat.library.R
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.model.MessageModel.TextMessageModel
+import com.strv.chat.library.domain.model.MessageModelRequest
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.reset
 import strv.ktools.logE
@@ -53,8 +53,7 @@ class SendWidget @JvmOverloads constructor(
 
     private fun sendTextMessage(userId: String, message: String) {
         chatClient.sendMessage(
-            TextMessageModel(
-                sentDate = Date(),
+            MessageModelRequest.TextMessageModel(
                 senderId = userId,
                 text = message
             ),

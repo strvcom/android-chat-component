@@ -1,8 +1,8 @@
 package com.strv.chat.library.firestore.mapper
 
-import com.strv.chat.library.domain.model.MessageModel
-import com.strv.chat.library.domain.model.MessageModel.ImageMessageModel
-import com.strv.chat.library.domain.model.MessageModel.TextMessageModel
+import com.strv.chat.library.data.entity.ID
+import com.strv.chat.library.domain.model.MessageModelRequest
+import com.strv.chat.library.domain.model.MessageModelResponse
 import com.strv.chat.library.firestore.entity.FirestoreData
 import com.strv.chat.library.firestore.entity.FirestoreImageData
 import com.strv.chat.library.firestore.entity.FirestoreMessage
@@ -17,7 +17,7 @@ import com.strv.chat.library.firestore.entity.messageType
 import strv.ktools.logE
 import java.util.*
 
-internal fun messageEntity(messageModel: MessageModel) =
+internal fun messageEntity(messageModel: MessageModelRequest) =
     FirestoreMessage(
         messageModel.senderId,
         messageType(messageModel),
@@ -29,12 +29,14 @@ internal fun messageModels(list: List<FirestoreMessage>) =
 
 private fun messageModels(message: FirestoreMessage) =
     when (messageType(requireNotNull(message.messageType) { "$MESSAGE_TYPE must be specified" })) {
-        TEXT_TYPE -> TextMessageModel(
+        TEXT_TYPE -> MessageModelResponse.TextMessageModel(
+            requireNotNull(message.id) { "$ID must me specified" },
             message.timestamp?.toDate() ?: Date(),
             requireNotNull(message.senderId) { logE("$SENDER_ID must be specified") },
             message.data?.message ?: ""
         )
-        IMAGE_TYPE -> ImageMessageModel(
+        IMAGE_TYPE -> MessageModelResponse.ImageMessageModel(
+            requireNotNull(message.id) { "$ID must me specified" },
             requireNotNull(message.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
             requireNotNull(message.senderId) { logE("$SENDER_ID must be specified") },
             imageModel(requireNotNull(message.data?.image) { logE("$IMAGE must be specified") })
@@ -42,30 +44,30 @@ private fun messageModels(message: FirestoreMessage) =
     }
 
 private fun imageModel(data: FirestoreImageData) =
-    ImageMessageModel.Image(
+    MessageModelResponse.ImageMessageModel.Image(
         data.width ?: 0.0,
         data.height ?: 0.0,
         requireNotNull(data.original) { logE("$ORIGINAL must be specified") }
     )
 
-private fun messageType(messageModel: MessageModel) =
+private fun messageType(messageModel: MessageModelRequest) =
     when (messageModel) {
-        is TextMessageModel -> TEXT_TYPE.key
-        is ImageMessageModel -> IMAGE_TYPE.key
+        is MessageModelRequest.TextMessageModel -> TEXT_TYPE.key
+        is MessageModelRequest.ImageMessageModel -> IMAGE_TYPE.key
     }
 
-private fun dataEntity(messageModel: MessageModel) =
+private fun dataEntity(messageModel: MessageModelRequest) =
     when (messageModel) {
-        is TextMessageModel -> textDataEntity(messageModel)
-        is ImageMessageModel -> imageDataEntity(messageModel)
+        is MessageModelRequest.TextMessageModel -> textDataEntity(messageModel)
+        is MessageModelRequest.ImageMessageModel -> imageDataEntity(messageModel)
     }
 
-private fun textDataEntity(messageModel: TextMessageModel) =
+private fun textDataEntity(messageModel: MessageModelRequest.TextMessageModel) =
     FirestoreData(
         message = messageModel.text
     )
 
-private fun imageDataEntity(messageModel: ImageMessageModel) =
+private fun imageDataEntity(messageModel: MessageModelRequest.ImageMessageModel) =
     FirestoreData(
         image = FirestoreImageData(
             messageModel.image.width,

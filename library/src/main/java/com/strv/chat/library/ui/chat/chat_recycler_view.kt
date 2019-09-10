@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.model.MessageModel
+import com.strv.chat.library.domain.model.MessageModelResponse
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
@@ -36,14 +36,17 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     private lateinit var chatClient: ChatClient
     private lateinit var memberProvider: MemberProvider
+    private lateinit var onError: (Throwable) -> Unit
 
-    private val messagesObserver = object : Observer<List<MessageModel>> {
-        override fun onSuccess(response: List<MessageModel>) {
+    private val messagesObserver = object : Observer<List<MessageModelResponse>> {
+        override fun onSuccess(response: List<MessageModelResponse>) {
+            chatClient.setSeen(memberProvider.currentUserId(), response.first())
+
             onMessagesChanged(chatItemView(response, memberProvider))
         }
 
         override fun onError(error: Throwable) {
-            onMessagesFetchFailed(error)
+            onError(error)
         }
     }
 
@@ -59,9 +62,9 @@ class ChatRecyclerView @JvmOverloads constructor(
         Builder().apply(config).build()
     }
 
-    fun startObserving(observer: Observer<List<MessageModel>> = messagesObserver) {
+    fun startObserving() {
         chatClient.run {
-            subscribeMessages(observer = observer)
+            subscribeMessages(messagesObserver)
         }
     }
 
@@ -84,7 +87,8 @@ class ChatRecyclerView @JvmOverloads constructor(
         var adapter: ChatAdapter<ViewHolder>? = null,
         var layoutManager: LinearLayoutManager? = null,
         var chatClient: ChatClient? = null,
-        var memberProvider: MemberProvider? = null
+        var memberProvider: MemberProvider? = null,
+        var onError: ((Throwable) -> Unit)? = null
     ) {
 
         fun build() {
@@ -98,6 +102,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 requireNotNull(chatClient) { "ChatClient must be specified" }
             this@ChatRecyclerView.memberProvider =
                 requireNotNull(memberProvider) { "MemberProvider must be specified" }
+            this@ChatRecyclerView.onError = onError ?: ::onMessagesFetchFailed
         }
     }
 }
