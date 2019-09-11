@@ -13,6 +13,7 @@ import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
 
+//todo update!!!!
 private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {
 
     override fun areItemsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
@@ -63,9 +64,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     fun startObserving() {
-        chatClient.run {
-            subscribeMessages(messagesObserver)
-        }
+        chatClient.subscribeMessages(messagesObserver)
     }
 
     fun stopObserving() {

@@ -1,5 +1,6 @@
 package com.strv.chat.library.ui.chat.data
 
+import com.strv.chat.library.ui.data.MemberView
 import java.util.*
 
 sealed class ChatItemView(open val sentDate: Date) {
@@ -21,9 +22,3 @@ sealed class ChatItemView(open val sentDate: Date) {
         val showSentDate: Boolean = false
     ) : ChatItemView(sentDate)
 }
-
-data class MemberView(
-    val userId: String,
-    val userName: String,
-    val userPhotoUrl: String
-)

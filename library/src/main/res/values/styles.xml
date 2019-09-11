@@ -17,4 +17,10 @@
         <item name="android:textSize">@dimen/text_size_14</item>
     </style>
 
+    <style name="TextAppearance.Chat.Component.Title" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

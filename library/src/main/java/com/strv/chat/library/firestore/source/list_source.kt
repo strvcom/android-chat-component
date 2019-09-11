@@ -1,7 +1,6 @@
 package com.strv.chat.library.firestore.source
 
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.data.entity.SourceEntity
 import com.strv.chat.library.data.source.ListSource
@@ -35,7 +34,7 @@ internal data class FirestoreListSource<Entity : SourceEntity>(
     override fun subscribe(observer: Observer<List<Entity>>): ListSource<Entity> =
         apply {
             listenerRegistration =
-                source.addSnapshotListener(MetadataChanges.EXCLUDE) { result, exception ->
+                source.addSnapshotListener { result, exception ->
                     if (exception != null) {
                         observer.onError(exception)
                     } else {
