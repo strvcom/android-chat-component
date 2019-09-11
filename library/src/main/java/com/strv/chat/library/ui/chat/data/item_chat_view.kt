@@ -1,7 +1,7 @@
 package com.strv.chat.library.ui.chat.data
 
 import com.strv.chat.library.ui.data.MemberView
-import java.util.*
+import java.util.Date
 
 sealed class ChatItemView(open val sentDate: Date) {
 
@@ -21,4 +21,12 @@ sealed class ChatItemView(open val sentDate: Date) {
         val text: String,
         val showSentDate: Boolean = false
     ) : ChatItemView(sentDate)
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }

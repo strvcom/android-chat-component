@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreConversationClient
+import com.strv.chat.library.ui.conversation.ConversationAdapter
 import com.strv.chat.library.ui.conversation.ConversationRecyclerView
 
 class ConversationsActivity : AppCompatActivity() {
@@ -23,8 +24,11 @@ class ConversationsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_conversations)
 
         conversationRecyclerView {
+            adapter = ConversationAdapter {
+                startActivity(MainActivity.newIntent(this@ConversationsActivity))
+            }
             memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-1"
+                override fun currentUserId(): String = "user-2"
 
                 override fun member(memberId: String): MemberModel {
                     if (memberId == "user-1") {
@@ -37,7 +41,7 @@ class ConversationsActivity : AppCompatActivity() {
             }
             conversationClient = firestoreConversationClient {
                 firebaseDb = firestoreDb
-                userId = "user-1"
+                userId = "user-2"
             }
 
         }

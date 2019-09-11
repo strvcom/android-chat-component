@@ -3,29 +3,15 @@ package com.strv.chat.library.ui.conversation
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ConversationClient
 import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.model.ConversationModel
 import com.strv.chat.library.domain.provider.MemberProvider
-import com.strv.chat.library.ui.chat.ChatAdapter
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.ui.conversation.mapper.conversationItemView
 import strv.ktools.logE
-
-//todo update!!!!
-private val diffUtilCallback = object : DiffUtil.ItemCallback<ConversationItemView>() {
-
-    override fun areItemsTheSame(oldItem: ConversationItemView, newItem: ConversationItemView): Boolean {
-        return true
-    }
-
-    override fun areContentsTheSame(oldItem: ConversationItemView, newItem: ConversationItemView): Boolean {
-        return true
-    }
-}
 
 class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -33,8 +19,8 @@ class ConversationRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
-    private var conversationAdapter: ConversationAdapter<ViewHolder>?
-        get() = super.getAdapter() as ConversationAdapter<ViewHolder>
+    private var conversationAdapter: ConversationAdapter
+        get() = super.getAdapter() as ConversationAdapter
         private set(value) = super.setAdapter(value)
 
     private lateinit var conversationClient: ConversationClient
@@ -65,7 +51,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {
-        conversationAdapter?.submitList(items)
+        conversationAdapter.submitList(items)
     }
 
     private fun onConversationsFetchFailed(exception: Throwable) {
@@ -73,15 +59,15 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var adapter: ConversationAdapter<ViewHolder>? = null,
+        var adapter: ConversationAdapter? = null,
         var layoutManager: LinearLayoutManager? = null,
         var conversationClient: ConversationClient? = null,
         var memberProvider: MemberProvider? = null
     ) {
 
         fun build() {
-            setAdapter(adapter ?: DefaultConversationAdapter(diffUtilCallback))
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
+            setAdapter(requireNotNull(adapter) { "ConversationAdapter must be specified" })
             this@ConversationRecyclerView.conversationClient =
                 requireNotNull(conversationClient) { "ConversationClient must be specified" }
             this@ConversationRecyclerView.memberProvider =
