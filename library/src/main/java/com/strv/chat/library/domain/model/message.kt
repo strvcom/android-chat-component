@@ -1,15 +1,25 @@
 package com.strv.chat.library.domain.model
 
-import java.util.*
+import java.util.Date
 
-sealed class Message(open val sendDate: Date, open val senderId: Long){
+sealed class MessageModel(sentDate: Date, senderId: String) {
 
-    data class TextMessage(
-        override val sendDate: Date,
-        override val senderId: Long,
+    data class TextMessageModel(
+        val sentDate: Date,
+        val senderId: String,
         val text: String
-    ) : Message(sendDate, senderId)
+    ) : MessageModel(sentDate, senderId)
 
+    data class ImageMessageModel(
+        val sentDate: Date,
+        val senderId: String,
+        val image: Image
+    ) : MessageModel(sentDate, senderId) {
+
+        data class Image(
+            val width: Double,
+            val height: Double,
+            val original: String
+        )
+    }
 }
-
-
