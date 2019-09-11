@@ -3,14 +3,19 @@ package com.strv.chat.component
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreChatClient
 import com.strv.chat.library.ui.chat.ChatAdapter
 import com.strv.chat.library.ui.chat.ChatRecyclerView
 import com.strv.chat.library.ui.chat.SendWidget
+import com.strv.chat.library.ui.chat.data.ChatItemView
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +33,10 @@ class MainActivity : AppCompatActivity() {
 
     val sendWidget by lazy {
         findViewById<SendWidget>(R.id.w_send)
+    }
+
+    val progress by lazy {
+        findViewById<ProgressBar>(R.id.progress)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +104,16 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        chatRecyclerView.startObserving()
+        chatRecyclerView.startObserving(object: Observer<List<ChatItemView>> {
+            override fun onSuccess(response: List<ChatItemView>) {
+                progress.visibility = View.GONE
+            }
+
+            override fun onError(error: Throwable) {
+                Toast.makeText(this@MainActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
+            }
+
+        })
     }
 
     override fun onStop() {

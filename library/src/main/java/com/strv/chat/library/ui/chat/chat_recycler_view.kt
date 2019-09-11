@@ -2,12 +2,11 @@ package com.strv.chat.library.ui.chat
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.model.MessageModelResponse
+import com.strv.chat.library.domain.client.observer.convert
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
@@ -25,22 +24,9 @@ class ChatRecyclerView @JvmOverloads constructor(
     private lateinit var chatClient: ChatClient
     private lateinit var memberProvider: MemberProvider
 
-    //todo where is the best place to handle seen property?
-    private val messagesObserver = object : Observer<List<MessageModelResponse>> {
-        override fun onSuccess(response: List<MessageModelResponse>) {
-            chatClient.setSeen(memberProvider.currentUserId(), response.first())
-
-            onMessagesChanged(chatItemView(response, memberProvider))
-        }
-
-        override fun onError(error: Throwable) {
-            onMessagesFetchFailed(error)
-        }
-    }
-
     init {
         addOnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom && chatAdapter.itemCount?.compareTo(0) == 1) {
+            if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
                 postDelayed({ scrollToPosition(0) }, 50)
             }
         }
@@ -50,8 +36,12 @@ class ChatRecyclerView @JvmOverloads constructor(
         Builder().apply(config).build()
     }
 
-    fun startObserving() {
-        chatClient.subscribeMessages(messagesObserver)
+    fun startObserving(observer: Observer<List<ChatItemView>>) {
+        chatClient.subscribeMessages(observer.convert { response ->
+            chatClient.setSeen(memberProvider.currentUserId(), response.first())
+
+            chatItemView(response, memberProvider).also(::onMessagesChanged)
+        })
     }
 
     fun stopObserving() {
@@ -63,10 +53,6 @@ class ChatRecyclerView @JvmOverloads constructor(
             submitList(items)
             if (items.isNotEmpty()) smoothScrollToPosition(0)
         }
-    }
-
-    private fun onMessagesFetchFailed(exception: Throwable) {
-        Toast.makeText(context, "Error has occured", Toast.LENGTH_SHORT).show()
     }
 
     inner class Builder(
