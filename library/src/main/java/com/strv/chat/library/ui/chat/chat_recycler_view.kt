@@ -2,27 +2,14 @@ package com.strv.chat.library.ui.chat
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.model.MessageModelResponse
+import com.strv.chat.library.domain.client.observer.convert
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
-
-private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {
-
-    override fun areItemsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
-        return true
-    }
-
-    override fun areContentsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
-        return true
-    }
-}
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -30,29 +17,16 @@ class ChatRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
-    private var chatAdapter: ChatAdapter<ViewHolder>?
-        get() = super.getAdapter() as ChatAdapter<ViewHolder>
+    private var chatAdapter: ChatAdapter
+        get() = super.getAdapter() as ChatAdapter
         private set(value) = super.setAdapter(value)
 
     private lateinit var chatClient: ChatClient
     private lateinit var memberProvider: MemberProvider
-    private lateinit var onError: (Throwable) -> Unit
-
-    private val messagesObserver = object : Observer<List<MessageModelResponse>> {
-        override fun onSuccess(response: List<MessageModelResponse>) {
-            chatClient.setSeen(memberProvider.currentUserId(), response.first())
-
-            onMessagesChanged(chatItemView(response, memberProvider))
-        }
-
-        override fun onError(error: Throwable) {
-            onError(error)
-        }
-    }
 
     init {
         addOnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom && chatAdapter?.itemCount?.compareTo(0) == 1) {
+            if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
                 postDelayed({ scrollToPosition(0) }, 50)
             }
         }
@@ -62,10 +36,12 @@ class ChatRecyclerView @JvmOverloads constructor(
         Builder().apply(config).build()
     }
 
-    fun startObserving() {
-        chatClient.run {
-            subscribeMessages(messagesObserver)
-        }
+    fun startObserving(observer: Observer<List<ChatItemView>>) {
+        chatClient.subscribeMessages(observer.convert { response ->
+            chatClient.setSeen(memberProvider.currentUserId(), response.first())
+
+            chatItemView(response, memberProvider).also(::onMessagesChanged)
+        })
     }
 
     fun stopObserving() {
@@ -73,36 +49,30 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     private fun onMessagesChanged(items: List<ChatItemView>) {
-        chatAdapter?.run {
+        chatAdapter.run {
             submitList(items)
             if (items.isNotEmpty()) smoothScrollToPosition(0)
         }
     }
 
-    private fun onMessagesFetchFailed(exception: Throwable) {
-        Toast.makeText(context, "Error has occured", Toast.LENGTH_SHORT).show()
-    }
-
     inner class Builder(
-        var adapter: ChatAdapter<ViewHolder>? = null,
+        var adapter: ChatAdapter? = null,
         var layoutManager: LinearLayoutManager? = null,
         var chatClient: ChatClient? = null,
-        var memberProvider: MemberProvider? = null,
-        var onError: ((Throwable) -> Unit)? = null
+        var memberProvider: MemberProvider? = null
     ) {
 
         fun build() {
-            setAdapter(adapter ?: DefaultChatAdapter(diffUtilCallback))
             setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
                 reverseLayout = true
                 stackFromEnd = true
                 setClipToPadding(false)
             })
+            setAdapter(requireNotNull(adapter) { "ChatAdapter must be specified" })
             this@ChatRecyclerView.chatClient =
                 requireNotNull(chatClient) { "ChatClient must be specified" }
             this@ChatRecyclerView.memberProvider =
                 requireNotNull(memberProvider) { "MemberProvider must be specified" }
-            this@ChatRecyclerView.onError = onError ?: ::onMessagesFetchFailed
         }
     }
 }

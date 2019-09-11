@@ -1,7 +1,5 @@
 package com.strv.chat.component
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -11,28 +9,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
-import com.strv.chat.library.firestore.di.firestoreChatClient
-import com.strv.chat.library.ui.chat.ChatAdapter
-import com.strv.chat.library.ui.chat.ChatRecyclerView
-import com.strv.chat.library.ui.chat.SendWidget
+import com.strv.chat.library.firestore.di.firestoreConversationClient
 import com.strv.chat.library.ui.chat.data.ChatItemView
+import com.strv.chat.library.ui.conversation.ConversationAdapter
+import com.strv.chat.library.ui.conversation.ConversationRecyclerView
+import com.strv.chat.library.ui.conversation.data.ConversationItemView
 
-class MainActivity : AppCompatActivity() {
-
-    companion object {
-        fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
-    }
+class ConversationsActivity : AppCompatActivity() {
 
     val firestoreDb by lazy {
         FirebaseFirestore.getInstance()
     }
 
-    val chatRecyclerView by lazy {
-        findViewById<ChatRecyclerView>(R.id.rv_chat)
-    }
-
-    val sendWidget by lazy {
-        findViewById<SendWidget>(R.id.w_send)
+    val conversationRecyclerView by lazy {
+        findViewById<ConversationRecyclerView>(R.id.rv_chat)
     }
 
     val progress by lazy {
@@ -41,13 +31,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_conversations)
 
-        chatRecyclerView {
-            adapter = ChatAdapter()
-            chatClient = firestoreChatClient {
-                firebaseDb = firestoreDb
-                conversationId = "WWRweQVRkNBRMsxQ0UFh"
+        conversationRecyclerView {
+            adapter = ConversationAdapter {
+                startActivity(MainActivity.newIntent(this@ConversationsActivity))
             }
             memberProvider = object : MemberProvider {
                 override fun currentUserId(): String = "user-2"
@@ -61,24 +49,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-        }
-
-        sendWidget {
-            chatClient = firestoreChatClient {
+            conversationClient = firestoreConversationClient {
                 firebaseDb = firestoreDb
-                conversationId = "WWRweQVRkNBRMsxQ0UFh"
-            }
-            memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-2"
-
-                override fun member(memberId: String): MemberModel {
-                    if (memberId == "user-1") {
-                        return user1()
-                    } else {
-                        return user2()
-                    }
-                }
-
+                userId = "user-2"
             }
 
         }
@@ -104,21 +77,22 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        chatRecyclerView.startObserving(object: Observer<List<ChatItemView>> {
-            override fun onSuccess(response: List<ChatItemView>) {
+        conversationRecyclerView.startObserving(object : Observer<List<ConversationItemView>> {
+            override fun onSuccess(response: List<ConversationItemView>) {
                 progress.visibility = View.GONE
             }
 
             override fun onError(error: Throwable) {
-                Toast.makeText(this@MainActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this@ConversationsActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
             }
-
         })
     }
 
     override fun onStop() {
         super.onStop()
 
-        chatRecyclerView.stopObserving()
+        conversationRecyclerView.stopObserving()
     }
 }
+
+
