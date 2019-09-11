@@ -6,7 +6,8 @@ import com.google.firebase.firestore.Query
 import com.strv.chat.library.firestore.entity.TIMESTAMP
 
 const val CONVERSATIONS_COLLECTION = "conversations"
-const val CONVERSATIONS_MESSAGES = "messages"
+const val MESSAGES_COLLECTION = "messages"
+const val SEEN_COLLECTION = "seen"
 
 internal fun firestoreChatMessages(
     firestoreDb: FirebaseFirestore,
@@ -16,7 +17,7 @@ internal fun firestoreChatMessages(
     firestoreDb
         .collection(CONVERSATIONS_COLLECTION)
         .document(conversationId)
-        .collection(CONVERSATIONS_MESSAGES)
+        .collection(MESSAGES_COLLECTION)
         .limit(limit)
         .orderBy(TIMESTAMP, Query.Direction.DESCENDING)
 
@@ -29,7 +30,7 @@ internal fun firestoreChatMessages(
     firestoreDb
         .collection(CONVERSATIONS_COLLECTION)
         .document(conversationId)
-        .collection(CONVERSATIONS_MESSAGES)
+        .collection(MESSAGES_COLLECTION)
         .orderBy(TIMESTAMP, Query.Direction.DESCENDING)
         .startAfter(startAfter)
         .limit(limit)

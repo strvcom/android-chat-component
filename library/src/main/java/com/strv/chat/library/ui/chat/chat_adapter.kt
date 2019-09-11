@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.ui.view.TimeTextView
 import com.strv.chat.library.ui.chat.data.ChatItemView
+import com.strv.chat.library.ui.chat.data.ChatItemView.Header
 import com.strv.chat.library.ui.chat.data.ChatItemView.MyTextMessage
 import com.strv.chat.library.ui.chat.data.ChatItemView.OtherTextMessage
 import com.strv.chat.library.ui.imageCircle
+import com.strv.chat.library.ui.view.RelativeTimeTextView
 
 abstract class ChatAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
 
@@ -39,6 +41,7 @@ class DefaultChatAdapter(diffCallback: DiffUtil.ItemCallback<ChatItemView>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder =
         when (viewType) {
+            R.layout.item_header -> ChatViewHolder.HeaderViewHolder(view(parent, viewType))
             R.layout.item_my_message -> ChatViewHolder.MyMessageViewHolder(view(parent, viewType))
             R.layout.item_other_message -> ChatViewHolder.OtherMessageViewHolder(
                 view(
@@ -51,15 +54,16 @@ class DefaultChatAdapter(diffCallback: DiffUtil.ItemCallback<ChatItemView>) :
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) =
         when (holder) {
+            is ChatViewHolder.HeaderViewHolder -> holder.bind(getItem(position) as Header)
             is ChatViewHolder.MyMessageViewHolder -> holder.bind(getItem(position) as MyTextMessage)
             is ChatViewHolder.OtherMessageViewHolder -> holder.bind(getItem(position) as OtherTextMessage)
         }
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
+            is Header -> R.layout.item_header
             is MyTextMessage -> R.layout.item_my_message
             is OtherTextMessage -> R.layout.item_other_message
-            else -> throw IllegalArgumentException("Undefined message type")
         }
 
     private fun view(parent: ViewGroup, layoutId: Int) =
@@ -67,6 +71,15 @@ class DefaultChatAdapter(diffCallback: DiffUtil.ItemCallback<ChatItemView>) :
 }
 
 sealed class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    class HeaderViewHolder(private val view: View) : ChatViewHolder(view) {
+
+        private val textDate = view.findViewById<RelativeTimeTextView>(R.id.tv_date)
+
+        fun bind(item: Header) {
+            textDate.date = item.sentDate
+        }
+    }
 
     class MyMessageViewHolder(private val view: View) : ChatViewHolder(view) {
 

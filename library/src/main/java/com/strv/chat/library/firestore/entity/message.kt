@@ -37,22 +37,12 @@ fun messageType(key: String): MeesageTypeEnum =
 
 data class FirestoreMessage(
     @get:PropertyName(SENDER_ID) @set:PropertyName(SENDER_ID) var senderId: String? = null,
-    @get:PropertyName(TIMESTAMP) @set:PropertyName(TIMESTAMP) var timestamp: Timestamp? = null,
     @get:PropertyName(MESSAGE_TYPE) @set:PropertyName(MESSAGE_TYPE) @MessageType var messageType: String? = null,
-    @get:PropertyName(DATA) @set:PropertyName(DATA) var data: FirestoreData? = null
+    @get:PropertyName(DATA) @set:PropertyName(DATA) var data: FirestoreData? = null,
+    @get:PropertyName(TIMESTAMP) @set:PropertyName(TIMESTAMP) var timestamp: Timestamp? = null
 ) : SourceEntity() {
 
     fun toMap() = hashMapOf(
-        SENDER_ID to requireNotNull(senderId) { logE("$SENDER_ID must be specified") },
-        TIMESTAMP to FieldValue.serverTimestamp(),
-        MESSAGE_TYPE to requireNotNull(messageType) { logE("$MESSAGE_TYPE must be specified") },
-        DATA to requireNotNull(data) { logE("$DATA must be specified") }.run {
-            if (messageType == KEY_TEXT_TYPE) toTextMap() else toImageMap()
-        }
-    )
-
-    fun toLastMessageMap() = hashMapOf(
-        MESSAGE_ID to requireNotNull(id) { logE("$MESSAGE_ID must be specified") },
         SENDER_ID to requireNotNull(senderId) { logE("$SENDER_ID must be specified") },
         TIMESTAMP to FieldValue.serverTimestamp(),
         MESSAGE_TYPE to requireNotNull(messageType) { logE("$MESSAGE_TYPE must be specified") },

@@ -2,20 +2,20 @@ package com.strv.chat.library.ui.chat.data
 
 import java.util.*
 
-sealed class ChatItemView(sentDate: Date) {
+sealed class ChatItemView(open val sentDate: Date) {
 
-    data class ChatHeader(
-        val sentDate: Date
+    data class Header(
+        override val sentDate: Date
     ): ChatItemView(sentDate)
 
     data class MyTextMessage(
-        val sentDate: Date,
+        override val sentDate: Date,
         val text: String,
         val showSentDate: Boolean = false
     ): ChatItemView(sentDate)
 
     data class OtherTextMessage(
-        val sentDate: Date,
+        override val sentDate: Date,
         val sender: MemberView,
         val text: String,
         val showSentDate: Boolean = false
