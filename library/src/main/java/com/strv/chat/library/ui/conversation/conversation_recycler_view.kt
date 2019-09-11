@@ -39,7 +39,6 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private lateinit var conversationClient: ConversationClient
     private lateinit var memberProvider: MemberProvider
-    private lateinit var onError: (Throwable) -> Unit
 
     private val conversationsObserver = object : Observer<List<ConversationModel>> {
         override fun onSuccess(response: List<ConversationModel>) {
@@ -56,6 +55,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         Builder().apply(config).build()
     }
 
+    //todo should be fine to add a possibility to define custom Observer<Model> or Observer<View>
     fun startObserving() {
         conversationClient.subscribeConversations(conversationsObserver)
     }
@@ -73,11 +73,10 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var adapter: ChatAdapter<ViewHolder>? = null,
+        var adapter: ConversationAdapter<ViewHolder>? = null,
         var layoutManager: LinearLayoutManager? = null,
         var conversationClient: ConversationClient? = null,
-        var memberProvider: MemberProvider? = null,
-        var onError: ((Throwable) -> Unit)? = null
+        var memberProvider: MemberProvider? = null
     ) {
 
         fun build() {
@@ -87,7 +86,6 @@ class ConversationRecyclerView @JvmOverloads constructor(
                 requireNotNull(conversationClient) { "ConversationClient must be specified" }
             this@ConversationRecyclerView.memberProvider =
                 requireNotNull(memberProvider) { "MemberProvider must be specified" }
-            this@ConversationRecyclerView.onError = onError ?: ::onConversationsFetchFailed
         }
     }
 }
