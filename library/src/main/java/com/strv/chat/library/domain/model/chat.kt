@@ -1,6 +1,5 @@
-package com.strv.chat.library.chat.domain
+package com.strv.chat.library.domain.model
 
-import com.strv.chat.library.message.domain.Message
 import java.util.*
 
 sealed class ChatItem {
