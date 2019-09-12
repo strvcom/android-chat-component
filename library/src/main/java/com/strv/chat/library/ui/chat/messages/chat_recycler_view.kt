@@ -1,4 +1,4 @@
-package com.strv.chat.library.ui.chat
+package com.strv.chat.library.ui.chat.messages
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,6 +11,9 @@ import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.chat.data.ChatItemView
 import com.strv.chat.library.ui.chat.mapper.chatItemView
+import com.strv.chat.library.ui.chat.messages.adapter.ChatAdapter
+import com.strv.chat.library.ui.chat.messages.adapter.ChatItemBinder
+import com.strv.chat.library.ui.chat.messages.adapter.DefaultChatItemBinder
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -72,7 +75,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         val chatClient: ChatClient,
         val conversationProvider: ConversationProvider,
         val memberProvider: MemberProvider,
-        var adapter: ChatAdapter? = null,
+        var binder: ChatItemBinder? = null,
         var layoutManager: LinearLayoutManager? = null
     ) {
 
@@ -82,7 +85,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 stackFromEnd = true
                 setClipToPadding(false)
             })
-            setAdapter(adapter ?: ChatAdapter())
+            adapter = ChatAdapter(binder ?: DefaultChatItemBinder())
             this@ChatRecyclerView.chatClient = chatClient
             this@ChatRecyclerView.conversationProvider = conversationProvider
             this@ChatRecyclerView.memberProvider = memberProvider

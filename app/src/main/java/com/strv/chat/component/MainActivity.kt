@@ -13,8 +13,7 @@ import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreChatClient
-import com.strv.chat.library.ui.chat.ChatAdapter
-import com.strv.chat.library.ui.chat.ChatRecyclerView
+import com.strv.chat.library.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.library.ui.chat.SendWidget
 import com.strv.chat.library.ui.chat.data.ChatItemView
 

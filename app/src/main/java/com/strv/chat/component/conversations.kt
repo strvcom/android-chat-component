@@ -10,8 +10,6 @@ import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreConversationClient
-import com.strv.chat.library.ui.chat.data.ChatItemView
-import com.strv.chat.library.ui.conversation.ConversationAdapter
 import com.strv.chat.library.ui.conversation.ConversationRecyclerView
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 
@@ -49,10 +47,7 @@ class ConversationsActivity : AppCompatActivity() {
 
         conversationRecyclerView(
             firestoreConversationClient(firestoreDb),
-            memberProvider,
-            ConversationAdapter {
-                startActivity(MainActivity.newIntent(this@ConversationsActivity))
-            }
+            memberProvider
         )
 
 
@@ -84,7 +79,7 @@ class ConversationsActivity : AppCompatActivity() {
             override fun onError(error: Throwable) {
                 Toast.makeText(this@ConversationsActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
             }
-        })
+        }) { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
     }
 
     override fun onStop() {
