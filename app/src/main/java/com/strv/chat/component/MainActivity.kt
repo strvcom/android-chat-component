@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.library.domain.client.observer.Observer
+import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreChatClient
@@ -39,51 +40,40 @@ class MainActivity : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.progress)
     }
 
+    val memberProvider = object : MemberProvider {
+        override fun currentUserId(): String = "user-1"
+
+        override fun member(memberId: String): MemberModel {
+            if (memberId == "user-1") {
+                return user1()
+            } else {
+                return user2()
+            }
+        }
+
+    }
+
+    val conversationProvider = object  : ConversationProvider {
+        override val conversationId: String
+            get() = "WWRweQVRkNBRMsxQ0UFh"
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chatRecyclerView {
-            adapter = ChatAdapter()
-            chatClient = firestoreChatClient {
-                firebaseDb = firestoreDb
-                conversationId = "WWRweQVRkNBRMsxQ0UFh"
-            }
-            memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-2"
+        chatRecyclerView(
+            firestoreChatClient(firestoreDb),
+            conversationProvider,
+            memberProvider
+        )
 
-                override fun member(memberId: String): MemberModel {
-                    if (memberId == "user-1") {
-                        return user1()
-                    } else {
-                        return user2()
-                    }
-                }
-
-            }
-        }
-
-        sendWidget {
-            chatClient = firestoreChatClient {
-                firebaseDb = firestoreDb
-                conversationId = "WWRweQVRkNBRMsxQ0UFh"
-            }
-            memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-2"
-
-                override fun member(memberId: String): MemberModel {
-                    if (memberId == "user-1") {
-                        return user1()
-                    } else {
-                        return user2()
-                    }
-                }
-
-            }
-
-        }
-
-
+        sendWidget(
+            firestoreChatClient(firestoreDb),
+            conversationProvider,
+            memberProvider
+        )
     }
 
 

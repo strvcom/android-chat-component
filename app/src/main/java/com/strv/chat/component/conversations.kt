@@ -29,32 +29,31 @@ class ConversationsActivity : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.progress)
     }
 
+    val memberProvider = object : MemberProvider {
+        override fun currentUserId(): String = "user-1"
+
+        override fun member(memberId: String): MemberModel {
+            if (memberId == "user-1") {
+                return user1()
+            } else {
+                return user2()
+            }
+        }
+
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView {
-            adapter = ConversationAdapter {
+        conversationRecyclerView(
+            firestoreConversationClient(firestoreDb),
+            memberProvider,
+            ConversationAdapter {
                 startActivity(MainActivity.newIntent(this@ConversationsActivity))
             }
-            memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-2"
-
-                override fun member(memberId: String): MemberModel {
-                    if (memberId == "user-1") {
-                        return user1()
-                    } else {
-                        return user2()
-                    }
-                }
-
-            }
-            conversationClient = firestoreConversationClient {
-                firebaseDb = firestoreDb
-                userId = "user-2"
-            }
-
-        }
+        )
 
 
     }

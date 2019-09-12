@@ -5,7 +5,7 @@ import com.strv.chat.library.domain.model.ConversationModel
 
 interface ConversationClient {
 
-    fun subscribeConversations(observer: Observer<List<ConversationModel>>)
+    fun subscribeConversations(userId: String, observer: Observer<List<ConversationModel>>)
 
     fun unsubscribeConversations()
 }

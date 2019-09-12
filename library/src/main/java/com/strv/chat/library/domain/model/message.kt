@@ -2,17 +2,19 @@ package com.strv.chat.library.domain.model
 
 import java.util.Date
 
-sealed class MessageModelRequest(open val senderId: String) {
+sealed class MessageModelRequest(open val senderId: String, open val conversationId: String) {
 
     data class TextMessageModel(
         override val senderId: String,
+        override val conversationId: String,
         val text: String
-    ) : MessageModelRequest(senderId)
+    ) : MessageModelRequest(senderId, conversationId)
 
     data class ImageMessageModel(
         override val senderId: String,
+        override val conversationId: String,
         val image: Image
-    ) : MessageModelRequest(senderId) {
+    ) : MessageModelRequest(senderId, conversationId) {
 
         data class Image(
             val width: Double,

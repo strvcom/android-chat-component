@@ -24,14 +24,21 @@ class ConversationRecyclerView @JvmOverloads constructor(
     private lateinit var conversationClient: ConversationClient
     private lateinit var memberProvider: MemberProvider
 
-    operator fun invoke(config: Builder.() -> Unit) {
-        Builder().apply(config).build()
+    operator fun invoke(
+        conversationClient: ConversationClient,
+        memberProvider: MemberProvider,
+        adapter: ConversationAdapter,
+        config: Builder.() -> Unit = {}
+    ) {
+        Builder(conversationClient, memberProvider, adapter).apply(config).build()
     }
 
     fun startObserving(observer: Observer<List<ConversationItemView>>) {
-        conversationClient.subscribeConversations(observer.convert { response ->
-            conversationItemView(response, memberProvider).also(::onConversationsChanged)
-        })
+        conversationClient.subscribeConversations(
+            memberProvider.currentUserId(),
+            observer.convert { response ->
+                conversationItemView(response, memberProvider).also(::onConversationsChanged)
+            })
     }
 
     fun stopObserving() {
@@ -43,19 +50,17 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var adapter: ConversationAdapter? = null,
-        var layoutManager: LinearLayoutManager? = null,
-        var conversationClient: ConversationClient? = null,
-        var memberProvider: MemberProvider? = null
+        val conversationClient: ConversationClient,
+        val memberProvider: MemberProvider,
+        val adapter: ConversationAdapter,
+        var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
+            this@ConversationRecyclerView.conversationClient = conversationClient
+            this@ConversationRecyclerView.memberProvider = memberProvider
+            setAdapter(adapter)
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
-            setAdapter(requireNotNull(adapter) { "ConversationAdapter must be specified" })
-            this@ConversationRecyclerView.conversationClient =
-                requireNotNull(conversationClient) { "ConversationClient must be specified" }
-            this@ConversationRecyclerView.memberProvider =
-                requireNotNull(memberProvider) { "MemberProvider must be specified" }
         }
     }
 }

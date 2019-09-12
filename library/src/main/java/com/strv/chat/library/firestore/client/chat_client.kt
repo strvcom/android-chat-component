@@ -24,13 +24,16 @@ import strv.ktools.logI
 import java.util.LinkedList
 
 class FirestoreChatClient(
-    val firebaseDb: FirebaseFirestore,
-    val conversationId: String
+    val firebaseDb: FirebaseFirestore
 ) : ChatClient {
 
     private val observableSnapshots = LinkedList<ListSource<out SourceEntity>>()
 
-    override fun subscribeMessages(observer: Observer<List<MessageModelResponse>>, limit: Long) {
+    override fun subscribeMessages(
+        conversationId: String,
+        observer: Observer<List<MessageModelResponse>>,
+        limit: Long
+    ) {
         firestoreListSource(
             firestoreChatMessages(
                 firebaseDb,
@@ -45,7 +48,7 @@ class FirestoreChatClient(
 
     override fun sendMessage(message: MessageModelRequest, observer: Observer<Void?>) {
         val conversationDocument =
-            firebaseDb.collection(CONVERSATIONS_COLLECTION).document(conversationId)
+            firebaseDb.collection(CONVERSATIONS_COLLECTION).document(message.conversationId)
         val messageDocument = conversationDocument.collection(MESSAGES_COLLECTION).document()
 
         firebaseDb.batch().run {
@@ -67,7 +70,7 @@ class FirestoreChatClient(
         }
     }
 
-    override fun setSeen(userId: String, model: MessageModelResponse) {
+    override fun setSeen(userId: String, conversationId: String, model: MessageModelResponse) {
         val seenSenderDocument = firebaseDb
             .collection(CONVERSATIONS_COLLECTION)
             .document(conversationId)
@@ -81,16 +84,4 @@ class FirestoreChatClient(
 
     private fun firestoreListSource(source: Query) =
         source.listSource<FirestoreMessage>()
-
-    data class Builder(
-        var firebaseDb: FirebaseFirestore? = null,
-        var conversationId: String? = null
-    ) {
-
-        fun build() =
-            FirestoreChatClient(
-                requireNotNull(firebaseDb) { logE("firebaseDb must be specified") },
-                requireNotNull(conversationId) { logE("conversationId must be specified") }
-            )
-    }
 }

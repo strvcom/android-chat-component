@@ -12,17 +12,15 @@ import com.strv.chat.library.firestore.entity.FirestoreConversation
 import com.strv.chat.library.firestore.firestoreConversations
 import com.strv.chat.library.firestore.listSource
 import com.strv.chat.library.firestore.mapper.conversationModels
-import strv.ktools.logE
 import java.util.LinkedList
 
 class FirestoreConversationClient(
-    val firebaseDb: FirebaseFirestore,
-    val userId: String
+    val firebaseDb: FirebaseFirestore
 ): ConversationClient {
 
     private val observableSnapshots = LinkedList<ListSource<out SourceEntity>>()
 
-    override fun subscribeConversations(observer: Observer<List<ConversationModel>>) {
+    override fun subscribeConversations(userId: String, observer: Observer<List<ConversationModel>>) {
         firestoreListSource(
             firestoreConversations(
                 firebaseDb,
@@ -43,16 +41,4 @@ class FirestoreConversationClient(
 
     private fun firestoreListSource(source: Query) =
         source.listSource<FirestoreConversation>()
-
-    data class Builder(
-        var firebaseDb: FirebaseFirestore? = null,
-        var userId: String? = null
-    ) {
-
-        fun build() =
-            FirestoreConversationClient(
-                requireNotNull(firebaseDb) { logE("firebaseDb must be specified") },
-                requireNotNull(userId) { logE("userId must be specified") }
-            )
-    }
 }
