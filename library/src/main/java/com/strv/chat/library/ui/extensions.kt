@@ -6,6 +6,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.strv.chat.library.R
 
+typealias OnClickAction<T> = (T) -> Unit
+
 fun ImageView.imageCircle(imageUrl: String) {
     Glide.with(context)
         .load(imageUrl)

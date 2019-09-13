@@ -10,11 +10,11 @@ import com.strv.chat.library.R
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.model.MessageModelRequest
+import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.reset
 import strv.ktools.logE
 import strv.ktools.logI
-import java.util.*
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
@@ -24,6 +24,7 @@ class SendWidget @JvmOverloads constructor(
 
     private lateinit var chatClient: ChatClient
     private lateinit var memberProvider: MemberProvider
+    private lateinit var conversationProvider: ConversationProvider
 
     private val buttonSend by lazy {
         findViewById<ImageButton>(R.id.ib_send)
@@ -38,8 +39,13 @@ class SendWidget @JvmOverloads constructor(
         buttonSendListener()
     }
 
-    operator fun invoke(config: Builder.() -> Unit) {
-        Builder().apply(config).build()
+    operator fun invoke(
+        chatClient: ChatClient,
+        conversationProvider: ConversationProvider,
+        memberProvider: MemberProvider,
+        config: Builder.() -> Unit = {}
+    ) {
+        Builder(chatClient, conversationProvider, memberProvider).apply(config).build()
     }
 
     private fun buttonSendListener() {
@@ -55,6 +61,7 @@ class SendWidget @JvmOverloads constructor(
         chatClient.sendMessage(
             MessageModelRequest.TextMessageModel(
                 senderId = userId,
+                conversationId = conversationProvider.conversationId,
                 text = message
             ),
             object : Observer<Void?> {
@@ -70,15 +77,15 @@ class SendWidget @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var chatClient: ChatClient? = null,
-        var memberProvider: MemberProvider? = null
+        val chatClient: ChatClient,
+        val conversationProvider: ConversationProvider,
+        val memberProvider: MemberProvider
     ) {
 
         fun build() {
-            this@SendWidget.chatClient =
-                requireNotNull(chatClient) { "ChatClient must be specified" }
-            this@SendWidget.memberProvider =
-                requireNotNull(memberProvider) { "MemberProvider must be specified" }
+            this@SendWidget.chatClient = chatClient
+            this@SendWidget.memberProvider = memberProvider
+            this@SendWidget.conversationProvider = conversationProvider
         }
     }
 }

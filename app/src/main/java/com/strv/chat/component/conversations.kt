@@ -10,8 +10,6 @@ import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreConversationClient
-import com.strv.chat.library.ui.chat.data.ChatItemView
-import com.strv.chat.library.ui.conversation.ConversationAdapter
 import com.strv.chat.library.ui.conversation.ConversationRecyclerView
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 
@@ -29,32 +27,28 @@ class ConversationsActivity : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.progress)
     }
 
+    val memberProvider = object : MemberProvider {
+        override fun currentUserId(): String = "user-1"
+
+        override fun member(memberId: String): MemberModel {
+            if (memberId == "user-1") {
+                return user1()
+            } else {
+                return user2()
+            }
+        }
+
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView {
-            adapter = ConversationAdapter {
-                startActivity(MainActivity.newIntent(this@ConversationsActivity))
-            }
-            memberProvider = object : MemberProvider {
-                override fun currentUserId(): String = "user-2"
-
-                override fun member(memberId: String): MemberModel {
-                    if (memberId == "user-1") {
-                        return user1()
-                    } else {
-                        return user2()
-                    }
-                }
-
-            }
-            conversationClient = firestoreConversationClient {
-                firebaseDb = firestoreDb
-                userId = "user-2"
-            }
-
-        }
+        conversationRecyclerView(
+            firestoreConversationClient(firestoreDb),
+            memberProvider
+        )
 
 
     }
@@ -85,7 +79,7 @@ class ConversationsActivity : AppCompatActivity() {
             override fun onError(error: Throwable) {
                 Toast.makeText(this@ConversationsActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
             }
-        })
+        }) { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
     }
 
     override fun onStop() {

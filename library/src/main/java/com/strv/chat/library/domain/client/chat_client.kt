@@ -8,9 +8,9 @@ interface ChatClient {
 
     fun sendMessage(message: MessageModelRequest, observer: Observer<Void?>)
 
-    fun setSeen(userId: String, model: MessageModelResponse)
+    fun setSeen(userId: String, conversationId: String, model: MessageModelResponse)
 
-    fun subscribeMessages(observer: Observer<List<MessageModelResponse>>, limit: Long = 50)
+    fun subscribeMessages(conversationId: String, observer: Observer<List<MessageModelResponse>>, limit: Long = 50)
 
     fun unsubscribeMessages()
 }

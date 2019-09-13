@@ -3,12 +3,13 @@ package com.strv.chat.library.ui.conversation.mapper
 import com.strv.chat.library.domain.model.ConversationModel
 import com.strv.chat.library.domain.model.MessageModelResponse
 import com.strv.chat.library.domain.provider.MemberProvider
+import com.strv.chat.library.ui.OnClickAction
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 
-internal fun conversationItemView(list: List<ConversationModel>, memberProvider: MemberProvider) =
-    list.map { model -> conversationItemView(model, memberProvider) }
+internal fun conversationItemView(list: List<ConversationModel>, memberProvider: MemberProvider, onItemClick: OnClickAction<ConversationItemView>) =
+    list.map { model -> conversationItemView(model, memberProvider, onItemClick) }
 
-private fun conversationItemView(model: ConversationModel, memberProvider: MemberProvider) =
+private fun conversationItemView(model: ConversationModel, memberProvider: MemberProvider, onItemClick: OnClickAction<ConversationItemView>) =
     ConversationItemView(
         model.id,
         false,
@@ -26,7 +27,8 @@ private fun conversationItemView(model: ConversationModel, memberProvider: Membe
                 acc.plus(memberProvider.member(id).userName)
             }.joinToString(),
         lastMessage(model.lastMessage),
-        model.lastMessage.sentDate
+        model.lastMessage.sentDate,
+        onItemClick
     )
 
 private fun lastMessage(messageModel: MessageModelResponse) =

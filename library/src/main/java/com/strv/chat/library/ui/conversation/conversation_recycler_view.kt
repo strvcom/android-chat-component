@@ -8,6 +8,10 @@ import com.strv.chat.library.domain.client.ConversationClient
 import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.client.observer.convert
 import com.strv.chat.library.domain.provider.MemberProvider
+import com.strv.chat.library.ui.OnClickAction
+import com.strv.chat.library.ui.conversation.adapter.ConversationAdapter
+import com.strv.chat.library.ui.conversation.adapter.ConversationBinder
+import com.strv.chat.library.ui.conversation.adapter.DefaultConversationBinder
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.ui.conversation.mapper.conversationItemView
 
@@ -24,14 +28,20 @@ class ConversationRecyclerView @JvmOverloads constructor(
     private lateinit var conversationClient: ConversationClient
     private lateinit var memberProvider: MemberProvider
 
-    operator fun invoke(config: Builder.() -> Unit) {
-        Builder().apply(config).build()
+    operator fun invoke(
+        conversationClient: ConversationClient,
+        memberProvider: MemberProvider,
+        config: Builder.() -> Unit = {}
+    ) {
+        Builder(conversationClient, memberProvider).apply(config).build()
     }
 
-    fun startObserving(observer: Observer<List<ConversationItemView>>) {
-        conversationClient.subscribeConversations(observer.convert { response ->
-            conversationItemView(response, memberProvider).also(::onConversationsChanged)
-        })
+    fun startObserving(observer: Observer<List<ConversationItemView>>, onItemClick: OnClickAction<ConversationItemView>) {
+        conversationClient.subscribeConversations(
+            memberProvider.currentUserId(),
+            observer.convert { response ->
+                conversationItemView(response, memberProvider, onItemClick).also(::onConversationsChanged)
+            })
     }
 
     fun stopObserving() {
@@ -43,19 +53,17 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        var adapter: ConversationAdapter? = null,
-        var layoutManager: LinearLayoutManager? = null,
-        var conversationClient: ConversationClient? = null,
-        var memberProvider: MemberProvider? = null
+        val conversationClient: ConversationClient,
+        val memberProvider: MemberProvider,
+        var binder: ConversationBinder? = null,
+        var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
+            this@ConversationRecyclerView.conversationClient = conversationClient
+            this@ConversationRecyclerView.memberProvider = memberProvider
+            adapter = ConversationAdapter(binder ?: DefaultConversationBinder())
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
-            setAdapter(requireNotNull(adapter) { "ConversationAdapter must be specified" })
-            this@ConversationRecyclerView.conversationClient =
-                requireNotNull(conversationClient) { "ConversationClient must be specified" }
-            this@ConversationRecyclerView.memberProvider =
-                requireNotNull(memberProvider) { "MemberProvider must be specified" }
         }
     }
 }
