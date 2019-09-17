@@ -10,6 +10,7 @@ class ConversationItemView(
     val title: String,
     val message: String,
     val sentDate: Date,
+    //todo not sure about this
     val onClick: OnClickAction<ConversationItemView>
 ) {
     override fun equals(other: Any?): Boolean {

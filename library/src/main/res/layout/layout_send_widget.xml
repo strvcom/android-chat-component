@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--todo update-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -58,7 +59,7 @@
     <!--    android:onClick="@{() -> view.showTextMessage()}"-->
 
     <ImageButton
-        android:id="@+id/ib_camera"
+        android:id="@+id/ib_image"
         android:layout_width="@dimen/dimen_icon_small"
         android:layout_height="@dimen/dimen_icon_small"
         android:layout_marginStart="16dp"

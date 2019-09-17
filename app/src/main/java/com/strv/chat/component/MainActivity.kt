@@ -1,8 +1,11 @@
 package com.strv.chat.component
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -10,12 +13,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.ConversationProvider
+import com.strv.chat.library.domain.provider.MediaProvider
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreChatClient
-import com.strv.chat.library.ui.chat.messages.ChatRecyclerView
+import com.strv.chat.library.ui.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.library.ui.chat.SendWidget
 import com.strv.chat.library.ui.chat.data.ChatItemView
+import com.strv.chat.library.ui.chat.messages.ChatRecyclerView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,6 +65,36 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    var uri: Uri? = null
+
+    val mediaProvider = object : MediaProvider {
+
+
+
+        override fun imageUri(): Uri = imageFile(
+            this@MainActivity,
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date()),
+            "Chat_component"
+        ).also {
+            uri = it
+        }
+
+//        override fun imageUri(fileName: String): Uri {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        }
+
+    }
+
+    private fun imageFile(context: Context, fileName: String, albumDirectoryName: String): Uri {
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${fileName}_.jpg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/$albumDirectoryName")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        return requireNotNull(context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -71,9 +108,23 @@ class MainActivity : AppCompatActivity() {
         sendWidget(
             firestoreChatClient(firestoreDb),
             conversationProvider,
-            memberProvider
+            memberProvider,
+            mediaProvider
         )
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            sendWidget.sendImageMessage("https://images.unsplash.com/photo-1523895665936-7bfe172b757d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80")
+
+//            val imageBitmap = data?.extras?.get("data") as Bitmap
+//            image.setImageBitmap(imageBitmap)
+           // imageView.setImageBitmap(imageBitmap)
+        }
+    }
+
+
 
 
     fun user1() = object : MemberModel {

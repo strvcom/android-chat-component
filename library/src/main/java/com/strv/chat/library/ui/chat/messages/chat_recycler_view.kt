@@ -67,7 +67,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
-            if (items.isNotEmpty()) smoothScrollToPosition(0)
+            if (items.isNotEmpty()) postDelayed({ scrollToPosition(0) }, 50)
         }
     }
 
@@ -85,6 +85,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 stackFromEnd = true
                 setClipToPadding(false)
             })
+            //todo consider using component root provider
             adapter = ChatAdapter(binder ?: DefaultChatItemBinder())
             this@ChatRecyclerView.chatClient = chatClient
             this@ChatRecyclerView.conversationProvider = conversationProvider

@@ -62,6 +62,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         fun build() {
             this@ConversationRecyclerView.conversationClient = conversationClient
             this@ConversationRecyclerView.memberProvider = memberProvider
+            //todo consider using component root provider
             adapter = ConversationAdapter(binder ?: DefaultConversationBinder())
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
         }
