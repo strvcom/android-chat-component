@@ -6,12 +6,10 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreConversationClient
 import com.strv.chat.library.ui.conversation.ConversationRecyclerView
-import com.strv.chat.library.ui.conversation.data.ConversationItemView
 
 class ConversationsActivity : AppCompatActivity() {
 
@@ -57,29 +55,29 @@ class ConversationsActivity : AppCompatActivity() {
     fun user1() = object : MemberModel {
         override val userId: String = "user-1"
         override val userName: String = "John"
-        override val userPhotoUrl: String = "https://d1uzq9i69r6hkq.cloudfront.net/profile-photos/ccbc2eb4-4902-40b1-9f2f-6c516964c038.jpg"
+        override val userPhotoUrl: String =
+            "https://d1uzq9i69r6hkq.cloudfront.net/profile-photos/ccbc2eb4-4902-40b1-9f2f-6c516964c038.jpg"
 
     }
 
     fun user2() = object : MemberModel {
         override val userId: String = "user-2"
         override val userName: String = "Camila"
-        override val userPhotoUrl: String = "https://d1uzq9i69r6hkq.cloudfront.net/profile-photos/d0727450-0984-4108-993f-a6173008264d.jpg"
+        override val userPhotoUrl: String =
+            "https://d1uzq9i69r6hkq.cloudfront.net/profile-photos/d0727450-0984-4108-993f-a6173008264d.jpg"
 
     }
 
     override fun onStart() {
         super.onStart()
 
-        conversationRecyclerView.startObserving(object : Observer<List<ConversationItemView>> {
-            override fun onSuccess(response: List<ConversationItemView>) {
+        conversationRecyclerView.startObserving { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
+            .onError {
+                Toast.makeText(this@ConversationsActivity, it.localizedMessage, Toast.LENGTH_SHORT)
+                    .show()
+            }.onNext {
                 progress.visibility = View.GONE
             }
-
-            override fun onError(error: Throwable) {
-                Toast.makeText(this@ConversationsActivity, error.localizedMessage, Toast.LENGTH_SHORT).show();
-            }
-        }) { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
     }
 
     override fun onStop() {

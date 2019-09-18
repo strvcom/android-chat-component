@@ -9,7 +9,6 @@ import android.widget.ImageButton
 import androidx.fragment.app.FragmentActivity
 import com.strv.chat.library.R
 import com.strv.chat.library.domain.client.ChatClient
-import com.strv.chat.library.domain.client.observer.Observer
 import com.strv.chat.library.domain.model.MessageModelRequest
 import com.strv.chat.library.domain.model.MessageModelRequest.ImageMessageModel.Image
 import com.strv.chat.library.domain.provider.ConversationProvider
@@ -19,8 +18,8 @@ import com.strv.chat.library.ui.openCamera
 import com.strv.chat.library.ui.reset
 import com.strv.chat.library.ui.selector
 import com.strv.chat.library.ui.view.DIALOG_PHOTO_PICKER
+import strv.ktools.logD
 import strv.ktools.logE
-import strv.ktools.logI
 import strv.ktools.logMe
 
 class SendWidget @JvmOverloads constructor(
@@ -112,17 +111,12 @@ class SendWidget @JvmOverloads constructor(
     }
 
     private fun sendMessage(message: MessageModelRequest) {
-        chatClient.sendMessage(message,
-            object : Observer<Void?> {
-                override fun onSuccess(response: Void?) {
-                    logI("Message has been sent")
-                }
-
-                override fun onError(error: Throwable) {
-                    logE(error.localizedMessage)
-                }
+        chatClient.sendMessage(message)
+            .onError { error ->
+                logE(error.localizedMessage ?: "Unknown error")
+            }.onSuccess {
+                logD("Message $it has been sent")
             }
-        )
     }
 
     inner class Builder(

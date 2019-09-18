@@ -6,4 +6,6 @@ interface MediaProvider {
 
     fun imageUri(): Uri
 
+    fun uploadPhoto(uri: Uri)
+
 }

@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.domain.client.ConversationClient
-import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.client.observer.convert
+import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.ui.OnClickAction
 import com.strv.chat.library.ui.conversation.adapter.ConversationAdapter
@@ -14,12 +13,16 @@ import com.strv.chat.library.ui.conversation.adapter.ConversationBinder
 import com.strv.chat.library.ui.conversation.adapter.DefaultConversationBinder
 import com.strv.chat.library.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.ui.conversation.mapper.conversationItemView
+import strv.ktools.logE
+import java.util.*
 
 class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
+
+    private val disposable = LinkedList<Disposable>()
 
     private var conversationAdapter: ConversationAdapter
         get() = super.getAdapter() as ConversationAdapter
@@ -36,16 +39,22 @@ class ConversationRecyclerView @JvmOverloads constructor(
         Builder(conversationClient, memberProvider).apply(config).build()
     }
 
-    fun startObserving(observer: Observer<List<ConversationItemView>>, onItemClick: OnClickAction<ConversationItemView>) {
+    fun startObserving(onItemClick: OnClickAction<ConversationItemView>) =
         conversationClient.subscribeConversations(
-            memberProvider.currentUserId(),
-            observer.convert { response ->
-                conversationItemView(response, memberProvider, onItemClick).also(::onConversationsChanged)
-            })
-    }
+            memberProvider.currentUserId()
+        ).onError { error ->
+            logE(error.localizedMessage ?: "Unknown error")
+        }.onNext { model ->
+            conversationItemView(model, memberProvider, onItemClick).also(::onConversationsChanged)
+        }.also { task ->
+            disposable.add(task)
+        }
+
 
     fun stopObserving() {
-        conversationClient.unsubscribeConversations()
+        while (disposable.isNotEmpty()) {
+            disposable.pop().dispose()
+        }
     }
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {

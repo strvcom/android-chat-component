@@ -4,47 +4,47 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.strv.chat.library.data.source.ListSource
 import com.strv.chat.library.data.entity.SourceEntity
-import com.strv.chat.library.domain.client.observer.Observer
+import com.strv.chat.library.data.source.ListSource
+import com.strv.chat.library.domain.Task
+import com.strv.chat.library.domain.observableTask
 
-data class FirebaseListSource<T : SourceEntity>(
+data class FirebaseListSource<Entity : SourceEntity>(
     private val source: DatabaseReference,
-    private val clazz: Class<T>
-) : ListSource<T> {
+    private val clazz: Class<Entity>
+) : ListSource<Entity> {
 
-    private lateinit var eventListener: ValueEventListener
+    private var eventListener: ValueEventListener? = null
 
-    override fun get(observer: Observer<List<T>>) {
+    override fun get(): Task<List<Entity>, Throwable> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun subscribe(observer: Observer<List<T>>): ListSource<T> =
-        apply {
+    override fun subscribe() =
+        observableTask<List<Entity>, Throwable>(::unsubscribe) {
             eventListener = object : ValueEventListener {
 
                 override fun onCancelled(p0: DatabaseError) {
-                    observer.onError(p0.toException())
+                    invokeError(p0.toException())
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val list = arrayListOf<T>()
+                    val list = arrayListOf<Entity>()
 
-                dataSnapshot.children.forEach { snapshot ->
-                    snapshot.getValue(clazz)?.let { result ->
-                        result.id = snapshot.key
-                        list.add(result)
+                    dataSnapshot.children.forEach { snapshot ->
+                        snapshot.getValue(clazz)?.let { result ->
+                            result.id = snapshot.key
+                            list.add(result)
+                        }
                     }
-                }
 
-                observer.onSuccess(list)
+                    invokeNext(list)
+                }
             }
         }
 
-            source.addValueEventListener(eventListener)
-        }
-
     override fun unsubscribe() {
-        source.removeEventListener(eventListener)
+        eventListener?.let(source::removeEventListener)
+        eventListener == null
     }
 }
