@@ -4,7 +4,8 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.data.entity.SourceEntity
 import com.strv.chat.library.data.source.Source
-import com.strv.chat.library.domain.client.observer.Observer
+import com.strv.chat.library.domain.observableTask
+import com.strv.chat.library.domain.task
 
 internal data class FirestoreSource<Entity : SourceEntity>(
     private val source: Query,
@@ -13,28 +14,31 @@ internal data class FirestoreSource<Entity : SourceEntity>(
 
     private var listenerRegistration: ListenerRegistration? = null
 
-    override fun get(observer: Observer<Entity?>) {
-        source.get()
-            .addOnSuccessListener { result ->
-                val list = arrayListOf<Entity>()
+    override fun get() =
+        task<Entity?, Throwable>() {
+            source.get()
+                .addOnSuccessListener { result ->
+                    val list = arrayListOf<Entity>()
 
-                result?.mapTo(list) { snapShot ->
-                    snapShot.toObject(clazz).also { item ->
-                        item.id = snapShot.id
+                    result?.mapTo(list) { snapShot ->
+                        snapShot.toObject(clazz).also { item ->
+                            item.id = snapShot.id
+                        }
                     }
+
+                    invokeSuccess(list.firstOrNull())
                 }
 
-                observer.onSuccess(list.firstOrNull())
-            }
+                .addOnFailureListener { error ->
+                    invokeError(error)
+                }
+        }
 
-            .addOnFailureListener { observer.onError(it) }
-    }
-
-    override fun subscribe(observer: Observer<Entity?>): Source<Entity> =
-        apply {
+    override fun subscribe() =
+        observableTask<Entity?, Throwable>(::unsubscribe) {
             listenerRegistration = source.addSnapshotListener { result, exception ->
                 if (exception != null) {
-                    observer.onError(exception)
+                    invokeError(exception)
                 } else {
                     val list = arrayListOf<Entity>()
 
@@ -44,12 +48,13 @@ internal data class FirestoreSource<Entity : SourceEntity>(
                         }
                     }
 
-                    observer.onSuccess(list.firstOrNull())
+                    invokeNext(list.firstOrNull())
                 }
             }
         }
 
     override fun unsubscribe() {
         listenerRegistration?.remove()
+        listenerRegistration == null
     }
 }

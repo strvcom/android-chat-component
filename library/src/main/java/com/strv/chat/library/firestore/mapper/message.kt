@@ -16,7 +16,6 @@ import com.strv.chat.library.firestore.entity.MeesageTypeEnum.IMAGE_TYPE
 import com.strv.chat.library.firestore.entity.MeesageTypeEnum.TEXT_TYPE
 import com.strv.chat.library.firestore.entity.ORIGINAL
 import com.strv.chat.library.firestore.entity.SENDER_ID
-import com.strv.chat.library.firestore.entity.TIMESTAMP
 import com.strv.chat.library.firestore.entity.messageType
 import strv.ktools.logE
 import java.util.*
@@ -54,7 +53,7 @@ private fun messageModel(message: FirestoreMessage) =
         )
         IMAGE_TYPE -> MessageModelResponse.ImageMessageModel(
             requireNotNull(message.id) { "$ID must me specified" },
-            requireNotNull(message.timestamp?.toDate()) { logE("$TIMESTAMP must be specified") },
+            message.timestamp?.toDate() ?: Date(),
             requireNotNull(message.senderId) { logE("$SENDER_ID must be specified") },
             imageModel(requireNotNull(message.data?.image) { logE("$IMAGE must be specified") })
         )

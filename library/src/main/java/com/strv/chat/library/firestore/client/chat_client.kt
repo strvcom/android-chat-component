@@ -2,11 +2,9 @@ package com.strv.chat.library.firestore.client
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.strv.chat.library.data.source.ListSource
-import com.strv.chat.library.data.entity.SourceEntity
 import com.strv.chat.library.domain.client.ChatClient
-import com.strv.chat.library.domain.client.observer.Observer
-import com.strv.chat.library.domain.client.observer.convert
+import com.strv.chat.library.domain.map
+import com.strv.chat.library.domain.task
 import com.strv.chat.library.domain.model.MessageModelRequest
 import com.strv.chat.library.domain.model.MessageModelResponse
 import com.strv.chat.library.firestore.CONVERSATIONS_COLLECTION
@@ -19,68 +17,59 @@ import com.strv.chat.library.firestore.listSource
 import com.strv.chat.library.firestore.mapper.messageEntity
 import com.strv.chat.library.firestore.mapper.messageModels
 import com.strv.chat.library.firestore.mapper.seenEntity
-import strv.ktools.logE
-import strv.ktools.logI
-import java.util.LinkedList
 
 class FirestoreChatClient(
     val firebaseDb: FirebaseFirestore
 ) : ChatClient {
 
-    private val observableSnapshots = LinkedList<ListSource<out SourceEntity>>()
-
     override fun subscribeMessages(
         conversationId: String,
-        observer: Observer<List<MessageModelResponse>>,
         limit: Long
-    ) {
-        firestoreListSource(
-            firestoreChatMessages(
-                firebaseDb,
-                conversationId
-            )
-        )
-            .subscribe(observer.convert(::messageModels))
-            .also {
-                observableSnapshots.add(it)
-            }
-    }
+    ) =
+        firestoreListSource(firestoreChatMessages(firebaseDb, conversationId))
+            .subscribe().map(::messageModels)
 
-    override fun sendMessage(message: MessageModelRequest, observer: Observer<Void?>) {
-        val conversationDocument =
-            firebaseDb.collection(CONVERSATIONS_COLLECTION).document(message.conversationId)
-        val messageDocument = conversationDocument.collection(MESSAGES_COLLECTION).document()
 
-        firebaseDb.batch().run {
-            set(messageDocument, messageEntity(messageDocument.id, message).toMap())
-            update(
-                conversationDocument,
-                LAST_MESSAGE,
-                messageEntity(messageDocument.id, message).toLastMessageMap()
-            )
-            commit()
+    override fun sendMessage(message: MessageModelRequest) =
+        task<String, Throwable> {
+            val conversationDocument =
+                firebaseDb.collection(CONVERSATIONS_COLLECTION).document(message.conversationId)
+            val messageDocument = conversationDocument.collection(MESSAGES_COLLECTION).document()
+
+            firebaseDb.batch()
+                .run {
+                    set(messageDocument, messageEntity(messageDocument.id, message).toMap())
+                    update(
+                        conversationDocument,
+                        LAST_MESSAGE,
+                        messageEntity(messageDocument.id, message).toLastMessageMap()
+                    )
+                    commit()
+                }
+                .addOnSuccessListener {
+                    invokeSuccess(messageDocument.id)
+                }
+                .addOnFailureListener { error ->
+                    invokeError(error)
+                }
         }
-            .addOnSuccessListener(observer::onSuccess)
-            .addOnFailureListener(observer::onError)
-    }
 
-    override fun unsubscribeMessages() {
-        while (observableSnapshots.isNotEmpty()) {
-            observableSnapshots.pop().unsubscribe()
+    override fun setSeen(userId: String, conversationId: String, model: MessageModelResponse) =
+        task<String, Throwable> {
+            val seenSenderDocument = firebaseDb
+                .collection(CONVERSATIONS_COLLECTION)
+                .document(conversationId)
+                .collection(SEEN_COLLECTION)
+                .document(userId)
+
+            seenSenderDocument.set(seenEntity(model).toMap())
+                .addOnSuccessListener {
+                    invokeSuccess(model.id)
+                }
+                .addOnFailureListener { error ->
+                    invokeError(error)
+                }
         }
-    }
-
-    override fun setSeen(userId: String, conversationId: String, model: MessageModelResponse) {
-        val seenSenderDocument = firebaseDb
-            .collection(CONVERSATIONS_COLLECTION)
-            .document(conversationId)
-            .collection(SEEN_COLLECTION)
-            .document(userId)
-
-        seenSenderDocument.set(seenEntity(model).toMap())
-            .addOnSuccessListener { logI("Message ${model.id} has been marked as seen") }
-            .addOnFailureListener { logE(it.localizedMessage) }
-    }
 
     private fun firestoreListSource(source: Query) =
         source.listSource<FirestoreMessage>()

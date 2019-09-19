@@ -12,6 +12,13 @@ interface ChatItemBinder {
 
     fun otherMessageBinder(parent: ViewGroup): OtherMessageViewHolder =
         DefaultOtherMessageViewHolder(parent)
+
+    fun myImageBinder(parent: ViewGroup): MyImageViewHolder =
+        DefaultMyImageViewHolder(parent)
+
+    fun otherImageBinder(parent: ViewGroup): OtherImageViewHolder =
+        DefaultOtherImageViewHolder(parent)
+
 }
 
 class DefaultChatItemBinder: ChatItemBinder

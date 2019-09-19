@@ -1,2 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.strv.chat.library"/>
+    package="com.strv.chat.library">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+</manifest>
