@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_chat"
         />
 
-    <com.strv.chat.library.ui.chat.SendWidget
+    <com.strv.chat.library.ui.chat.sending.SendWidget
         android:id="@+id/w_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -71,7 +71,7 @@ class ConversationsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        conversationRecyclerView.startObserving { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
+        conversationRecyclerView.onStart { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
             .onError {
                 Toast.makeText(this@ConversationsActivity, it.localizedMessage, Toast.LENGTH_SHORT)
                     .show()
@@ -83,7 +83,7 @@ class ConversationsActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        conversationRecyclerView.stopObserving()
+        conversationRecyclerView.onStop()
     }
 }
 

@@ -39,7 +39,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         Builder(conversationClient, memberProvider).apply(config).build()
     }
 
-    fun startObserving(onItemClick: OnClickAction<ConversationItemView>) =
+    fun onStart(onItemClick: OnClickAction<ConversationItemView>) =
         conversationClient.subscribeConversations(
             memberProvider.currentUserId()
         ).onError { error ->
@@ -51,7 +51,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         }
 
 
-    fun stopObserving() {
+    fun onStop() {
         while (disposable.isNotEmpty()) {
             disposable.pop().dispose()
         }

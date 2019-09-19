@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
+import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.map
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberProvider
@@ -51,7 +51,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         Builder(chatClient, conversationProvider, memberProvider).apply(config).build()
     }
 
-    fun startObserving(): ObservableTask<List<ChatItemView>, Throwable> =
+    fun onStart(): ObservableTask<List<ChatItemView>, Throwable> =
             chatClient.subscribeMessages(
                 conversationProvider.conversationId
             ).onError { error ->
@@ -61,7 +61,9 @@ class ChatRecyclerView @JvmOverloads constructor(
                     memberProvider.currentUserId(),
                     conversationProvider.conversationId,
                     response.first()
-                )
+                ).also { task ->
+                    disposable.add(task)
+                }
             }.map { model ->
                 chatItemView(model, memberProvider)
             }.onNext { itemViews ->
@@ -70,7 +72,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 disposable.add(task)
             }
 
-    fun stopObserving() {
+    fun onStop() {
         while (disposable.isNotEmpty()) {
             disposable.pop().dispose()
         }

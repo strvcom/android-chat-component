@@ -1,6 +1,7 @@
 package com.strv.chat.library.domain
 
 import com.strv.chat.library.domain.ObservableTask.ObservableTaskImpl
+import com.strv.chat.library.domain.ProgressTask.ProgressTaskImpl
 import com.strv.chat.library.domain.Task.TaskImpl
 
 interface Disposable {
@@ -14,30 +15,72 @@ sealed class Task<R, E> : Disposable {
 
     abstract fun onError(callback: (error: E) -> Unit): Task<R, E>
 
-    class TaskImpl<R, E> : Task<R, E>() {
+    open class TaskImpl<R, E> : Task<R, E>() {
+
+        private var result: R? = null
+        private var error: E? = null
+        private var completed = false
+        private val successful get() = completed && error == null
 
         private val successCallbacks = mutableListOf<(R) -> Unit>()
         private val errorCallbacks = mutableListOf<(E) -> Unit>()
 
         override fun onSuccess(callback: (result: R) -> Unit) = apply {
             successCallbacks.add(callback)
+
+            if (completed && successful && result != null)
+                callback(result!!)
         }
 
         override fun onError(callback: (error: E) -> Unit) = apply {
             errorCallbacks.add(callback)
+
+            if (completed && !successful && error != null)
+                callback(error!!)
         }
 
         fun invokeSuccess(result: R) {
+            completed = true
+            this.result = result
+
             successCallbacks.forEach { it.invoke(result) }
         }
 
         fun invokeError(error: E) {
+            completed = true
+            this.error = error
+
             errorCallbacks.forEach { it.invoke(error) }
         }
 
         override fun dispose() {
+            result = null
+            error = null
             successCallbacks.removeAll(successCallbacks)
             errorCallbacks.removeAll(errorCallbacks)
+        }
+    }
+}
+
+sealed class ProgressTask<R, E> : TaskImpl<R, E>(), Disposable {
+
+    abstract fun onProgress(callback: (progress: Int) -> Unit): ProgressTask<R, E>
+
+    class ProgressTaskImpl<R, E> : ProgressTask<R, E>() {
+
+        private val progressCallbacks = mutableListOf<(Int) -> Unit>()
+
+        override fun onProgress(callback: (progress: Int) -> Unit) = this.apply {
+            progressCallbacks.add(callback)
+        }
+
+        fun invokeProgress(progress: Int) {
+            progressCallbacks.forEach { it.invoke(progress) }
+        }
+
+        override fun dispose() {
+            super.dispose()
+            progressCallbacks.removeAll(progressCallbacks)
         }
     }
 }
@@ -81,19 +124,22 @@ sealed class ObservableTask<R, E> : Disposable {
     }
 }
 
-fun <R, E> task(runnable: TaskImpl<R, E>.() -> Unit): Task<R, E> =
+inline fun <R, E> task(runnable: TaskImpl<R, E>.() -> Unit): Task<R, E> =
     TaskImpl<R, E>().apply(runnable)
 
-fun <R, E> observableTask(
-    onDispose: (() -> Unit)?,
+inline fun <R, E> observableTask(
+    noinline onDispose: (() -> Unit)?,
     runnable: ObservableTaskImpl<R, E>.() -> Unit
 ): ObservableTask<R, E> =
     ObservableTaskImpl<R, E>(onDispose).apply(runnable)
 
-fun <R, E, V> Task<R, E>.map(mapper: (R) -> V) =
+inline fun <R, E> progressTask(runnable: ProgressTaskImpl<R, E>.() -> Unit): ProgressTask<R, E> =
+    ProgressTaskImpl<R, E>().apply(runnable)
+
+inline fun <R, E, V> Task<R, E>.map(crossinline transform: (R) -> V) =
     task<V, E> {
         this@map.onSuccess { result ->
-            invokeSuccess(mapper(result))
+            invokeSuccess(transform(result))
         }
 
         this@map.onError { error ->
@@ -101,31 +147,53 @@ fun <R, E, V> Task<R, E>.map(mapper: (R) -> V) =
         }
     }
 
-fun <R, E, V> ObservableTask<R, E>.map(mapper: (R) -> V) =
+inline fun <R, E, V> ProgressTask<R, E>.map(crossinline transform: (R) -> V) =
+    progressTask<V, E> {
+        this@map.onSuccess { result ->
+            invokeSuccess(transform(result))
+        }
+
+        this@map.onError { error ->
+            invokeError(error)
+        }
+
+        this@map.onProgress { progress ->
+            invokeProgress(progress)
+        }
+    }
+
+
+inline fun <R, E, V> Task<R, E>.flatMap(crossinline transform: (R) -> Task<V, E>?): Task<V, E> =
+    task<V, E> {
+
+        this@flatMap.onSuccess { result ->
+            transform(result)
+                ?.onSuccess {
+                    this.invokeSuccess(it)
+                }
+                ?.onError { error ->
+                    this.invokeError(error)
+                }
+        }
+
+        this@flatMap.onError { error ->
+            this.invokeError(error)
+        }
+    }
+
+inline fun <R, E, V> ObservableTask<R, E>.map(crossinline transform: (R) -> V) =
     when (this) {
         is ObservableTaskImpl -> {
             observableTask<V, E>(onDispose) {
                 this@map.onNext { result ->
-                    invokeNext(mapper(result))
+                    invokeNext(transform(result))
+                }
+
+                this@map.onError { error ->
+                    invokeError(error)
                 }
             }
         }
     }
 
 
-//class ProgressTask<R, E> : Task<R, E>() {
-//    private var progress: Int = 0
-//    private val progressCallbacks = mutableListOf<(Int) -> Unit>()
-//
-//    fun onProgress(callback: (progress: Int) -> Unit) = this.apply {
-//        progressCallbacks.add(callback)
-//    }
-//
-//    fun invokeProgress(progress: Int) {
-//        this.progress = progress
-//        progressCallbacks.forEach { it.invoke(progress) }
-//    }
-//}
-
-//fun <R, E> progressTask(runnable: ProgressTask<R, E>.() -> Unit) =
-//    ProgressTask<R, E>().apply(runnable)
