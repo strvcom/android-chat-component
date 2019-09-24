@@ -5,4 +5,10 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application>
+        <service android:name="com.strv.chat.library.core.ui.chat.sending.UploadPhotoService" />
+    </application>
+
 </manifest>

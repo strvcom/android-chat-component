@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
         tools:text="Conversation" />
 
-    <com.strv.chat.library.ui.view.TimeTextView
+    <com.strv.chat.library.core.ui.view.TimeTextView
         android:id="@+id/tv_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

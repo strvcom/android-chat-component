@@ -9,13 +9,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreConversationClient
-import com.strv.chat.library.ui.conversation.ConversationRecyclerView
+import com.strv.chat.library.core.ui.conversation.ConversationRecyclerView
 
 class ConversationsActivity : AppCompatActivity() {
-
-    val firestoreDb by lazy {
-        FirebaseFirestore.getInstance()
-    }
 
     val conversationRecyclerView by lazy {
         findViewById<ConversationRecyclerView>(R.id.rv_chat)
@@ -43,12 +39,9 @@ class ConversationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView(
-            firestoreConversationClient(firestoreDb),
+        conversationRecyclerView.init(
             memberProvider
         )
-
-
     }
 
 

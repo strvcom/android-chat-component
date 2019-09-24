@@ -7,7 +7,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ProgressBar
@@ -16,20 +15,17 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
 import com.strv.chat.library.cloudStorage.di.cloudStorageMediaClient
-import com.strv.chat.library.domain.Task
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.firestore.di.firestoreChatClient
-import com.strv.chat.library.ui.REQUEST_IMAGE_CAPTURE
-import com.strv.chat.library.ui.chat.sending.SendWidget
-import com.strv.chat.library.ui.chat.messages.ChatRecyclerView
-import strv.ktools.logI
+import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
+import com.strv.chat.library.core.ui.chat.sending.SendWidget
+import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
+import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_GALLERY
 import strv.ktools.logMe
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -129,92 +125,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chatRecyclerView(
-            firestoreChatClient(firestoreDb),
+        chatRecyclerView.init(
             conversationProvider,
             memberProvider
         )
 
-        sendWidget(
-            firestoreChatClient(firestoreDb),
-            cloudStorageMediaClient(firebaseStorage),
+        sendWidget.init(
             conversationProvider,
             memberProvider,
             mediaProvider
         )
     }
 
+    //todo any size restrictions?
+    //todo how to make dimensions compatible?
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
             val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri!!))
-            sendWidget.uploadImage(name!!, bitmap)
-
-            //   val imagesRef = storageRef.child("image")
-
-
-            //val file = imageFile(this, name!!, "Chat_component")
-//            file.logMe()
-//            file.lastPathSegment.logMe()
-
-            //  realPathFromUri(file)
-
-
-            //MediaType.Companion.run { "image/jpeg".toMediaType() }
-
-            /*
-            FireStore
-
-            1. getRef - immediately
-            2. upload to Ref - get progress
-            3. get url
-             */
-
-
-            /*
-            S3
-
-            1. getUrl - suspendb
-            2. upload to Url - get progress
-            3. get Url
-             */
-
-
-//            val fileDescriptor = contentResolver.openFile(uri!!, "r", null)
-//            val fileDescriptor2 = contentResolver.openFileDescriptor(uri!!, "r", null)
-//
-//            fileDescriptor2?.fileDescriptor?
-
-
-
-//
-//
-//            photoRef.putFile(file)
-//                .addOnSuccessListener {
-//                    "File was uploaded".logMe()
-//                }
-//                .addOnFailureListener{
-//                    "File wasnt uploaded: ${it.localizedMessage}".logMe()
-//                }
-//                .addOnProgressListener {
-//                    it.bytesTransferred.logMe()
-//                }
-//                .continueWith {
-//                    photoRef.downloadUrl
-//                }.addOnSuccessListener {
-//                    it.result.logMe()
-//                    sendWidget.sendImageMessage(it.result.toString())
-//                }.addOnFailureListener {
-//                    "Error during uri generation: ${it.localizedMessage}".logMe()
-//                }
-
-
-            // sendWidget.sendImageMessage("https://images.unsplash.com/photo-1523895665936-7bfe172b757d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80")
-
-//            val imageBitmap = data?.extras?.get("data") as Bitmap
-//            image.setImageBitmap(imageBitmap)
-            // imageView.setImageBitmap(imageBitmap)
+            sendWidget.uploadImage(uri!!)
+        } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+                sendWidget.uploadImage(uri!!)
+            }
         }
     }
 
