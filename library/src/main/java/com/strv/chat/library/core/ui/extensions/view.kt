@@ -15,10 +15,11 @@ fun ImageView.imageCircle(imageUrl: String) {
         .into(this)
 }
 
-fun ImageView.imageUrl(imageUrl: String) {
+fun ImageView.imageCenterCrop(imageUrl: String) {
     Glide.with(context)
         .load(imageUrl)
         .placeholder(R.drawable.placeholder_image)
+        .centerCrop()
         .error(R.drawable.placeholder_image)
         .into(this)
 }

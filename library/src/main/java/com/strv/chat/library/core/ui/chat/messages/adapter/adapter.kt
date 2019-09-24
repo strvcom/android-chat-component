@@ -59,6 +59,9 @@ class ChatAdapter(
         differ.submitList(list)
     }
 
+    fun getItems() =
+        differ.currentList
+
     fun getItem(position: Int): ChatItemView =
         differ.currentList[position]
 }

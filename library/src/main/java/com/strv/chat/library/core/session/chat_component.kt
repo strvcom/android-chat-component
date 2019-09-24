@@ -1,6 +1,7 @@
 package com.strv.chat.library.core.session
 
 import com.strv.chat.library.core.session.config.Configuration
+import com.strv.chat.library.core.ui.chat.messages.adapter.DefaultChatItemBinder
 
 object ChatComponent {
 
@@ -19,4 +20,6 @@ object ChatComponent {
     internal fun smallIconProgressRes() = configuration.serviceConfig.smallIconProgressRes
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
+
+    internal fun defaultChatItemBinder() = DefaultChatItemBinder()
 }

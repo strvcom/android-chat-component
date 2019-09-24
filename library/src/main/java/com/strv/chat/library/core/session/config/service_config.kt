@@ -9,6 +9,7 @@ class ServiceConfig(
 ) {
 
     class Builder(
+        //todo update just for Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         val channelId: String,
         var largeIconRes: Int? = null,
         var smallIconProgressRes: Int? = null,
