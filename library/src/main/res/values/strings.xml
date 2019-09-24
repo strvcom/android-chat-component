@@ -4,4 +4,7 @@
     <string name="write_your_message">Write your message...</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="uploading_photo">Uploading photo…</string>
+    <string name="photo_was_not_uploaded">Photo was not uploaded</string>
+    <string name="photo_was_uploaded">Photo was uploaded</string>
 </resources>

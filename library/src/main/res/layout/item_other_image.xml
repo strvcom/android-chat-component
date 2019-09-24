@@ -26,7 +26,7 @@
     <!--    android:background="@drawable/overlay_giphy"-->
 
 
-    <com.strv.chat.library.ui.view.TimeTextView
+    <com.strv.chat.library.core.ui.view.TimeTextView
         android:id="@+id/tv_message_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

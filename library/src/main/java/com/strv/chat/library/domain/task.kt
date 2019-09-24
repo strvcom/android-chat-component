@@ -162,24 +162,22 @@ inline fun <R, E, V> ProgressTask<R, E>.map(crossinline transform: (R) -> V) =
         }
     }
 
-
-inline fun <R, E, V> Task<R, E>.flatMap(crossinline transform: (R) -> Task<V, E>?): Task<V, E> =
-    task<V, E> {
+fun <R, E, V> Task<R, E>.flatMap(transform: (R) -> Task<V, E>): Task<V, E> =
+    task {
 
         this@flatMap.onSuccess { result ->
-            transform(result)
-                ?.onSuccess {
-                    this.invokeSuccess(it)
-                }
-                ?.onError { error ->
-                    this.invokeError(error)
-                }
+            transform(result).onSuccess {
+                this.invokeSuccess(it)
+            }.onError { error ->
+                this.invokeError(error )
+            }
         }
 
         this@flatMap.onError { error ->
             this.invokeError(error)
         }
     }
+
 
 inline fun <R, E, V> ObservableTask<R, E>.map(crossinline transform: (R) -> V) =
     when (this) {

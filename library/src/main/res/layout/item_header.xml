@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.strv.chat.library.ui.view.RelativeTimeTextView
+    <com.strv.chat.library.core.ui.view.RelativeTimeTextView
         android:id="@+id/tv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -20,7 +20,7 @@ class CloudStorageMediaClient(
 ) : MediaClient {
 
     override fun uploadUrl(fileName: String): Task<UploadUrl, Throwable> = task {
-        invokeSuccess("$IMAGE_REFERENCE/$fileName")
+        invokeSuccess("$IMAGE_REFERENCE/$fileName.jpg")
     }
 
     override fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
