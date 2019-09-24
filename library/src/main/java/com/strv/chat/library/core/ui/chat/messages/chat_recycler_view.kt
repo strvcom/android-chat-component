@@ -2,6 +2,7 @@ package com.strv.chat.library.core.ui.chat.messages
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent.chatClient
@@ -18,6 +19,7 @@ import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logE
 import java.util.*
 
+
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -33,12 +35,27 @@ class ChatRecyclerView @JvmOverloads constructor(
     private lateinit var memberProvider: MemberProvider
     private lateinit var conversationProvider: ConversationProvider
 
-    init {
-        addOnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
-               // postDelayed({ scrollToPosition(0) }, 100)
+    private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
+        override fun onLayoutChange(
+            v: View?,
+            p1: Int,
+            p2: Int,
+            p3: Int,
+            bottom: Int,
+            p5: Int,
+            p6: Int,
+            p7: Int,
+            oldBottom: Int
+        ) {
+            if (bottom <= oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
+                scrollToPosition(0)
+                removeOnLayoutChangeListener(this)
             }
         }
+    }
+
+    init {
+        addOnLayoutChangeListener(onFirstLayoutChangeListener)
     }
 
     fun init(
@@ -99,7 +116,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
-            if (items.isNotEmpty()) postDelayed({ smoothScrollToPosition(0) }, 0)
+            if (items.isNotEmpty()) postDelayed({ smoothScrollToPosition(0) }, 100)
         }
     }
 
@@ -114,7 +131,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             adapter = ChatAdapter(binder ?: defaultChatItemBinder())
             setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
                 reverseLayout = true
-                stackFromEnd = false
+                stackFromEnd = true
                 setClipToPadding(false)
             })
             this@ChatRecyclerView.conversationProvider = conversationProvider
