@@ -10,7 +10,7 @@ import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.Binder
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.extensions.imageCircle
-import com.strv.chat.library.core.ui.extensions.imageUrl
+import com.strv.chat.library.core.ui.extensions.imageCenterCrop
 import com.strv.chat.library.core.ui.view.RelativeTimeTextView
 import com.strv.chat.library.core.ui.view.TimeTextView
 
@@ -101,7 +101,7 @@ internal class DefaultMyImageViewHolder(parent: ViewGroup) :
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(item: ChatItemView.MyImageMessage) {
-        image.imageUrl(item.imageUrl)
+        image.imageCenterCrop(item.imageUrl)
 
         textDate.run {
             date = item.sentDate
@@ -123,7 +123,7 @@ internal class DefaultOtherImageViewHolder(parent: ViewGroup) :
 
     override fun bind(item: ChatItemView.OtherImageMessage) {
         imageIcon.imageCircle(item.sender.userPhotoUrl)
-        image.imageUrl(item.imageUrl)
+        image.imageCenterCrop(item.imageUrl)
 
         textDate.run {
             date = item.sentDate

@@ -1,5 +1,6 @@
 package com.strv.chat.library.firestore.client
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.domain.client.ChatClient
@@ -17,17 +18,24 @@ import com.strv.chat.library.firestore.listSource
 import com.strv.chat.library.firestore.mapper.messageEntity
 import com.strv.chat.library.firestore.mapper.messageModels
 import com.strv.chat.library.firestore.mapper.seenEntity
+import java.util.*
 
 class FirestoreChatClient(
     val firebaseDb: FirebaseFirestore
 ) : ChatClient {
+
+    override fun messages(conversationId: String, startAfter: Date, limit: Long) =
+        firestoreListSource(firestoreChatMessages(firebaseDb, conversationId, Timestamp(startAfter)))
+            .get()
+            .map(::messageModels)
 
     override fun subscribeMessages(
         conversationId: String,
         limit: Long
     ) =
         firestoreListSource(firestoreChatMessages(firebaseDb, conversationId))
-            .subscribe().map(::messageModels)
+            .subscribe()
+            .map(::messageModels)
 
 
     override fun sendMessage(message: MessageModelRequest) =

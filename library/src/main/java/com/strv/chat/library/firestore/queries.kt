@@ -1,5 +1,6 @@
 package com.strv.chat.library.firestore
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,8 +37,8 @@ internal fun firestoreChatMessages(
 internal fun firestoreChatMessages(
     firestoreDb: FirebaseFirestore,
     conversationId: String,
-    limit: Long = 50,
-    startAfter: DocumentSnapshot
+    startAfter: Timestamp,
+    limit: Long = 50
 ) =
     firestoreDb
         .collection(CONVERSATIONS_COLLECTION)
