@@ -1,4 +1,4 @@
-package com.strv.chat.library.core.ui.conversation.mapper
+package com.strv.chat.library.core.ui.conversation.data.mapper
 
 import com.strv.chat.library.domain.model.ConversationModel
 import com.strv.chat.library.domain.model.MessageModelResponse

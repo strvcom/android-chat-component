@@ -9,7 +9,7 @@ import com.strv.chat.library.core.ui.conversation.adapter.ConversationAdapter
 import com.strv.chat.library.core.ui.conversation.adapter.ConversationBinder
 import com.strv.chat.library.core.ui.conversation.adapter.DefaultConversationBinder
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.library.core.ui.conversation.mapper.conversationItemView
+import com.strv.chat.library.core.ui.conversation.data.mapper.conversationItemView
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.provider.MemberProvider
