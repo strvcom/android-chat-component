@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.Binder
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.library.core.ui.extensions.imageCircle
+import com.strv.chat.library.core.ui.extensions.imageCircleUrl
 import com.strv.chat.library.core.ui.view.TimeTextView
 
 abstract class ConversationViewHolder(
@@ -26,7 +26,7 @@ internal class DefaultConversationViewHolder(
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_date)
 
     override fun bind(item: ConversationItemView) {
-        imageIcon.imageCircle(item.iconUrl)
+        imageIcon.imageCircleUrl(item.iconUrl)
         textUserName.text = item.title
         textLastMessage.text = item.message
         textDate.date = item.sentDate

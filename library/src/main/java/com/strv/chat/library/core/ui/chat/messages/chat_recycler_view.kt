@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent.chatClient
 import com.strv.chat.library.core.session.ChatComponent.defaultChatItemBinder
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
-import com.strv.chat.library.core.ui.chat.mapper.chatItemView
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image
+import com.strv.chat.library.core.ui.chat.data.mapper.chatItemView
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatItemBinder
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
 import com.strv.chat.library.domain.map
@@ -34,6 +36,8 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     private lateinit var memberProvider: MemberProvider
     private lateinit var conversationProvider: ConversationProvider
+
+    private var onImageClick: OnClickAction<Image>? = null
 
     private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
         override fun onLayoutChange(
@@ -86,7 +90,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 disposable.add(task)
             }
         }.map { model ->
-            chatItemView(model, memberProvider)
+            chatItemView(model, memberProvider, onImageClick)
         }.onNext { itemViews ->
             onMessagesChanged(itemViews)
         }.also { task ->
@@ -123,6 +127,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     inner class Builder(
         val conversationProvider: ConversationProvider,
         val memberProvider: MemberProvider,
+        var onImageClick: OnClickAction<Image>? = null,
         var binder: ChatItemBinder? = null,
         var layoutManager: LinearLayoutManager? = null
     ) {
@@ -136,6 +141,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             })
             this@ChatRecyclerView.conversationProvider = conversationProvider
             this@ChatRecyclerView.memberProvider = memberProvider
+            this@ChatRecyclerView.onImageClick = onImageClick
         }
     }
 }

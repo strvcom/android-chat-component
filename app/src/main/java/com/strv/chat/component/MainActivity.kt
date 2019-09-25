@@ -15,12 +15,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.strv.chat.library.cloudStorage.di.cloudStorageMediaClient
+import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
 import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
-import com.strv.chat.library.firestore.di.firestoreChatClient
 import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.library.core.ui.chat.sending.SendWidget
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
@@ -128,7 +127,11 @@ class MainActivity : AppCompatActivity() {
         chatRecyclerView.init(
             conversationProvider,
             memberProvider
-        )
+        ) {
+            onImageClick = { image ->
+                startActivity(ImageDetailActivity.newIntent(this@MainActivity, image.imageUrl))
+            }
+        }
 
         sendWidget.init(
             conversationProvider,
@@ -144,12 +147,14 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri!!))
+            val bitmap =
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri!!))
             sendWidget.uploadImage(uri!!)
         } else if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
             data?.data?.let { uri ->
-                val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
-                sendWidget.uploadImage(uri!!)
+                val bitmap =
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+                sendWidget.uploadImage(uri)
             }
         }
     }

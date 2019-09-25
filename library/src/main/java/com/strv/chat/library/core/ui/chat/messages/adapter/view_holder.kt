@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.Binder
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
-import com.strv.chat.library.core.ui.extensions.imageCircle
-import com.strv.chat.library.core.ui.extensions.imageCenterCrop
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
+import com.strv.chat.library.core.ui.extensions.imageCircleUrl
+import com.strv.chat.library.core.ui.extensions.imageCenterCropUrl
 import com.strv.chat.library.core.ui.view.RelativeTimeTextView
 import com.strv.chat.library.core.ui.view.TimeTextView
 
@@ -35,13 +37,13 @@ abstract class OtherMessageViewHolder(
 abstract class MyImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ChatItemView.MyImageMessage>,
+) : Binder<MyImageMessage>,
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
 
 abstract class OtherImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ChatItemView.OtherImageMessage>,
+) : Binder<OtherImageMessage>,
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
 
 internal class DefaultHeaderViewHolder(parent: ViewGroup) :
@@ -55,6 +57,7 @@ internal class DefaultHeaderViewHolder(parent: ViewGroup) :
 
 internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
     MyMessageViewHolder(parent, R.layout.item_my_message) {
+
     private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
 
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
@@ -80,7 +83,7 @@ internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(item: ChatItemView.OtherTextMessage) {
-        imageIcon.imageCircle(item.sender.userPhotoUrl)
+        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
         textMessage.text = item.text
 
         textDate.run {
@@ -100,12 +103,18 @@ internal class DefaultMyImageViewHolder(parent: ViewGroup) :
     private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
-    override fun bind(item: ChatItemView.MyImageMessage) {
-        image.imageCenterCrop(item.imageUrl)
+    override fun bind(item: MyImageMessage) {
+        image.imageCenterCropUrl(item.imageUrl)
 
         textDate.run {
             date = item.sentDate
             visibility = if (item.showSentDate) View.VISIBLE else View.GONE
+        }
+
+        item.onClick?.run {
+            image.setOnClickListener {
+                invoke(item)
+            }
         }
 
         itemView.setOnClickListener {
@@ -121,13 +130,19 @@ internal class DefaultOtherImageViewHolder(parent: ViewGroup) :
     private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
-    override fun bind(item: ChatItemView.OtherImageMessage) {
-        imageIcon.imageCircle(item.sender.userPhotoUrl)
-        image.imageCenterCrop(item.imageUrl)
+    override fun bind(item: OtherImageMessage) {
+        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
+        image.imageCenterCropUrl(item.imageUrl)
 
         textDate.run {
             date = item.sentDate
             visibility = if (item.showSentDate) View.VISIBLE else View.GONE
+        }
+
+        item.onClick?.run {
+            image.setOnClickListener {
+                invoke(item)
+            }
         }
 
         itemView.setOnClickListener {

@@ -1,4 +1,4 @@
-package com.strv.chat.library.core.ui.chat.mapper
+package com.strv.chat.library.core.ui.chat.data.mapper
 
 import com.strv.chat.library.domain.isDayEqual
 import com.strv.chat.library.domain.model.MessageModelResponse
@@ -7,16 +7,19 @@ import com.strv.chat.library.domain.model.MessageModelResponse.TextMessageModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.domain.runNonEmpty
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Header
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyImageMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherImageMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.*
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
 import com.strv.chat.library.core.ui.data.mapper.memberView
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 
-internal fun chatItemView(list: List<MessageModelResponse>, memberProvider: MemberProvider) =
+internal fun chatItemView(
+    list: List<MessageModelResponse>,
+    memberProvider: MemberProvider,
+    clickAction: OnClickAction<Image>? = null
+) =
     list
-        .map { model -> chatItemView(model, memberProvider) }
+        .map { model -> chatItemView(model, memberProvider, clickAction) }
         .let { items -> addHeaders(items) }
 
 private fun addHeaders(messageModels: List<ChatItemView>): List<ChatItemView> =
@@ -30,7 +33,11 @@ private fun addHeaders(messageModels: List<ChatItemView>): List<ChatItemView> =
         plus(Header(last().sentDate))
     }
 
-private fun chatItemView(model: MessageModelResponse, memberProvider: MemberProvider) =
+private fun chatItemView(
+    model: MessageModelResponse,
+    memberProvider: MemberProvider,
+    clickAction: OnClickAction<Image>? = null
+) =
     when (model) {
         is TextMessageModel -> {
             if (memberProvider.currentUserId() == model.senderId) {
@@ -53,14 +60,16 @@ private fun chatItemView(model: MessageModelResponse, memberProvider: MemberProv
                 MyImageMessage(
                     model.id,
                     model.sentDate,
-                    model.image.original
+                    model.image.original,
+                    clickAction
                 )
             } else {
                 OtherImageMessage(
                     model.id,
                     model.sentDate,
-                    memberView(memberProvider.member(model.senderId)),
-                    model.image.original
+                    model.image.original,
+                    clickAction,
+                    memberView(memberProvider.member(model.senderId))
                 )
             }
         }

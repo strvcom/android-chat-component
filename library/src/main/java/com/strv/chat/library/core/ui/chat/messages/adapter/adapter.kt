@@ -6,6 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Header
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
 
 class ChatAdapter(
     binder: ChatItemBinder
@@ -38,21 +43,21 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header)
-            is MyMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage)
-            is OtherMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage)
-            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage)
-            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage)
+            is HeaderViewHolder -> holder.bind(getItem(position) as Header)
+            is MyMessageViewHolder -> holder.bind(getItem(position) as MyTextMessage)
+            is OtherMessageViewHolder -> holder.bind(getItem(position) as OtherTextMessage)
+            is MyImageViewHolder -> holder.bind(getItem(position) as MyImageMessage)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as OtherImageMessage)
         }
     }
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is ChatItemView.Header -> R.layout.item_header
-            is ChatItemView.MyTextMessage -> R.layout.item_my_message
-            is ChatItemView.OtherTextMessage -> R.layout.item_other_message
-            is ChatItemView.MyImageMessage -> R.layout.item_my_image
-            is ChatItemView.OtherImageMessage -> R.layout.item_other_image
+            is Header -> R.layout.item_header
+            is MyTextMessage -> R.layout.item_my_message
+            is OtherTextMessage -> R.layout.item_other_message
+            is MyImageMessage -> R.layout.item_my_image
+            is OtherImageMessage -> R.layout.item_other_image
         }
 
     fun submitList(list: List<ChatItemView>) {
