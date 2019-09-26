@@ -19,7 +19,7 @@ class ChatRecyclerViewStyle private constructor(
 
             style.textMessageTextSize = typedArray.getDimensionPixelSize(
                 R.styleable.ChatRecyclerView_chrv_textMessageTextSize,
-                style.dimension(R.dimen.text_size_12)
+                style.defaultTextSize()
             )
 
             parseMyTextMessage(typedArray, style)
@@ -142,6 +142,9 @@ class ChatRecyclerViewStyle private constructor(
             } else {
                 requireNotNull(drawable(otherTextMessageBackground)) { "Drawable resource is not defined" }
             }
+
+    private fun defaultTextSize() =
+        dimension(R.dimen.text_message_text_size)
 
     private fun defaultMyMessageCornerRadius() =
         dimension(R.dimen.text_message_corner_radius)

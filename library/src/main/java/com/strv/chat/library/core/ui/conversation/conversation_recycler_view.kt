@@ -22,7 +22,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
     val attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr) {
+) : RecyclerView(context, attrs, defStyleAttr){
 
     private val disposable = LinkedList<Disposable>()
 
@@ -33,6 +33,12 @@ class ConversationRecyclerView @JvmOverloads constructor(
     private lateinit var memberProvider: MemberProvider
 
     private var style: ConversationRecyclerViewStyle? = null
+
+    init {
+        if (attrs != null) {
+            style = ConversationRecyclerViewStyle.parse(context, attrs)
+        }
+    }
 
     fun init(
         memberProvider: MemberProvider,

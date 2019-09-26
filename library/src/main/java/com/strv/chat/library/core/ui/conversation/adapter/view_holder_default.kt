@@ -1,5 +1,6 @@
 package com.strv.chat.library.core.ui.conversation.adapter
 
+import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -30,6 +31,12 @@ internal class DefaultConversationViewHolder(
     }
 
     override fun applyStyle(style: ConversationRecyclerViewStyle) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        textUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.titleTextSize.toFloat())
+        textUserName.setTextColor(style.titleTextColor)
+        textUserName.setTypeface(null, style.titleTextStyle)
+
+        textLastMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.messageTextSize.toFloat())
+        textLastMessage.setTextColor(style.messageTextColor)
+        textLastMessage.setTypeface(null, style.messageTextStyle)
     }
 }
