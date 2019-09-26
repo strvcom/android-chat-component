@@ -1,5 +1,6 @@
 package com.strv.chat.library.core.ui.chat.messages.adapter
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.strv.chat.library.core.ui.Binder
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
+import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.library.core.ui.extensions.imageCircleUrl
 import com.strv.chat.library.core.ui.extensions.imageCenterCropUrl
 import com.strv.chat.library.core.ui.view.RelativeTimeTextView
@@ -55,12 +57,13 @@ internal class DefaultHeaderViewHolder(parent: ViewGroup) :
     }
 }
 
-internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
+internal open class DefaultMyMessageViewHolder(parent: ViewGroup) :
     MyMessageViewHolder(parent, R.layout.item_my_message) {
 
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
+    protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
 
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
+
     override fun bind(item: ChatItemView.MyTextMessage) {
         textMessage.text = item.text
 
@@ -75,11 +78,29 @@ internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
     }
 }
 
-internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
+internal class StyleableMyMessageViewHolder(
+    parent: ViewGroup,
+    private val style: ChatRecyclerViewStyle
+) : DefaultMyMessageViewHolder(parent) {
+
+    override fun bind(item: ChatItemView.MyTextMessage) {
+        applyStyle(style)
+        super.bind(item)
+    }
+
+    private fun applyStyle(style: ChatRecyclerViewStyle) {
+        textMessage.background = style.myTextMessageBackgroundDrawable
+        textMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.textMessageTextSize.toFloat())
+        textMessage.setTextColor(style.myTextMessageTextColor)
+    }
+}
+
+internal open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     OtherMessageViewHolder(parent, R.layout.item_other_message) {
 
+    protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
+
     private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(item: ChatItemView.OtherTextMessage) {
@@ -94,6 +115,23 @@ internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
         itemView.setOnClickListener {
             bind(item.copy(showSentDate = !item.showSentDate))
         }
+    }
+}
+
+internal class StyleableOtherMessageViewHolder(
+    parent: ViewGroup,
+    private val style: ChatRecyclerViewStyle
+) : DefaultOtherMessageViewHolder(parent) {
+
+    override fun bind(item: ChatItemView.OtherTextMessage) {
+        super.bind(item)
+        applyStyle(style)
+    }
+
+    private fun applyStyle(style: ChatRecyclerViewStyle) {
+        textMessage.background = style.otherTextMessageBackgroundDrawable
+        textMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.textMessageTextSize.toFloat())
+        textMessage.setTextColor(style.otherTextMessageTextColor)
     }
 }
 

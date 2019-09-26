@@ -1,6 +1,7 @@
 package com.strv.chat.library.core.ui.chat.messages.adapter
 
 import android.view.ViewGroup
+import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
 
 interface ChatItemBinder {
 
@@ -22,3 +23,16 @@ interface ChatItemBinder {
 }
 
 class DefaultChatItemBinder: ChatItemBinder
+
+class StyleableChatItemBinder(
+    val style: ChatRecyclerViewStyle
+) : ChatItemBinder {
+
+    override fun myMessageBinder(parent: ViewGroup): MyMessageViewHolder {
+        return StyleableMyMessageViewHolder(parent, style)
+    }
+
+    override fun otherMessageBinder(parent: ViewGroup): OtherMessageViewHolder {
+        return StyleableOtherMessageViewHolder(parent, style)
+    }
+}

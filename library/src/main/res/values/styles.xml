@@ -9,7 +9,7 @@
     </style>
 
     <style name="TextAppearance.Chat.Component.Date" parent="@style/TextAppearance.Chat.Component.Caption">
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">?android:textColorHint</item>
     </style>
 
     <style name="TextAppearance.Chat.Component.Message" parent="@style/TextAppearance.AppCompat.Body1">

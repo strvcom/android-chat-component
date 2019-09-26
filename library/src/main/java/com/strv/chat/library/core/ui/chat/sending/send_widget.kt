@@ -1,24 +1,26 @@
 package com.strv.chat.library.core.ui.chat.sending
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.strv.chat.library.R
 import com.strv.chat.library.core.session.ChatComponent.chatClient
+import com.strv.chat.library.core.ui.chat.sending.style.SendWidgetStyle
 import com.strv.chat.library.core.ui.extensions.openCamera
 import com.strv.chat.library.core.ui.extensions.openGalleryPhotoPicker
 import com.strv.chat.library.core.ui.extensions.reset
 import com.strv.chat.library.core.ui.extensions.selector
+import com.strv.chat.library.core.ui.extensions.tint
 import com.strv.chat.library.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.model.MessageModelRequest
-import com.strv.chat.library.domain.model.MessageModelRequest.ImageMessageModel.Image
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
 import com.strv.chat.library.domain.provider.MemberProvider
@@ -29,9 +31,9 @@ import java.util.*
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
+    val attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val disposable = LinkedList<Disposable>()
 
@@ -53,6 +55,11 @@ class SendWidget @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_send_widget, this)
+
+        if (attrs != null) {
+            applyStyle(SendWidgetStyle.parse(context, attrs))
+        }
+
         buttonSendListener()
         buttonCameraListener()
     }
@@ -65,8 +72,7 @@ class SendWidget @JvmOverloads constructor(
     ) {
         Builder(conversationProvider, memberProvider, mediaProvider).apply(
             config
-        )
-            .build()
+        ).build()
     }
 
     fun onStop() {
@@ -95,17 +101,6 @@ class SendWidget @JvmOverloads constructor(
                 )
             )
         }
-    }
-
-
-    private fun sendImageMessage(messageUrl: String) {
-        sendMessage(
-            MessageModelRequest.ImageMessageModel(
-                senderId = memberProvider.currentUserId(),
-                conversationId = conversationProvider.conversationId,
-                image = Image(0.0, 0.0, messageUrl.toString())
-            )
-        )
     }
 
     private fun buttonSendListener() {
@@ -158,6 +153,11 @@ class SendWidget @JvmOverloads constructor(
                     logD("Message $it has been sent")
                 }
         )
+    }
+
+    private fun applyStyle(style: SendWidgetStyle) {
+        setBackgroundColor(style.backgroundColor)
+        buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
     }
 
     inner class Builder(

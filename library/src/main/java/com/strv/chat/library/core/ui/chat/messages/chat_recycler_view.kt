@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent.chatClient
 import com.strv.chat.library.core.session.ChatComponent.defaultChatItemBinder
+import com.strv.chat.library.core.session.ChatComponent.styleableChatItemBinder
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image
 import com.strv.chat.library.core.ui.chat.data.mapper.chatItemView
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatItemBinder
+import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
@@ -24,7 +26,7 @@ import java.util.*
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
+    val attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
@@ -58,8 +60,14 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
     }
 
+    private var style: ChatRecyclerViewStyle? = null
+
     init {
         addOnLayoutChangeListener(onFirstLayoutChangeListener)
+
+        if (attrs != null) {
+            style = ChatRecyclerViewStyle.parse(context, attrs)
+        }
     }
 
     fun init(
@@ -133,7 +141,13 @@ class ChatRecyclerView @JvmOverloads constructor(
     ) {
 
         fun build() {
-            adapter = ChatAdapter(binder ?: defaultChatItemBinder())
+            chatAdapter = ChatAdapter(
+                binder ?: if (this@ChatRecyclerView.style != null) {
+                    styleableChatItemBinder(style!!)
+                } else {
+                    defaultChatItemBinder()
+                }
+            )
             setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
                 reverseLayout = true
                 stackFromEnd = true

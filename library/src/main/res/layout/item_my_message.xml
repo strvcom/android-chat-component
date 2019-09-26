@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!--    android:onClick="@{() -> listener.onMessageClick(item)}"-->
 
     <TextView
         android:id="@+id/tv_message"
@@ -16,14 +15,12 @@
         android:layout_marginEnd="@dimen/spacing_8"
         android:layout_marginBottom="@dimen/spacing_8"
         android:autoLink="web|phone|email"
-        android:background="@drawable/bg_rectangle_rounded"
         android:gravity="center_vertical"
         android:lineSpacingExtra="@dimen/spacing_2"
         android:paddingStart="@dimen/spacing_16"
         android:paddingTop="@dimen/spacing_8"
         android:paddingEnd="@dimen/spacing_24"
         android:paddingBottom="10dp"
-        android:textAppearance="@style/TextAppearance.Chat.Component.Message"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

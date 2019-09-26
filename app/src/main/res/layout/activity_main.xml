@@ -29,6 +29,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingTop="@dimen/spacing_16"
+        app:chrv_otherTextMessageBackgroundColor="@color/blue"
+        app:chrv_myTextMessageBackgroundColor="@color/blue"
         app:layout_constraintBottom_toTopOf="@+id/w_send"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

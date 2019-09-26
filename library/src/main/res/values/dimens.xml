@@ -15,4 +15,7 @@
     <dimen name="spacing_4">4dp</dimen>
     <dimen name="spacing_6">6dp</dimen>
 
+    <dimen name="text_message_corner_radius">20dp</dimen>
+    <dimen name="text_message_stroke_width">2dp</dimen>
+
 </resources>
