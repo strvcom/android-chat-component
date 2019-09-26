@@ -1,152 +1,44 @@
 package com.strv.chat.library.core.ui.chat.messages.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.library.R
-import com.strv.chat.library.core.ui.Binder
+import com.strv.chat.library.core.ui.Bindable
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.Header
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
-import com.strv.chat.library.core.ui.extensions.imageCircleUrl
-import com.strv.chat.library.core.ui.extensions.imageCenterCropUrl
-import com.strv.chat.library.core.ui.view.RelativeTimeTextView
-import com.strv.chat.library.core.ui.view.TimeTextView
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
+
+abstract class ChatViewHolder<T : ChatItemView>(
+    parent: ViewGroup,
+    layoutId: Int
+) : Bindable<T>,
+    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
 
 abstract class HeaderViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ChatItemView.Header>,
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : ChatViewHolder<Header>(parent, layoutId)
 
-abstract class MyMessageViewHolder(
+abstract class MyTextMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ChatItemView.MyTextMessage>,
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : ChatViewHolder<MyTextMessage>(parent, layoutId)
 
-abstract class OtherMessageViewHolder(
+abstract class OtherTextMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ChatItemView.OtherTextMessage>,
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : ChatViewHolder<OtherTextMessage>(parent, layoutId)
 
 abstract class MyImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<MyImageMessage>,
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : ChatViewHolder<MyImageMessage>(parent, layoutId)
 
 abstract class OtherImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<OtherImageMessage>,
-    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : ChatViewHolder<OtherImageMessage>(parent, layoutId)
 
-internal class DefaultHeaderViewHolder(parent: ViewGroup) :
-    HeaderViewHolder(parent, R.layout.item_header) {
-    private val textDate = itemView.findViewById<RelativeTimeTextView>(R.id.tv_date)
-
-    override fun bind(item: ChatItemView.Header) {
-        textDate.date = item.sentDate
-    }
-}
-
-internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
-    MyMessageViewHolder(parent, R.layout.item_my_message) {
-
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
-
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
-    override fun bind(item: ChatItemView.MyTextMessage) {
-        textMessage.text = item.text
-
-        textDate.run {
-            date = item.sentDate
-            visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate))
-        }
-    }
-}
-
-internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
-    OtherMessageViewHolder(parent, R.layout.item_other_message) {
-
-    private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
-
-    override fun bind(item: ChatItemView.OtherTextMessage) {
-        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
-        textMessage.text = item.text
-
-        textDate.run {
-            date = item.sentDate
-            visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate))
-        }
-    }
-}
-
-internal class DefaultMyImageViewHolder(parent: ViewGroup) :
-    MyImageViewHolder(parent, R.layout.item_my_image) {
-
-    private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
-
-    override fun bind(item: MyImageMessage) {
-        image.imageCenterCropUrl(item.imageUrl)
-
-        textDate.run {
-            date = item.sentDate
-            visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        item.onClick?.run {
-            image.setOnClickListener {
-                invoke(item)
-            }
-        }
-
-        itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate))
-        }
-    }
-}
-
-internal class DefaultOtherImageViewHolder(parent: ViewGroup) :
-    OtherImageViewHolder(parent, R.layout.item_other_image) {
-
-    private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
-    private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
-
-    override fun bind(item: OtherImageMessage) {
-        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
-        image.imageCenterCropUrl(item.imageUrl)
-
-        textDate.run {
-            date = item.sentDate
-            visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        item.onClick?.run {
-            image.setOnClickListener {
-                invoke(item)
-            }
-        }
-
-        itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate))
-        }
-    }
-}

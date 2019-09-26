@@ -4,17 +4,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Header
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
+import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
 
 class ChatAdapter(
-    binder: ChatItemBinder
-) : ChatItemBinder by binder, RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val chatViewHolderProvider: ChatViewHolderProvider,
+    private val style: ChatRecyclerViewStyle?
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {
 
         override fun areItemsTheSame(oldItem: ChatItemView, newItem: ChatItemView): Boolean {
@@ -32,32 +29,25 @@ class ChatAdapter(
         differ.currentList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        when (viewType) {
-            R.layout.item_header -> headerBinder(parent)
-            R.layout.item_my_message -> myMessageBinder(parent)
-            R.layout.item_other_message -> otherMessageBinder(parent)
-            R.layout.item_my_image -> myImageBinder(parent)
-            R.layout.item_other_image -> otherImageBinder(parent)
-            else -> throw IllegalArgumentException("Undefined message type")
-        }
+        chatViewHolderProvider.holder(parent, viewType, style)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.bind(getItem(position) as Header)
-            is MyMessageViewHolder -> holder.bind(getItem(position) as MyTextMessage)
-            is OtherMessageViewHolder -> holder.bind(getItem(position) as OtherTextMessage)
-            is MyImageViewHolder -> holder.bind(getItem(position) as MyImageMessage)
-            is OtherImageViewHolder -> holder.bind(getItem(position) as OtherImageMessage)
+            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header)
+            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage)
+            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage)
+            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.MyImageMessage)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.OtherImageMessage)
         }
     }
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is Header -> R.layout.item_header
-            is MyTextMessage -> R.layout.item_my_message
-            is OtherTextMessage -> R.layout.item_other_message
-            is MyImageMessage -> R.layout.item_my_image
-            is OtherImageMessage -> R.layout.item_other_image
+            is ChatItemView.Header -> ChatViewType.HEADER.id
+            is ChatItemView.MyTextMessage -> ChatViewType.MY_TEXT_MESSAGE.id
+            is ChatItemView.OtherTextMessage -> ChatViewType.OTHER_TEXT_MESSAGE.id
+            is ChatItemView.Image.MyImageMessage -> ChatViewType.MY_IMAGE_MESSAGE.id
+            is ChatItemView.Image.OtherImageMessage -> ChatViewType.OTHER_IMAGE_MESSAGE.id
         }
 
     fun submitList(list: List<ChatItemView>) {

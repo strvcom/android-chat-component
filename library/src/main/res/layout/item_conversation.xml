@@ -30,11 +30,12 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginRight="@dimen/spacing_16"
         android:text="@{item.otherUser.name}"
-        android:textAppearance="@style/TextAppearance.Chat.Component.Title"
         app:layout_constraintBottom_toTopOf="@+id/tv_message"
         app:layout_constraintEnd_toStartOf="@+id/tv_date"
         app:layout_constraintStart_toEndOf="@+id/iv_photo"
         app:layout_constraintTop_toTopOf="@+id/iv_photo"
+        tools:textSize="@dimen/conversation_title_text_size"
+        tools:textStyle="bold"
         tools:text="Username" />
 
     <TextView

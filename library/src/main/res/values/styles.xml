@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--    todo how to do style attributes in a library-->
-
-    <style name="TextAppearance.Chat.Component.Caption" parent="@style/TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">@dimen/text_size_12</item>
+    <style name="TextAppearance.Chat.Component.Date" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">@dimen/text_message_text_size</item>
         <item name="android:textColor">?android:textColorSecondary</item>
-    </style>
-
-    <style name="TextAppearance.Chat.Component.Date" parent="@style/TextAppearance.Chat.Component.Caption">
-        <item name="android:textColor">@color/gray</item>
-    </style>
-
-    <style name="TextAppearance.Chat.Component.Message" parent="@style/TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_size_14</item>
-    </style>
-
-    <style name="TextAppearance.Chat.Component.Title" parent="@style/TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textSize">@dimen/text_size_20</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
