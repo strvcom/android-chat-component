@@ -5,11 +5,13 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent
+import com.strv.chat.library.core.session.ChatComponent.conversationAdapter
+import com.strv.chat.library.core.session.ChatComponent.conversationViewHolderProvider
 import com.strv.chat.library.core.ui.conversation.adapter.ConversationAdapter
-import com.strv.chat.library.core.ui.conversation.adapter.ConversationBinder
-import com.strv.chat.library.core.ui.conversation.adapter.DefaultConversationBinder
+import com.strv.chat.library.core.ui.conversation.adapter.ConversationViewHolderProvider
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.core.ui.conversation.data.mapper.conversationItemView
+import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.provider.MemberProvider
@@ -18,7 +20,7 @@ import java.util.*
 
 class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
+    val attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
@@ -30,11 +32,17 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private lateinit var memberProvider: MemberProvider
 
+    private var style: ConversationRecyclerViewStyle? = null
+
     fun init(
         memberProvider: MemberProvider,
         config: Builder.() -> Unit = {}
     ) {
         Builder(memberProvider).apply(config).build()
+
+        if (attrs != null) {
+            style = ConversationRecyclerViewStyle.parse(context, attrs)
+        }
     }
 
     fun onStart(onItemClick: OnClickAction<ConversationItemView>) =
@@ -61,14 +69,13 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     inner class Builder(
         val memberProvider: MemberProvider,
-        var binder: ConversationBinder? = null,
+        var viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
         var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
             this@ConversationRecyclerView.memberProvider = memberProvider
-            //todo consider using component root provider
-            adapter = ConversationAdapter(binder ?: DefaultConversationBinder())
+            adapter = conversationAdapter(viewHolderProvider, style)
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
         }
     }

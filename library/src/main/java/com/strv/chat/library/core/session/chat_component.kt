@@ -1,7 +1,12 @@
 package com.strv.chat.library.core.session
 
 import com.strv.chat.library.core.session.config.Configuration
-import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolders
+import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
+import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolderProvider
+import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
+import com.strv.chat.library.core.ui.conversation.adapter.ConversationAdapter
+import com.strv.chat.library.core.ui.conversation.adapter.ConversationViewHolderProvider
+import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerViewStyle
 
 object ChatComponent {
 
@@ -21,5 +26,10 @@ object ChatComponent {
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
-    internal fun chatViewHolders() = ChatViewHolders()
+    internal fun chatAdapter(chatViewHolderProvider: ChatViewHolderProvider, style: ChatRecyclerViewStyle?) = ChatAdapter(chatViewHolderProvider, style)
+    internal fun chatViewHolderProvider() = ChatViewHolderProvider()
+
+    internal fun conversationAdapter(conversationViewHolderProvider: ConversationViewHolderProvider, style: ConversationRecyclerViewStyle?) =
+        ConversationAdapter(conversationViewHolderProvider, style)
+    internal fun conversationViewHolderProvider() = ConversationViewHolderProvider()
 }

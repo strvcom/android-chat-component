@@ -11,7 +11,7 @@ import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMess
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
 
-abstract class ChatViewHolderBetter<T : ChatItemView>(
+abstract class ChatViewHolder<T : ChatItemView>(
     parent: ViewGroup,
     layoutId: Int
 ) : Bindable<T>,
@@ -20,25 +20,25 @@ abstract class ChatViewHolderBetter<T : ChatItemView>(
 abstract class HeaderViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : ChatViewHolderBetter<Header>(parent, layoutId)
+) : ChatViewHolder<Header>(parent, layoutId)
 
 abstract class MyTextMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : ChatViewHolderBetter<MyTextMessage>(parent, layoutId)
+) : ChatViewHolder<MyTextMessage>(parent, layoutId)
 
 abstract class OtherTextMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : ChatViewHolderBetter<OtherTextMessage>(parent, layoutId)
+) : ChatViewHolder<OtherTextMessage>(parent, layoutId)
 
 abstract class MyImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : ChatViewHolderBetter<MyImageMessage>(parent, layoutId)
+) : ChatViewHolder<MyImageMessage>(parent, layoutId)
 
 abstract class OtherImageViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : ChatViewHolderBetter<OtherImageMessage>(parent, layoutId)
+) : ChatViewHolder<OtherImageMessage>(parent, layoutId)
 

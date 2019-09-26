@@ -1,8 +1,7 @@
 package com.strv.chat.library.core.ui.chat.messages.adapter
 
 import com.strv.chat.library.R
-
-typealias LayoutId = Int
+import com.strv.chat.library.core.ui.extensions.LayoutId
 
 enum class ChatViewType(val id: LayoutId) {
     HEADER(R.layout.item_header),

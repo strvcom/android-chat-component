@@ -8,7 +8,7 @@ import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
 
 class ChatAdapter(
-    private val chatViewHolders: ChatViewHolders,
+    private val chatViewHolderProvider: ChatViewHolderProvider,
     private val style: ChatRecyclerViewStyle?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -29,14 +29,26 @@ class ChatAdapter(
         differ.currentList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        chatViewHolders.holder(parent, viewType, style)
+        chatViewHolderProvider.holder(parent, viewType, style)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        chatViewHolders.bind(holder, getItem(position))
+        when (holder) {
+            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header)
+            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage)
+            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage)
+            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.MyImageMessage)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.OtherImageMessage)
+        }
     }
 
     override fun getItemViewType(position: Int): Int =
-        chatViewHolders.itemViewType(getItem(position))
+        when (getItem(position)) {
+            is ChatItemView.Header -> ChatViewType.HEADER.id
+            is ChatItemView.MyTextMessage -> ChatViewType.MY_TEXT_MESSAGE.id
+            is ChatItemView.OtherTextMessage -> ChatViewType.OTHER_TEXT_MESSAGE.id
+            is ChatItemView.Image.MyImageMessage -> ChatViewType.MY_IMAGE_MESSAGE.id
+            is ChatItemView.Image.OtherImageMessage -> ChatViewType.OTHER_IMAGE_MESSAGE.id
+        }
 
     fun submitList(list: List<ChatItemView>) {
         differ.submitList(list)

@@ -6,13 +6,14 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent
+import com.strv.chat.library.core.session.ChatComponent.chatAdapter
 import com.strv.chat.library.core.session.ChatComponent.chatClient
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image
 import com.strv.chat.library.core.ui.chat.data.mapper.chatItemView
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
+import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
-import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolders
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
@@ -21,7 +22,6 @@ import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logE
 import java.util.*
-
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -134,13 +134,13 @@ class ChatRecyclerView @JvmOverloads constructor(
     inner class Builder(
         val conversationProvider: ConversationProvider,
         val memberProvider: MemberProvider,
-        var viewHolders: ChatViewHolders = ChatComponent.chatViewHolders(),
+        var viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
         var onImageClick: OnClickAction<Image>? = null,
         var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
-            chatAdapter = ChatAdapter(viewHolders, style)
+            chatAdapter = chatAdapter(viewHolderProvider, style)
             setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
                 reverseLayout = true
                 stackFromEnd = true
