@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.R
-import com.strv.chat.library.core.ui.Binder
+import com.strv.chat.library.core.ui.Bindable
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.core.ui.extensions.imageCircleUrl
 import com.strv.chat.library.core.ui.view.TimeTextView
@@ -14,7 +14,8 @@ import com.strv.chat.library.core.ui.view.TimeTextView
 abstract class ConversationViewHolder(
     parent: ViewGroup,
     layoutId: Int
-) : Binder<ConversationItemView>, RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+) : Bindable<ConversationItemView>,
+    RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
 
 internal class DefaultConversationViewHolder(
     parent: ViewGroup

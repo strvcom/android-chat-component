@@ -11,6 +11,11 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.strv.chat.library.R
 
+interface Styleable<T: Style> {
+
+    fun applyStyle(style: T)
+}
+
 abstract class Style(
     val context: Context
 ) {

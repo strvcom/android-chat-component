@@ -1,9 +1,7 @@
 package com.strv.chat.library.core.session
 
 import com.strv.chat.library.core.session.config.Configuration
-import com.strv.chat.library.core.ui.chat.messages.adapter.DefaultChatItemBinder
-import com.strv.chat.library.core.ui.chat.messages.adapter.StyleableChatItemBinder
-import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
+import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolders
 
 object ChatComponent {
 
@@ -23,6 +21,5 @@ object ChatComponent {
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
-    internal fun defaultChatItemBinder() = DefaultChatItemBinder()
-    internal fun styleableChatItemBinder(style: ChatRecyclerViewStyle) = StyleableChatItemBinder(style)
+    internal fun chatViewHolders() = ChatViewHolders()
 }
