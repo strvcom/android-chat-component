@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.strv.chat.library.R
 import com.strv.chat.library.core.session.ChatComponent.chatClient
+import com.strv.chat.library.core.session.ChatComponent.memberProvider
 import com.strv.chat.library.core.ui.chat.sending.style.SendWidgetStyle
 import com.strv.chat.library.core.ui.extensions.openCamera
 import com.strv.chat.library.core.ui.extensions.openGalleryPhotoPicker
@@ -23,10 +24,8 @@ import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.model.MessageInputModel
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
-import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logD
 import strv.ktools.logE
-import strv.ktools.logMe
 import java.util.*
 
 class SendWidget @JvmOverloads constructor(
@@ -37,7 +36,6 @@ class SendWidget @JvmOverloads constructor(
 
     private val disposable = LinkedList<Disposable>()
 
-    private lateinit var memberProvider: MemberProvider
     private lateinit var conversationProvider: ConversationProvider
     private lateinit var mediaProvider: MediaProvider
 
@@ -66,11 +64,10 @@ class SendWidget @JvmOverloads constructor(
 
     fun init(
         conversationProvider: ConversationProvider,
-        memberProvider: MemberProvider,
         mediaProvider: MediaProvider,
         config: Builder.() -> Unit = {}
     ) {
-        Builder(conversationProvider, memberProvider, mediaProvider).apply(
+        Builder(conversationProvider, mediaProvider).apply(
             config
         ).build()
     }
@@ -87,7 +84,7 @@ class SendWidget @JvmOverloads constructor(
                 UploadPhotoService.newIntent(
                     context,
                     uri.toString(),
-                    memberProvider.currentUserId(),
+                    memberProvider().currentUserId(),
                     conversationProvider.conversationId
                 )
             )
@@ -96,7 +93,7 @@ class SendWidget @JvmOverloads constructor(
                 UploadPhotoService.newIntent(
                     context,
                     uri.toString(),
-                    memberProvider.currentUserId(),
+                    memberProvider().currentUserId(),
                     conversationProvider.conversationId
                 )
             )
@@ -106,7 +103,7 @@ class SendWidget @JvmOverloads constructor(
     private fun buttonSendListener() {
         buttonSend.setOnClickListener {
             if (editInput.text.isNotBlank()) {
-                sendTextMessage(memberProvider.currentUserId(), editInput.text.toString())
+                sendTextMessage(memberProvider().currentUserId(), editInput.text.toString())
                 editInput.reset()
             }
         }
@@ -123,7 +120,6 @@ class SendWidget @JvmOverloads constructor(
         selector("Choose photo", arrayOf("Take photo", "Select from library")) {
             onClick { position ->
                 val uri = mediaProvider.imageUri()
-                uri.logMe()
                 when (position) {
                     //todo how to pass application name here
 
@@ -162,12 +158,10 @@ class SendWidget @JvmOverloads constructor(
 
     inner class Builder(
         val conversationProvider: ConversationProvider,
-        val memberProvider: MemberProvider,
         val mediaProvider: MediaProvider
     ) {
 
         fun build() {
-            this@SendWidget.memberProvider = memberProvider
             this@SendWidget.conversationProvider = conversationProvider
             this@SendWidget.mediaProvider = mediaProvider
         }

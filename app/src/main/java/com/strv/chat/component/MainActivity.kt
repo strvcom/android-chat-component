@@ -124,13 +124,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         chatRecyclerView.init(
-            conversationProvider,
-            memberProvider
+            conversationProvider
         )
 
         sendWidget.init(
             conversationProvider,
-            memberProvider,
             mediaProvider
         )
     }

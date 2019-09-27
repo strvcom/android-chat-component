@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent
 import com.strv.chat.library.core.session.ChatComponent.conversationAdapter
 import com.strv.chat.library.core.session.ChatComponent.conversationViewHolderProvider
+import com.strv.chat.library.core.session.ChatComponent.memberProvider
 import com.strv.chat.library.core.ui.conversation.adapter.ConversationAdapter
 import com.strv.chat.library.core.ui.conversation.adapter.ConversationViewHolderProvider
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
@@ -14,7 +15,6 @@ import com.strv.chat.library.core.ui.conversation.data.mapper.conversationItemVi
 import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
-import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logE
 import java.util.*
 
@@ -30,8 +30,6 @@ class ConversationRecyclerView @JvmOverloads constructor(
         get() = super.getAdapter() as ConversationAdapter
         private set(value) = super.setAdapter(value)
 
-    private lateinit var memberProvider: MemberProvider
-
     private var style: ConversationRecyclerViewStyle? = null
 
     init {
@@ -41,10 +39,9 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     fun init(
-        memberProvider: MemberProvider,
         config: Builder.() -> Unit = {}
     ) {
-        Builder(memberProvider).apply(config).build()
+        Builder().apply(config).build()
 
         if (attrs != null) {
             style = ConversationRecyclerViewStyle.parse(context, attrs)
@@ -53,11 +50,11 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     fun onStart(onItemClick: OnClickAction<ConversationItemView>) =
         ChatComponent.conversationClient().subscribeConversations(
-            memberProvider.currentUserId()
+            memberProvider().currentUserId()
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { model ->
-            conversationItemView(model, memberProvider, onItemClick).also(::onConversationsChanged)
+            conversationItemView(model, memberProvider(), onItemClick).also(::onConversationsChanged)
         }.also { task ->
             disposable.add(task)
         }
@@ -74,13 +71,11 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
-        val memberProvider: MemberProvider,
         var viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
         var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
-            this@ConversationRecyclerView.memberProvider = memberProvider
             adapter = conversationAdapter(viewHolderProvider, style)
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
         }

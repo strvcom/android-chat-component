@@ -20,6 +20,8 @@ object ChatComponent {
     internal fun conversationClient() = configuration.conversationClient
     internal fun mediaClient() = configuration.mediaClient
 
+    internal fun memberProvider() = configuration.memberProvider
+
     internal fun channelId() = configuration.serviceConfig.channelId
     internal fun largeIconRes() = configuration.serviceConfig.largeIconRes
     internal fun smallIconProgressRes() = configuration.serviceConfig.smallIconProgressRes
