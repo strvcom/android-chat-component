@@ -8,12 +8,9 @@ import androidx.annotation.RequiresApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.strv.chat.component.di.CompositionRoot
-import com.strv.chat.library.cloudStorage.di.cloudStorageMediaClient
 import com.strv.chat.library.core.session.ChatComponent
 import com.strv.chat.library.core.session.config.Configuration
 import com.strv.chat.library.core.ui.extensions.serviceConfig
-import com.strv.chat.library.firestore.di.firestoreChatClient
-import com.strv.chat.library.firestore.di.firestoreConversationClient
 
 private const val CHANNEL_ID = "upload"
 private const val CHANNEL_DESCRIPTION = "ImageModel upload"
@@ -59,9 +56,9 @@ class App : Application() {
 
         ChatComponent.init(
             Configuration(
-                firestoreChatClient(firestoreDb),
-                firestoreConversationClient(firestoreDb),
-                cloudStorageMediaClient(firebaseStorage),
+                compositionRoot.chatClient(firestoreDb),
+                compositionRoot.conversationClient(firestoreDb),
+                compositionRoot.mediaClient(firebaseStorage),
                 serviceConfig("upload"),
                 compositionRoot.memberProvider()
             )
