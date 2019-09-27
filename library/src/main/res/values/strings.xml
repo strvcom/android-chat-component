@@ -7,4 +7,8 @@
     <string name="uploading_photo">Uploading photo…</string>
     <string name="photo_was_not_uploaded">Photo was not uploaded</string>
     <string name="photo_was_uploaded">Photo was uploaded</string>
+    <string name="choose_photo">Choose photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="select_from_library">Select from library</string>
+    <string name="select_photo">Select photo</string>
 </resources>

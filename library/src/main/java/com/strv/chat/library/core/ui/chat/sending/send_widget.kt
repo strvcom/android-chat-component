@@ -22,7 +22,6 @@ import com.strv.chat.library.core.ui.extensions.tint
 import com.strv.chat.library.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.model.MessageInputModel
-import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
 import strv.ktools.logD
 import strv.ktools.logE
@@ -36,7 +35,7 @@ class SendWidget @JvmOverloads constructor(
 
     private val disposable = LinkedList<Disposable>()
 
-    private lateinit var conversationProvider: ConversationProvider
+    private lateinit var conversationId: String
     private lateinit var mediaProvider: MediaProvider
 
     private val buttonSend by lazy {
@@ -63,13 +62,11 @@ class SendWidget @JvmOverloads constructor(
     }
 
     fun init(
-        conversationProvider: ConversationProvider,
-        mediaProvider: MediaProvider,
-        config: Builder.() -> Unit = {}
+        conversationId: String,
+        mediaProvider: MediaProvider
     ) {
-        Builder(conversationProvider, mediaProvider).apply(
-            config
-        ).build()
+        this@SendWidget.conversationId = conversationId
+        this@SendWidget.mediaProvider = mediaProvider
     }
 
     fun onStop() {
@@ -85,7 +82,7 @@ class SendWidget @JvmOverloads constructor(
                     context,
                     uri.toString(),
                     memberProvider().currentUserId(),
-                    conversationProvider.conversationId
+                    conversationId
                 )
             )
         } else {
@@ -94,7 +91,7 @@ class SendWidget @JvmOverloads constructor(
                     context,
                     uri.toString(),
                     memberProvider().currentUserId(),
-                    conversationProvider.conversationId
+                    conversationId
                 )
             )
         }
@@ -117,14 +114,18 @@ class SendWidget @JvmOverloads constructor(
 
     private fun showPhotoPickerDialog() {
         //todo update
-        selector("Choose photo", arrayOf("Take photo", "Select from library")) {
+        selector(
+            context.getString(R.string.choose_photo),
+            arrayOf(
+                context.getString(R.string.take_photo),
+                context.getString(R.string.select_from_library)
+            )
+        ) {
             onClick { position ->
-                val uri = mediaProvider.imageUri()
+                val uri = mediaProvider.newImageUri(requireContext())
                 when (position) {
-                    //todo how to pass application name here
-
                     0 -> activity?.openCamera(uri)
-                    1 -> activity?.openGalleryPhotoPicker("Select photo")
+                    1 -> activity?.openGalleryPhotoPicker(getString(R.string.select_photo))
                 }
             }
         }.show((context as FragmentActivity).supportFragmentManager, DIALOG_PHOTO_PICKER)
@@ -134,7 +135,7 @@ class SendWidget @JvmOverloads constructor(
         sendMessage(
             MessageInputModel.TextInputModel(
                 senderId = userId,
-                conversationId = conversationProvider.conversationId,
+                conversationId = conversationId,
                 text = message
             )
         )
@@ -154,16 +155,5 @@ class SendWidget @JvmOverloads constructor(
     private fun applyStyle(style: SendWidgetStyle) {
         setBackgroundColor(style.backgroundColor)
         buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
-    }
-
-    inner class Builder(
-        val conversationProvider: ConversationProvider,
-        val mediaProvider: MediaProvider
-    ) {
-
-        fun build() {
-            this@SendWidget.conversationProvider = conversationProvider
-            this@SendWidget.mediaProvider = mediaProvider
-        }
     }
 }
