@@ -1,18 +1,16 @@
 package com.strv.chat.library.core.ui.conversation.data.mapper
 
-import com.strv.chat.library.domain.model.IConversationModel
-import com.strv.chat.library.domain.model.IMessageModel
-import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.library.core.ui.extensions.OnClickAction
+import com.strv.chat.library.domain.model.IConversationModel
 import com.strv.chat.library.domain.model.IImageMessageModel
+import com.strv.chat.library.domain.model.IMessageModel
 import com.strv.chat.library.domain.model.ITextMessageModel
-import java.lang.IllegalArgumentException
+import com.strv.chat.library.domain.provider.MemberProvider
 
-internal fun conversationItemView(list: List<IConversationModel>, memberProvider: MemberProvider, onItemClick: OnClickAction<ConversationItemView>) =
-    list.map { model -> conversationItemView(model, memberProvider, onItemClick) }
+internal fun conversationItemView(list: List<IConversationModel>, memberProvider: MemberProvider) =
+    list.map { model -> conversationItemView(model, memberProvider) }
 
-private fun conversationItemView(model: IConversationModel, memberProvider: MemberProvider, onItemClick: OnClickAction<ConversationItemView>) =
+private fun conversationItemView(model: IConversationModel, memberProvider: MemberProvider) =
     ConversationItemView(
         model.id,
         false,
@@ -30,8 +28,7 @@ private fun conversationItemView(model: IConversationModel, memberProvider: Memb
                 acc.plus(memberProvider.member(id).userName)
             }.joinToString(),
         lastMessage(model.lastMessage),
-        model.lastMessage.sentDate,
-        onItemClick
+        model.lastMessage.sentDate
     )
 
 private fun lastMessage(messageModel: IMessageModel) =

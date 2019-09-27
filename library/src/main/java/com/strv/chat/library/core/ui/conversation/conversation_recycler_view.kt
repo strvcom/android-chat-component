@@ -22,7 +22,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
     val attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr){
+) : RecyclerView(context, attrs, defStyleAttr) {
 
     private val disposable = LinkedList<Disposable>()
 
@@ -39,22 +39,23 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     fun init(
+        onConversationClick: OnClickAction<ConversationItemView>,
         config: Builder.() -> Unit = {}
     ) {
-        Builder().apply(config).build()
+        Builder(onConversationClick).apply(config).build()
 
         if (attrs != null) {
             style = ConversationRecyclerViewStyle.parse(context, attrs)
         }
     }
 
-    fun onStart(onItemClick: OnClickAction<ConversationItemView>) =
+    fun onStart() =
         ChatComponent.conversationClient().subscribeConversations(
             memberProvider().currentUserId()
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { model ->
-            conversationItemView(model, memberProvider(), onItemClick).also(::onConversationsChanged)
+            conversationItemView(model, memberProvider()).also(::onConversationsChanged)
         }.also { task ->
             disposable.add(task)
         }
@@ -71,12 +72,13 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     inner class Builder(
+        val onConversationClick: OnClickAction<ConversationItemView>,
         var viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
         var layoutManager: LinearLayoutManager? = null
     ) {
 
         fun build() {
-            adapter = conversationAdapter(viewHolderProvider, style)
+            adapter = conversationAdapter(viewHolderProvider, onConversationClick, style)
             setLayoutManager(layoutManager ?: LinearLayoutManager(context))
         }
     }

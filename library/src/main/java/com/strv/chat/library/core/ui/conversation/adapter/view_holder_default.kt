@@ -8,6 +8,7 @@ import com.strv.chat.library.R
 import com.strv.chat.library.core.ui.Styleable
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerViewStyle
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.core.ui.extensions.imageCircleUrl
 import com.strv.chat.library.core.ui.view.TimeTextView
 
@@ -19,14 +20,17 @@ internal class DefaultConversationViewHolder(
     private val textLastMessage = itemView.findViewById<TextView>(R.id.tv_message)
     private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_date)
 
-    override fun bind(item: ConversationItemView) {
+    override fun bind(
+        item: ConversationItemView,
+        onClickAction: OnClickAction<ConversationItemView>
+    ) {
         imageIcon.imageCircleUrl(item.iconUrl)
         textUserName.text = item.title
         textLastMessage.text = item.message
         textDate.date = item.sentDate
 
         itemView.setOnClickListener {
-            item.onClick(item)
+            onClickAction(item)
         }
     }
 

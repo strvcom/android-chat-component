@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.library.core.ui.chat.sending.SendWidget
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
@@ -124,7 +125,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         chatRecyclerView.init(
-            conversationProvider
+            conversationProvider, { itemView ->
+                when(itemView) {
+                    is ChatItemView.Header -> {}
+                    is ChatItemView.MyTextMessage -> {}
+                    is ChatItemView.OtherTextMessage -> {}
+                    is ChatItemView.MyImageMessage -> startActivity(ImageDetailActivity.newIntent(this, itemView.imageUrl))
+                    is ChatItemView.OtherImageMessage -> startActivity(ImageDetailActivity.newIntent(this, itemView.imageUrl))
+                }
+            }
         )
 
         sendWidget.init(

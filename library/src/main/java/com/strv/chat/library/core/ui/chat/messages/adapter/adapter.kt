@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 
 class ChatAdapter(
     private val chatViewHolderProvider: ChatViewHolderProvider,
+    private val onClickAction: OnClickAction<ChatItemView>,
     private val style: ChatRecyclerViewStyle?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -33,11 +35,11 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header)
-            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage)
-            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage)
-            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage)
-            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage)
+            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header, onClickAction)
+            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage, onClickAction)
+            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage, onClickAction)
+            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage, onClickAction)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage, onClickAction)
         }
     }
 

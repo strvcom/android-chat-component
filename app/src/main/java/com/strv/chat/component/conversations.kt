@@ -26,7 +26,7 @@ class ConversationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView.init(
+        conversationRecyclerView.init( { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
         )
     }
 
@@ -34,7 +34,7 @@ class ConversationsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        conversationRecyclerView.onStart { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
+        conversationRecyclerView.onStart()
             .onError {
                 Toast.makeText(this@ConversationsActivity, it.localizedMessage, Toast.LENGTH_SHORT)
                     .show()
