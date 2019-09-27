@@ -5,11 +5,9 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.firestore.FirebaseFirestore
-import com.strv.chat.library.domain.provider.MemberModel
-import com.strv.chat.library.domain.provider.MemberProvider
-import com.strv.chat.library.firestore.di.firestoreConversationClient
 import com.strv.chat.library.core.ui.conversation.ConversationRecyclerView
+import com.strv.chat.library.domain.model.MemberModel
+import com.strv.chat.library.domain.provider.MemberProvider
 
 class ConversationsActivity : AppCompatActivity() {
 

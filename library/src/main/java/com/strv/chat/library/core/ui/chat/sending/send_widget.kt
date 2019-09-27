@@ -20,7 +20,7 @@ import com.strv.chat.library.core.ui.extensions.selector
 import com.strv.chat.library.core.ui.extensions.tint
 import com.strv.chat.library.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.library.domain.Disposable
-import com.strv.chat.library.domain.model.MessageModelRequest
+import com.strv.chat.library.domain.model.MessageInputModel
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
 import com.strv.chat.library.domain.provider.MemberProvider
@@ -31,7 +31,7 @@ import java.util.*
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
-    val attrs: AttributeSet? = null,
+    attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
@@ -136,7 +136,7 @@ class SendWidget @JvmOverloads constructor(
 
     private fun sendTextMessage(userId: String, message: String) {
         sendMessage(
-            MessageModelRequest.TextMessageModel(
+            MessageInputModel.TextInputModel(
                 senderId = userId,
                 conversationId = conversationProvider.conversationId,
                 text = message
@@ -144,7 +144,7 @@ class SendWidget @JvmOverloads constructor(
         )
     }
 
-    private fun sendMessage(message: MessageModelRequest) {
+    private fun sendMessage(message: MessageInputModel) {
         disposable.add(
             chatClient().sendMessage(message)
                 .onError { error ->

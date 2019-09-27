@@ -19,9 +19,9 @@ import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.library.core.ui.chat.sending.SendWidget
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_GALLERY
+import com.strv.chat.library.domain.model.MemberModel
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
-import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logMe
 import java.text.SimpleDateFormat
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
             put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/$albumDirectoryName")
 
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.MIME_TYPE, "imageModel/jpeg")
         }
 
         return requireNotNull(

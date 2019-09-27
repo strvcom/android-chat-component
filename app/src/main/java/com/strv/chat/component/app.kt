@@ -27,7 +27,7 @@ class App: Application() {
     private val zoeNotificationChannels
         @RequiresApi(Build.VERSION_CODES.O)
         get() = listOf(
-            notificationChannel("upload", "Image upload", NotificationManager.IMPORTANCE_DEFAULT) {
+            notificationChannel("upload", "IImageModel upload", NotificationManager.IMPORTANCE_DEFAULT) {
                 vibration = true
                 lights = true
                 showBadge = true

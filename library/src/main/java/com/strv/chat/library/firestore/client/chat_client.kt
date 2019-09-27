@@ -6,18 +6,18 @@ import com.google.firebase.firestore.Query
 import com.strv.chat.library.domain.client.ChatClient
 import com.strv.chat.library.domain.map
 import com.strv.chat.library.domain.task
-import com.strv.chat.library.domain.model.MessageModelRequest
-import com.strv.chat.library.domain.model.MessageModelResponse
+import com.strv.chat.library.domain.model.IMessageModel
+import com.strv.chat.library.domain.model.MessageInputModel
 import com.strv.chat.library.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.library.firestore.MESSAGES_COLLECTION
 import com.strv.chat.library.firestore.SEEN_COLLECTION
-import com.strv.chat.library.firestore.entity.FirestoreMessage
+import com.strv.chat.library.firestore.entity.FirestoreMessageEntity
 import com.strv.chat.library.firestore.entity.LAST_MESSAGE
 import com.strv.chat.library.firestore.firestoreChatMessages
 import com.strv.chat.library.firestore.listSource
-import com.strv.chat.library.firestore.mapper.messageEntity
-import com.strv.chat.library.firestore.mapper.messageModels
-import com.strv.chat.library.firestore.mapper.seenEntity
+import com.strv.chat.library.firestore.model.mapper.messageEntity
+import com.strv.chat.library.firestore.model.mapper.messageModels
+import com.strv.chat.library.firestore.model.mapper.seenEntity
 import java.util.*
 
 class FirestoreChatClient(
@@ -38,19 +38,19 @@ class FirestoreChatClient(
             .map(::messageModels)
 
 
-    override fun sendMessage(message: MessageModelRequest) =
+    override fun sendMessage(messageInput: MessageInputModel) =
         task<String, Throwable> {
             val conversationDocument =
-                firebaseDb.collection(CONVERSATIONS_COLLECTION).document(message.conversationId)
+                firebaseDb.collection(CONVERSATIONS_COLLECTION).document(messageInput.conversationId)
             val messageDocument = conversationDocument.collection(MESSAGES_COLLECTION).document()
 
             firebaseDb.batch()
                 .run {
-                    set(messageDocument, messageEntity(messageDocument.id, message).toMap())
+                    set(messageDocument, messageEntity(messageDocument.id, messageInput).toMap())
                     update(
                         conversationDocument,
                         LAST_MESSAGE,
-                        messageEntity(messageDocument.id, message).toLastMessageMap()
+                        messageEntity(messageDocument.id, messageInput).toLastMessageMap()
                     )
                     commit()
                 }
@@ -62,7 +62,7 @@ class FirestoreChatClient(
                 }
         }
 
-    override fun setSeen(userId: String, conversationId: String, model: MessageModelResponse) =
+    override fun setSeen(userId: String, conversationId: String, model: IMessageModel) =
         task<String, Throwable> {
             val seenSenderDocument = firebaseDb
                 .collection(CONVERSATIONS_COLLECTION)
@@ -80,5 +80,5 @@ class FirestoreChatClient(
         }
 
     private fun firestoreListSource(source: Query) =
-        source.listSource<FirestoreMessage>()
+        source.listSource<FirestoreMessageEntity>()
 }

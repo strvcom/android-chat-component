@@ -8,14 +8,15 @@ import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherImageMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
 import com.strv.chat.library.core.ui.data.mapper.memberView
 import com.strv.chat.library.domain.isDayEqual
-import com.strv.chat.library.domain.model.MessageModelResponse
-import com.strv.chat.library.domain.model.MessageModelResponse.ImageMessageModel
-import com.strv.chat.library.domain.model.MessageModelResponse.TextMessageModel
+import com.strv.chat.library.domain.model.IImageMessageModel
+import com.strv.chat.library.domain.model.IMessageModel
+import com.strv.chat.library.domain.model.ITextMessageModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.domain.runNonEmpty
+import java.lang.IllegalArgumentException
 
 internal fun chatItemView(
-    list: List<MessageModelResponse>,
+    list: List<IMessageModel>,
     memberProvider: MemberProvider
 ) =
     list
@@ -34,11 +35,11 @@ private fun addHeaders(messageModels: List<ChatItemView>): List<ChatItemView> =
     }
 
 private fun chatItemView(
-    model: MessageModelResponse,
+    model: IMessageModel,
     memberProvider: MemberProvider
 ) =
     when (model) {
-        is TextMessageModel -> {
+        is ITextMessageModel -> {
             if (memberProvider.currentUserId() == model.senderId) {
                 MyTextMessage(
                     model.id,
@@ -54,20 +55,21 @@ private fun chatItemView(
                 )
             }
         }
-        is ImageMessageModel -> {
+        is IImageMessageModel -> {
             if (memberProvider.currentUserId() == model.senderId) {
                 MyImageMessage(
                     model.id,
                     model.sentDate,
-                    model.image.original
+                    model.imageModel.original
                 )
             } else {
                 OtherImageMessage(
                     model.id,
                     model.sentDate,
-                    model.image.original,
+                    model.imageModel.original,
                     memberView(memberProvider.member(model.senderId))
                 )
             }
         }
+        else -> throw IllegalArgumentException("Unknown message type")
     }
