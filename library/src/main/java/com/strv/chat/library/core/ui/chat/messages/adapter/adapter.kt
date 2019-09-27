@@ -36,8 +36,8 @@ class ChatAdapter(
             is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header)
             is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage)
             is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage)
-            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.MyImageMessage)
-            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.Image.OtherImageMessage)
+            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage)
         }
     }
 
@@ -46,8 +46,8 @@ class ChatAdapter(
             is ChatItemView.Header -> ChatViewType.HEADER.id
             is ChatItemView.MyTextMessage -> ChatViewType.MY_TEXT_MESSAGE.id
             is ChatItemView.OtherTextMessage -> ChatViewType.OTHER_TEXT_MESSAGE.id
-            is ChatItemView.Image.MyImageMessage -> ChatViewType.MY_IMAGE_MESSAGE.id
-            is ChatItemView.Image.OtherImageMessage -> ChatViewType.OTHER_IMAGE_MESSAGE.id
+            is ChatItemView.MyImageMessage -> ChatViewType.MY_IMAGE_MESSAGE.id
+            is ChatItemView.OtherImageMessage -> ChatViewType.OTHER_IMAGE_MESSAGE.id
         }
 
     fun submitList(list: List<ChatItemView>) {

@@ -5,9 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.ui.Styleable
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.Header
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.MyImageMessage
-import com.strv.chat.library.core.ui.chat.data.ChatItemView.Image.OtherImageMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyImageMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherImageMessage
 import com.strv.chat.library.core.ui.chat.data.ChatItemView.OtherTextMessage
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewType.HEADER
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewType.MY_IMAGE_MESSAGE

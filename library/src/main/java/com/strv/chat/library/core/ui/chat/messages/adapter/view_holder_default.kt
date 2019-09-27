@@ -19,20 +19,21 @@ import com.strv.chat.library.core.ui.extensions.imageCircleUrl
 import com.strv.chat.library.core.ui.view.RelativeTimeTextView
 import com.strv.chat.library.core.ui.view.TimeTextView
 
-internal class DefaultHeaderViewHolder(parent: ViewGroup) :
+open class DefaultHeaderViewHolder(parent: ViewGroup) :
     HeaderViewHolder(parent, HEADER.id) {
-    private val textDate = itemView.findViewById<RelativeTimeTextView>(R.id.tv_date)
+
+    protected val textDate = itemView.findViewById<RelativeTimeTextView>(R.id.tv_date)
 
     override fun bind(item: ChatItemView.Header) {
         textDate.date = item.sentDate
     }
 }
 
-internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
+open class DefaultMyMessageViewHolder(parent: ViewGroup) :
     MyTextMessageViewHolder(parent, MY_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
+    protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
+    protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(item: ChatItemView.MyTextMessage) {
         textMessage.text = item.text
@@ -55,13 +56,12 @@ internal class DefaultMyMessageViewHolder(parent: ViewGroup) :
 }
 
 
-internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
+open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     OtherTextMessageViewHolder(parent, OTHER_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
-    private val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
-
-    private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
+    protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
+    protected val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
+    protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(item: ChatItemView.OtherTextMessage) {
         imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
@@ -84,24 +84,18 @@ internal class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     }
 }
 
-internal class DefaultMyImageViewHolder(parent: ViewGroup) :
+open class DefaultMyImageViewHolder(parent: ViewGroup) :
     MyImageViewHolder(parent, MY_IMAGE_MESSAGE.id) {
 
-    private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
+    protected val image = itemView.findViewById<ImageView>(R.id.iv_photo)
+    protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
-    override fun bind(item: ChatItemView.Image.MyImageMessage) {
+    override fun bind(item: ChatItemView.MyImageMessage) {
         image.imageCenterCropUrl(item.imageUrl)
 
         textDate.run {
             date = item.sentDate
             visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        item.onClick?.run {
-            image.setOnClickListener {
-                invoke(item)
-            }
         }
 
         itemView.setOnClickListener {
@@ -110,26 +104,20 @@ internal class DefaultMyImageViewHolder(parent: ViewGroup) :
     }
 }
 
-internal class DefaultOtherImageViewHolder(parent: ViewGroup) :
+open class DefaultOtherImageViewHolder(parent: ViewGroup) :
     OtherImageViewHolder(parent, OTHER_IMAGE_MESSAGE.id) {
 
-    private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
-    private val image = itemView.findViewById<ImageView>(R.id.iv_photo)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
+    protected val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
+    protected val image = itemView.findViewById<ImageView>(R.id.iv_photo)
+    protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
-    override fun bind(item: ChatItemView.Image.OtherImageMessage) {
+    override fun bind(item: ChatItemView.OtherImageMessage) {
         imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
         image.imageCenterCropUrl(item.imageUrl)
 
         textDate.run {
             date = item.sentDate
             visibility = if (item.showSentDate) View.VISIBLE else View.GONE
-        }
-
-        item.onClick?.run {
-            image.setOnClickListener {
-                invoke(item)
-            }
         }
 
         itemView.setOnClickListener {
