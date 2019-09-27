@@ -67,11 +67,20 @@ class ChatRecyclerView @JvmOverloads constructor(
     fun init(
         conversationProvider: ConversationProvider,
         onClickAction: OnClickAction<ChatItemView>,
-        config: Builder.() -> Unit = {}
+        viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
+        layoutManager: LinearLayoutManager? = null
     ) {
-        Builder(conversationProvider, onClickAction).apply(config).build()
+        chatAdapter = chatAdapter(viewHolderProvider, onClickAction, style)
 
-        addOnScrollListener(object : PaginationListener(layoutManager as LinearLayoutManager) {
+        setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
+            reverseLayout = true
+            stackFromEnd = true
+            setClipToPadding(false)
+        })
+
+        this@ChatRecyclerView.conversationProvider = conversationProvider
+
+        addOnScrollListener(object : PaginationListener(getLayoutManager() as LinearLayoutManager) {
             override fun loadMoreItems(offset: Int) {
                 loadMoreMessages(chatAdapter.getItem(offset).sentDate)
             }
@@ -122,24 +131,6 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
-        }
-    }
-
-    inner class Builder(
-        val conversationProvider: ConversationProvider,
-        val onClickAction: OnClickAction<ChatItemView>,
-        var viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
-        var layoutManager: LinearLayoutManager? = null
-    ) {
-
-        fun build() {
-            chatAdapter = chatAdapter(viewHolderProvider, onClickAction, style)
-            setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
-                reverseLayout = true
-                stackFromEnd = true
-                setClipToPadding(false)
-            })
-            this@ChatRecyclerView.conversationProvider = conversationProvider
         }
     }
 }

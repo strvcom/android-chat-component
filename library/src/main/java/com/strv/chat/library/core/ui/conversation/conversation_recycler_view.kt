@@ -40,13 +40,11 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     fun init(
         onConversationClick: OnClickAction<ConversationItemView>,
-        config: Builder.() -> Unit = {}
+        viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
+        layoutManager: LinearLayoutManager? = null
     ) {
-        Builder(onConversationClick).apply(config).build()
-
-        if (attrs != null) {
-            style = ConversationRecyclerViewStyle.parse(context, attrs)
-        }
+        adapter = conversationAdapter(viewHolderProvider, onConversationClick, style)
+        setLayoutManager(layoutManager ?: LinearLayoutManager(context))
     }
 
     fun onStart() =
@@ -69,17 +67,5 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {
         conversationAdapter.submitList(items)
-    }
-
-    inner class Builder(
-        val onConversationClick: OnClickAction<ConversationItemView>,
-        var viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
-        var layoutManager: LinearLayoutManager? = null
-    ) {
-
-        fun build() {
-            adapter = conversationAdapter(viewHolderProvider, onConversationClick, style)
-            setLayoutManager(layoutManager ?: LinearLayoutManager(context))
-        }
     }
 }
