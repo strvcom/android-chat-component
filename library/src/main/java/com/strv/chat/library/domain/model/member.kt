@@ -1,6 +1,6 @@
 package com.strv.chat.library.domain.model
 
-interface MemberModel {
+interface IMemberModel {
     val userId: String
     val userName: String
     val userPhotoUrl: String

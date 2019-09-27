@@ -1,15 +1,14 @@
-package com.strv.chat.component
+package com.strv.chat.component.ui
 
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.strv.chat.component.R
+import com.strv.chat.component.ui.base.BaseActivity
 import com.strv.chat.library.core.ui.conversation.ConversationRecyclerView
-import com.strv.chat.library.domain.model.MemberModel
-import com.strv.chat.library.domain.provider.MemberProvider
 
-class ConversationsActivity : AppCompatActivity() {
+class ConversationsActivity : BaseActivity() {
 
     val conversationRecyclerView by lazy {
         findViewById<ConversationRecyclerView>(R.id.rv_chat)
@@ -19,25 +18,21 @@ class ConversationsActivity : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.progress)
     }
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView.init( { startActivity(MainActivity.newIntent(this@ConversationsActivity)) }
-        )
+        conversationRecyclerView.init { conversation ->
+            openChat(conversation.id)
+        }
     }
-
 
     override fun onStart() {
         super.onStart()
 
         conversationRecyclerView.onStart()
-            .onError {
-                Toast.makeText(this@ConversationsActivity, it.localizedMessage, Toast.LENGTH_SHORT)
-                    .show()
+            .onError { error ->
+                showErrorToast(error.localizedMessage ?: "Unknown error")
             }.onNext {
                 progress.visibility = View.GONE
             }
@@ -47,6 +42,13 @@ class ConversationsActivity : AppCompatActivity() {
         super.onStop()
 
         conversationRecyclerView.onStop()
+    }
+
+    private fun openChat(conversationId: String) =
+        startActivity(ChatActivity.newIntent(this@ConversationsActivity, conversationId))
+
+    private fun showErrorToast(errorMessage: String) {
+        Toast.makeText(this@ConversationsActivity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 }
 

@@ -2,7 +2,7 @@ package com.strv.chat.library.core.ui.chat.messages
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.View.OnLayoutChangeListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent
@@ -18,7 +18,6 @@ import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
 import com.strv.chat.library.domain.map
-import com.strv.chat.library.domain.provider.ConversationProvider
 import strv.ktools.logE
 import java.util.*
 
@@ -34,25 +33,14 @@ class ChatRecyclerView @JvmOverloads constructor(
         get() = super.getAdapter() as ChatAdapter
         private set(value) = super.setAdapter(value)
 
-    private lateinit var conversationProvider: ConversationProvider
+    private lateinit var conversationId: String
 
-    private val onLayoutChangeListener = object : OnLayoutChangeListener {
-        override fun onLayoutChange(
-            v: View?,
-            p1: Int,
-            p2: Int,
-            p3: Int,
-            bottom: Int,
-            p5: Int,
-            p6: Int,
-            p7: Int,
-            oldBottom: Int
-        ) {
+    private val onLayoutChangeListener =
+        OnLayoutChangeListener { v, p1, p2, p3, bottom, p5, p6, p7, oldBottom ->
             if (bottom <= oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
                 scrollToPosition(0)
             }
         }
-    }
 
     private var style: ChatRecyclerViewStyle? = null
 
@@ -65,7 +53,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     fun init(
-        conversationProvider: ConversationProvider,
+        conversationId: String,
         onClickAction: OnClickAction<ChatItemView>,
         viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
         layoutManager: LinearLayoutManager? = null
@@ -78,7 +66,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             setClipToPadding(false)
         })
 
-        this@ChatRecyclerView.conversationProvider = conversationProvider
+        this@ChatRecyclerView.conversationId = conversationId
 
         addOnScrollListener(object : PaginationListener(getLayoutManager() as LinearLayoutManager) {
             override fun loadMoreItems(offset: Int) {
@@ -89,13 +77,13 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     fun onStart(): ObservableTask<List<ChatItemView>, Throwable> =
         chatClient().subscribeMessages(
-            conversationProvider.conversationId
+            conversationId
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { response ->
             chatClient().setSeen(
                 memberProvider().currentUserId(),
-                conversationProvider.conversationId,
+                conversationId,
                 response.first()
             ).also { task ->
                 disposable.add(task)
@@ -117,7 +105,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun loadMoreMessages(startAfter: Date) {
         disposable.add(
             chatClient().messages(
-                conversationProvider.conversationId, startAfter
+                conversationId, startAfter
             ).map { model ->
                 chatItemView(model, memberProvider())
             }.onSuccess { response ->

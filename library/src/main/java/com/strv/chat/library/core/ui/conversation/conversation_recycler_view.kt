@@ -39,9 +39,9 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     fun init(
-        onConversationClick: OnClickAction<ConversationItemView>,
         viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
-        layoutManager: LinearLayoutManager? = null
+        layoutManager: LinearLayoutManager? = null,
+        onConversationClick: OnClickAction<ConversationItemView>
     ) {
         adapter = conversationAdapter(viewHolderProvider, onConversationClick, style)
         setLayoutManager(layoutManager ?: LinearLayoutManager(context))
