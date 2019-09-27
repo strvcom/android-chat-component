@@ -60,7 +60,7 @@ data class FirestoreData(
 
     fun toMap() = hashMapOf(
         "message" to message
-        //"image" to image?.toMap()
+        //"imageModel" to imageModel?.toMap()
     )
 }
 

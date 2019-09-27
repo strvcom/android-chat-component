@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.ui.conversation.adapter.ConversationViewType.CONVERSATION
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerViewStyle
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 
 class ConversationAdapter(
     private val conversationViewHolderProvider: ConversationViewHolderProvider,
+    private val onConversationClick: OnClickAction<ConversationItemView>,
     private val style: ConversationRecyclerViewStyle?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -37,7 +39,7 @@ class ConversationAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ConversationViewHolder -> holder.bind(getItem(position))
+            is ConversationViewHolder -> holder.bind(getItem(position), onConversationClick)
         }
     }
 

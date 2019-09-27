@@ -4,10 +4,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.strv.chat.library.domain.client.ConversationClient
 import com.strv.chat.library.domain.map
-import com.strv.chat.library.firestore.entity.FirestoreConversation
+import com.strv.chat.library.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.library.firestore.firestoreConversations
 import com.strv.chat.library.firestore.listSource
-import com.strv.chat.library.firestore.mapper.conversationModels
+import com.strv.chat.library.firestore.model.mapper.conversationModels
 
 class FirestoreConversationClient(
     val firebaseDb: FirebaseFirestore
@@ -19,5 +19,5 @@ class FirestoreConversationClient(
 
 
     private fun firestoreListSource(source: Query) =
-        source.listSource<FirestoreConversation>()
+        source.listSource<FirestoreConversationEntity>()
 }

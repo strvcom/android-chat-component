@@ -29,7 +29,8 @@ import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.Task
 import com.strv.chat.library.domain.client.DownloadUrl
 import com.strv.chat.library.domain.flatMap
-import com.strv.chat.library.domain.model.MessageModelRequest
+import com.strv.chat.library.domain.model.MessageInputModel
+import com.strv.chat.library.domain.model.MessageInputModel.ImageInputModel.ImageModel
 import strv.ktools.logD
 import strv.ktools.logE
 import java.util.*
@@ -104,21 +105,21 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                     logE(error.localizedMessage ?: "Unknown error")
                     showNotification(startId, errorNotification())
                 }.onSuccess { id ->
-                    logD("Image message $id has been sent")
+                    logD("IImageModel message $id has been sent")
                     showNotification(startId, doneNotification())
                 }
         )
 
     private fun sendImageMessage(messageUrl: DownloadUrl): Task<String, Throwable> =
         sendMessage(
-            MessageModelRequest.ImageMessageModel(
+            MessageInputModel.ImageInputModel(
                 senderId = senderId,
                 conversationId = conversationId,
-                image = MessageModelRequest.ImageMessageModel.Image(0.0, 0.0, messageUrl.toString())
+                imageModel = ImageModel(0.0, 0.0, messageUrl.toString())
             )
         )
 
-    private fun sendMessage(message: MessageModelRequest) =
+    private fun sendMessage(message: MessageInputModel) =
         chatClient().sendMessage(message)
 
 

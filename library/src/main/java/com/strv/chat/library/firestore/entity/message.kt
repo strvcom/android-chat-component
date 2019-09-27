@@ -35,11 +35,11 @@ fun messageType(key: String): MeesageTypeEnum =
         it.key.equals(key, true)
     }
 
-data class FirestoreMessage(
+data class FirestoreMessageEntity(
     @get:PropertyName(ID) @set:PropertyName(ID) override var id: String? = null,
     @get:PropertyName(SENDER_ID) @set:PropertyName(SENDER_ID) var senderId: String? = null,
     @get:PropertyName(MESSAGE_TYPE) @set:PropertyName(MESSAGE_TYPE) @MessageType var messageType: String? = null,
-    @get:PropertyName(DATA) @set:PropertyName(DATA) var data: FirestoreData? = null,
+    @get:PropertyName(DATA) @set:PropertyName(DATA) var data: FirestoreDataEntity? = null,
     @get:PropertyName(TIMESTAMP) @set:PropertyName(TIMESTAMP) var timestamp: Timestamp? = null
 ) : SourceEntity {
 
@@ -63,9 +63,9 @@ data class FirestoreMessage(
     )
 }
 
-data class FirestoreData(
+data class FirestoreDataEntity(
     var message: String? = null,
-    var image: FirestoreImageData? = null
+    var image: FirestoreImageDataEntity? = null
 ) {
 
     fun toTextMap() = hashMapOf(
@@ -77,7 +77,7 @@ data class FirestoreData(
     )
 }
 
-data class FirestoreImageData(
+data class FirestoreImageDataEntity(
     var width: Double? = null,
     var height: Double? = null,
     var original: String? = null

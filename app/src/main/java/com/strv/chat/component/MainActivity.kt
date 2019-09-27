@@ -15,13 +15,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.library.core.ui.chat.sending.SendWidget
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_GALLERY
+import com.strv.chat.library.domain.model.MemberModel
 import com.strv.chat.library.domain.provider.ConversationProvider
 import com.strv.chat.library.domain.provider.MediaProvider
-import com.strv.chat.library.domain.provider.MemberModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logMe
 import java.text.SimpleDateFormat
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
             put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/$albumDirectoryName")
 
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.MIME_TYPE, "imageModel/jpeg")
         }
 
         return requireNotNull(
@@ -124,13 +125,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         chatRecyclerView.init(
-            conversationProvider,
-            memberProvider
+            conversationProvider, { itemView ->
+                when(itemView) {
+                    is ChatItemView.Header -> {}
+                    is ChatItemView.MyTextMessage -> {}
+                    is ChatItemView.OtherTextMessage -> {}
+                    is ChatItemView.MyImageMessage -> startActivity(ImageDetailActivity.newIntent(this, itemView.imageUrl))
+                    is ChatItemView.OtherImageMessage -> startActivity(ImageDetailActivity.newIntent(this, itemView.imageUrl))
+                }
+            }
         )
 
         sendWidget.init(
             conversationProvider,
-            memberProvider,
             mediaProvider
         )
     }

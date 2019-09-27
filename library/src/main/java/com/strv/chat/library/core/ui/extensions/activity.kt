@@ -21,6 +21,6 @@ fun Activity.openGalleryPhotoPicker(title: String) =
     startActivityForResult(
         Intent.createChooser(
             Intent(Intent.ACTION_PICK).apply {
-                type = "image/*"
+                type = "imageModel/*"
             }, title), REQUEST_IMAGE_GALLERY
     )

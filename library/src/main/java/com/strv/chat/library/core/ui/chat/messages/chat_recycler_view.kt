@@ -8,16 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.library.core.session.ChatComponent
 import com.strv.chat.library.core.session.ChatComponent.chatAdapter
 import com.strv.chat.library.core.session.ChatComponent.chatClient
+import com.strv.chat.library.core.session.ChatComponent.memberProvider
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.data.mapper.chatItemView
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.library.core.ui.chat.messages.style.ChatRecyclerViewStyle
+import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
 import com.strv.chat.library.domain.map
 import com.strv.chat.library.domain.provider.ConversationProvider
-import com.strv.chat.library.domain.provider.MemberProvider
 import strv.ktools.logE
 import java.util.*
 
@@ -33,10 +34,9 @@ class ChatRecyclerView @JvmOverloads constructor(
         get() = super.getAdapter() as ChatAdapter
         private set(value) = super.setAdapter(value)
 
-    private lateinit var memberProvider: MemberProvider
     private lateinit var conversationProvider: ConversationProvider
 
-    private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
+    private val onLayoutChangeListener = object : OnLayoutChangeListener {
         override fun onLayoutChange(
             v: View?,
             p1: Int,
@@ -50,7 +50,6 @@ class ChatRecyclerView @JvmOverloads constructor(
         ) {
             if (bottom <= oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
                 scrollToPosition(0)
-                removeOnLayoutChangeListener(this)
             }
         }
     }
@@ -58,7 +57,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     private var style: ChatRecyclerViewStyle? = null
 
     init {
-        addOnLayoutChangeListener(onFirstLayoutChangeListener)
+        addOnLayoutChangeListener(onLayoutChangeListener)
 
         if (attrs != null) {
             style = ChatRecyclerViewStyle.parse(context, attrs)
@@ -67,12 +66,21 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     fun init(
         conversationProvider: ConversationProvider,
-        memberProvider: MemberProvider,
-        config: Builder.() -> Unit = {}
+        onClickAction: OnClickAction<ChatItemView>,
+        viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
+        layoutManager: LinearLayoutManager? = null
     ) {
-        Builder(conversationProvider, memberProvider).apply(config).build()
+        chatAdapter = chatAdapter(viewHolderProvider, onClickAction, style)
 
-        addOnScrollListener(object : PaginationListener(layoutManager as LinearLayoutManager) {
+        setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
+            reverseLayout = true
+            stackFromEnd = true
+            setClipToPadding(false)
+        })
+
+        this@ChatRecyclerView.conversationProvider = conversationProvider
+
+        addOnScrollListener(object : PaginationListener(getLayoutManager() as LinearLayoutManager) {
             override fun loadMoreItems(offset: Int) {
                 loadMoreMessages(chatAdapter.getItem(offset).sentDate)
             }
@@ -86,14 +94,14 @@ class ChatRecyclerView @JvmOverloads constructor(
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { response ->
             chatClient().setSeen(
-                memberProvider.currentUserId(),
+                memberProvider().currentUserId(),
                 conversationProvider.conversationId,
                 response.first()
             ).also { task ->
                 disposable.add(task)
             }
         }.map { model ->
-            chatItemView(model, memberProvider)
+            chatItemView(model, memberProvider())
         }.onNext { itemViews ->
             onMessagesChanged(itemViews)
         }.also { task ->
@@ -111,7 +119,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             chatClient().messages(
                 conversationProvider.conversationId, startAfter
             ).map { model ->
-                chatItemView(model, memberProvider)
+                chatItemView(model, memberProvider())
             }.onSuccess { response ->
                 chatAdapter.submitList(chatAdapter.getItems().plus(response))
             }.onError { error ->
@@ -123,26 +131,6 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
-            if (items.isNotEmpty()) postDelayed({ smoothScrollToPosition(0) }, 100)
-        }
-    }
-
-    inner class Builder(
-        val conversationProvider: ConversationProvider,
-        val memberProvider: MemberProvider,
-        var viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
-        var layoutManager: LinearLayoutManager? = null
-    ) {
-
-        fun build() {
-            chatAdapter = chatAdapter(viewHolderProvider, style)
-            setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
-                reverseLayout = true
-                stackFromEnd = true
-                setClipToPadding(false)
-            })
-            this@ChatRecyclerView.conversationProvider = conversationProvider
-            this@ChatRecyclerView.memberProvider = memberProvider
         }
     }
 }
