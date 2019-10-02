@@ -55,11 +55,12 @@ class App : Application() {
         }
 
         ChatComponent.init(
+            this,
             Configuration(
                 compositionRoot.chatClient(firestoreDb),
                 compositionRoot.conversationClient(firestoreDb),
                 compositionRoot.mediaClient(firebaseStorage),
-                serviceConfig("upload"),
+                serviceConfig(CHANNEL_ID),
                 compositionRoot.memberProvider()
             )
         )

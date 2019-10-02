@@ -16,7 +16,7 @@ import com.strv.chat.library.core.ui.conversation.style.ConversationRecyclerView
 import com.strv.chat.library.core.ui.extensions.OnClickAction
 import com.strv.chat.library.domain.Disposable
 import strv.ktools.logE
-import java.util.*
+import java.util.LinkedList
 
 class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,

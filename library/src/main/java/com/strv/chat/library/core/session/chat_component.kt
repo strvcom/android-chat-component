@@ -1,6 +1,8 @@
 package com.strv.chat.library.core.session
 
+import android.app.Application
 import com.strv.chat.library.core.session.config.Configuration
+import com.strv.chat.library.core.ui.ChatComponentResourceProvider
 import com.strv.chat.library.core.ui.chat.data.ChatItemView
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.library.core.ui.chat.messages.adapter.ChatViewHolderProvider
@@ -13,10 +15,12 @@ import com.strv.chat.library.core.ui.extensions.OnClickAction
 
 object ChatComponent {
 
-    internal lateinit var configuration: Configuration
+    private lateinit var configuration: Configuration
+    private lateinit var resourceProvider: ChatComponentResourceProvider
 
-    fun init(configuration: Configuration) {
+    fun init(app: Application, configuration: Configuration) {
         ChatComponent.configuration = configuration
+        ChatComponent.resourceProvider = ChatComponentResourceProvider(app)
     }
 
     internal fun chatClient() = configuration.chatClient
@@ -41,4 +45,6 @@ object ChatComponent {
         ConversationAdapter(conversationViewHolderProvider, onClickAction, style)
 
     internal fun conversationViewHolderProvider() = ConversationViewHolderProvider()
+
+    internal fun string(resId: Int) = resourceProvider.string[resId]
 }
