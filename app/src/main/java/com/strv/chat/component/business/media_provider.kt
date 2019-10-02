@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.strv.chat.library.domain.provider.MediaProvider
+import com.strv.chat.core.domain.provider.MediaProvider
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -1,6 +1,6 @@
 package com.strv.chat.component.model
 
-import com.strv.chat.library.domain.model.IMemberModel
+import com.strv.chat.core.domain.model.IMemberModel
 
 const val CURRENT_USER_ID = "user-1"
 private const val CURRENT_USER_NAME = "John"

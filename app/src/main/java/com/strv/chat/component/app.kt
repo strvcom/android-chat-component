@@ -8,9 +8,9 @@ import androidx.annotation.RequiresApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.strv.chat.component.di.CompositionRoot
-import com.strv.chat.library.core.session.ChatComponent
-import com.strv.chat.library.core.session.config.Configuration
-import com.strv.chat.library.core.ui.extensions.serviceConfig
+import com.strv.chat.core.core.session.ChatComponent
+import com.strv.chat.core.core.session.config.Configuration
+import com.strv.chat.core.core.ui.extensions.serviceConfig
 
 private const val CHANNEL_ID = "upload"
 private const val CHANNEL_DESCRIPTION = "ImageModel upload"

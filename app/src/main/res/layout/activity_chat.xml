@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="@+id/rv_chat"
         app:layout_constraintTop_toTopOf="@+id/rv_chat" />
 
-    <com.strv.chat.library.core.ui.chat.sending.SendWidget
+    <com.strv.chat.core.core.ui.chat.sending.SendWidget
         android:id="@+id/w_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
+    <com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
         android:id="@+id/rv_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
