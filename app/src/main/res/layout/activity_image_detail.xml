@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.ImageDetailActivity">
 
-    <com.strv.chat.library.core.ui.chat.imageDetail.ImageDetailView
+    <com.strv.chat.core.core.ui.chat.imageDetail.ImageDetailView
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.strv.chat.component.R
 import com.strv.chat.component.ui.base.BaseActivity
-import com.strv.chat.library.core.ui.conversation.ConversationRecyclerView
+import com.strv.chat.core.core.ui.conversation.ConversationRecyclerView
 
 class ConversationsActivity : BaseActivity() {
 

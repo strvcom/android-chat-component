@@ -12,11 +12,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.strv.chat.component.R
 import com.strv.chat.component.ui.base.BaseActivity
-import com.strv.chat.library.core.ui.chat.data.ChatItemView
-import com.strv.chat.library.core.ui.chat.messages.ChatRecyclerView
-import com.strv.chat.library.core.ui.chat.sending.SendWidget
-import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_CAPTURE
-import com.strv.chat.library.core.ui.extensions.REQUEST_IMAGE_GALLERY
+import com.strv.chat.core.core.ui.chat.data.ChatItemView
+import com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
+import com.strv.chat.core.core.ui.chat.sending.SendWidget
+import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_CAPTURE
+import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_GALLERY
 
 const val CONVERSATION_ID_EXTRA = "conversation_id"
 

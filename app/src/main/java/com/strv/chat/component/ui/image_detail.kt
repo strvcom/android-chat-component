@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.strv.chat.component.R
-import com.strv.chat.library.core.ui.chat.imageDetail.ImageDetailView
+import com.strv.chat.core.core.ui.chat.imageDetail.ImageDetailView
 
 const val IMAGE_URL_EXTRA = "image_url"
 
