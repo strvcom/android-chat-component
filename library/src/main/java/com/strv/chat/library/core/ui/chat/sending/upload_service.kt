@@ -18,6 +18,7 @@ import com.strv.chat.library.core.session.ChatComponent.mediaClient
 import com.strv.chat.library.core.session.ChatComponent.smallIconErrorRes
 import com.strv.chat.library.core.session.ChatComponent.smallIconProgressRes
 import com.strv.chat.library.core.session.ChatComponent.smallIconSuccessRes
+import com.strv.chat.library.core.session.ChatComponent.string
 import com.strv.chat.library.core.ui.extensions.autoCancel
 import com.strv.chat.library.core.ui.extensions.contentTitle
 import com.strv.chat.library.core.ui.extensions.largeIcon
@@ -33,7 +34,7 @@ import com.strv.chat.library.domain.model.MessageInputModel
 import com.strv.chat.library.domain.model.MessageInputModel.ImageInputModel.ImageModel
 import strv.ktools.logD
 import strv.ktools.logE
-import java.util.*
+import java.util.LinkedList
 
 private const val ARGUMENT_PHOTO_URI = "uri"
 private const val ARGUMENT_SENDER_ID = "sender_id"
@@ -50,8 +51,6 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 putExtra(ARGUMENT_CONVERSATION_ID, conversationId)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
-
-
     }
 
     private val disposable = LinkedList<Disposable>()
@@ -88,6 +87,11 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
 
     override fun onDestroy() {
         logD("UploadPhotoService is destroyed")
+
+        while (disposable.isNotEmpty()) {
+            disposable.pop().dispose()
+        }
+
         super.onDestroy()
     }
 
@@ -138,7 +142,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 )
             ).toBitmap()
             smallIcon = smallIconProgressRes()
-            contentTitle = getString(R.string.uploading_photo)
+            contentTitle = string(R.string.uploading_photo)
             autoCancel = true
             this.progress {
                 this.max = 100
@@ -147,9 +151,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
         }
 
     private fun errorNotification() =
-        //todo change
         notification(channelId()) {
-            //todo change
             largeIcon = requireNotNull(
                 ContextCompat.getDrawable(
                     this@UploadPhotoService,
@@ -157,7 +159,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 )
             ).toBitmap()
             smallIcon = smallIconErrorRes()
-            contentTitle = getString(R.string.photo_was_not_uploaded)
+            contentTitle = string(R.string.photo_was_not_uploaded)
             autoCancel = true
         }
 
@@ -170,7 +172,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 )
             ).toBitmap()
             smallIcon = smallIconSuccessRes()
-            contentTitle = getString(R.string.photo_was_uploaded)
+            contentTitle = string(R.string.photo_was_uploaded)
             autoCancel = true
         }
 }

@@ -13,7 +13,6 @@ import com.strv.chat.library.domain.model.IMessageModel
 import com.strv.chat.library.domain.model.ITextMessageModel
 import com.strv.chat.library.domain.provider.MemberProvider
 import com.strv.chat.library.domain.runNonEmpty
-import java.lang.IllegalArgumentException
 
 internal fun chatItemView(
     list: List<IMessageModel>,
@@ -26,7 +25,7 @@ internal fun chatItemView(
 private fun addHeaders(messageModels: List<ChatItemView>): List<ChatItemView> =
     messageModels.fold(listOf<ChatItemView>()) { acc, chatItemView ->
         if (acc.isNotEmpty() && !acc.last().sentDate.isDayEqual(chatItemView.sentDate)) {
-            acc.plus(arrayOf(chatItemView, Header(chatItemView.sentDate)))
+            acc.plus(arrayOf(Header(acc.last().sentDate), chatItemView))
         } else {
             acc.plus(chatItemView)
         }

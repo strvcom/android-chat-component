@@ -1,3 +1,5 @@
+@file:JvmName("FirestoreCompositionRoot")
+
 package com.strv.chat.library.firestore.di
 
 import com.google.firebase.firestore.FirebaseFirestore

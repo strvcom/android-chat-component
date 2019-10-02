@@ -1,7 +1,7 @@
 package com.strv.chat.library.core.ui.chat.data
 
 import com.strv.chat.library.core.ui.data.MemberView
-import java.util.*
+import java.util.Date
 
 const val HEADER_ID = "NO_ID"
 

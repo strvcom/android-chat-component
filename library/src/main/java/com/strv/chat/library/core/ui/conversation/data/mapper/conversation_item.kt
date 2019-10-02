@@ -1,5 +1,7 @@
 package com.strv.chat.library.core.ui.conversation.data.mapper
 
+import com.strv.chat.library.R
+import com.strv.chat.library.core.session.ChatComponent.string
 import com.strv.chat.library.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.library.domain.model.IConversationModel
 import com.strv.chat.library.domain.model.IImageMessageModel
@@ -34,7 +36,6 @@ private fun conversationItemView(model: IConversationModel, memberProvider: Memb
 private fun lastMessage(messageModel: IMessageModel) =
     when (messageModel) {
         is ITextMessageModel -> messageModel.text
-        //todo what about localization?
-        is IImageMessageModel -> "User has send a picture"
+        is IImageMessageModel -> string(R.string.user_has_sent_picture)
         else -> throw IllegalArgumentException("Unknown message type")
     }

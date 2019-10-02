@@ -35,17 +35,15 @@ class CloudStorageMediaClient(
             val imagePath = path(firebaseStorage, uploadUrl)
 
             imagePath.putBytes(bos.toByteArray(), metadata)
-                //todo should I add context????
                 .addOnSuccessListener() {
                     logD("File was uploaded")
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     invokeError(it)
-                }
-                .addOnProgressListener { snapshot ->
+                }.also { task ->
+                    onDispose = { task.cancel() }
+                }.addOnProgressListener { snapshot ->
                     invokeProgress((100.0 * snapshot.bytesTransferred / snapshot.totalByteCount).toInt())
-                }
-                .continueWithTask {
+                }.continueWithTask {
                     imagePath.downloadUrl
                 }.addOnSuccessListener { uri ->
                     invokeSuccess(uri)

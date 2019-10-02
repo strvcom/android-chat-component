@@ -2,6 +2,7 @@ package com.strv.chat.library.core.ui.chat.messages
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.View.OnLayoutChangeListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,8 @@ import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
 import com.strv.chat.library.domain.map
 import strv.ktools.logE
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -35,23 +37,45 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     private lateinit var conversationId: String
 
-    private val onLayoutChangeListener =
-        OnLayoutChangeListener { v, p1, p2, p3, bottom, p5, p6, p7, oldBottom ->
+    private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
+        override fun onLayoutChange(
+            p0: View?,
+            p1: Int,
+            p2: Int,
+            bottom: Int,
+            p4: Int,
+            p5: Int,
+            p6: Int,
+            p7: Int,
+            oldBottom: Int
+        ) {
             if (bottom <= oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
                 scrollToPosition(0)
+
+                removeOnLayoutChangeListener(this)
+                addOnLayoutChangeListener(onLayoutChangeListener)
+            }
+        }
+    }
+
+    private val onLayoutChangeListener =
+        OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
+                postDelayed( { scrollToPosition(0) }, 50)
             }
         }
 
     private var style: ChatRecyclerViewStyle? = null
 
     init {
-        addOnLayoutChangeListener(onLayoutChangeListener)
+        addOnLayoutChangeListener(onFirstLayoutChangeListener)
 
         if (attrs != null) {
             style = ChatRecyclerViewStyle.parse(context, attrs)
         }
     }
 
+    @JvmOverloads
     fun init(
         conversationId: String,
         onClickAction: OnClickAction<ChatItemView>,

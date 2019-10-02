@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import com.strv.chat.library.R
 import com.strv.chat.library.core.session.ChatComponent.chatClient
 import com.strv.chat.library.core.session.ChatComponent.memberProvider
+import com.strv.chat.library.core.session.ChatComponent.string
 import com.strv.chat.library.core.ui.chat.sending.style.SendWidgetStyle
 import com.strv.chat.library.core.ui.extensions.openCamera
 import com.strv.chat.library.core.ui.extensions.openGalleryPhotoPicker
@@ -25,7 +26,7 @@ import com.strv.chat.library.domain.model.MessageInputModel
 import com.strv.chat.library.domain.provider.MediaProvider
 import strv.ktools.logD
 import strv.ktools.logE
-import java.util.*
+import java.util.LinkedList
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
@@ -44,6 +45,10 @@ class SendWidget @JvmOverloads constructor(
 
     private val editInput by lazy {
         findViewById<EditText>(R.id.et_message_input)
+    }
+
+    private val buttonText by lazy {
+        findViewById<ImageButton>(R.id.ib_text)
     }
 
     private val buttonImage by lazy {
@@ -113,19 +118,18 @@ class SendWidget @JvmOverloads constructor(
     }
 
     private fun showPhotoPickerDialog() {
-        //todo update
         selector(
-            context.getString(R.string.choose_photo),
+            string(R.string.choose_photo),
             arrayOf(
-                context.getString(R.string.take_photo),
-                context.getString(R.string.select_from_library)
+                string(R.string.take_photo),
+                string(R.string.select_from_library)
             )
         ) {
             onClick { position ->
                 val uri = mediaProvider.newImageUri(requireContext())
                 when (position) {
                     0 -> activity?.openCamera(uri)
-                    1 -> activity?.openGalleryPhotoPicker(getString(R.string.select_photo))
+                    1 -> activity?.openGalleryPhotoPicker(string(R.string.select_photo))
                 }
             }
         }.show((context as FragmentActivity).supportFragmentManager, DIALOG_PHOTO_PICKER)
@@ -155,5 +159,7 @@ class SendWidget @JvmOverloads constructor(
     private fun applyStyle(style: SendWidgetStyle) {
         setBackgroundColor(style.backgroundColor)
         buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
+        buttonText.setColorFilter(style.filterColorActivated)
+        buttonImage.setColorFilter(style.filterColorNormal)
     }
 }

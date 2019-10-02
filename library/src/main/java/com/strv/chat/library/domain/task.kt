@@ -66,7 +66,9 @@ sealed class ProgressTask<R, E> : TaskImpl<R, E>(), Disposable {
 
     abstract fun onProgress(callback: (progress: Int) -> Unit): ProgressTask<R, E>
 
-    class ProgressTaskImpl<R, E> : ProgressTask<R, E>() {
+    class ProgressTaskImpl<R, E>(
+        var onDispose: (() -> Unit)?
+    ) : ProgressTask<R, E>() {
 
         private val progressCallbacks = mutableListOf<(Int) -> Unit>()
 
@@ -81,6 +83,9 @@ sealed class ProgressTask<R, E> : TaskImpl<R, E>(), Disposable {
         override fun dispose() {
             super.dispose()
             progressCallbacks.removeAll(progressCallbacks)
+
+            onDispose?.invoke()
+            onDispose = null
         }
     }
 }
@@ -133,8 +138,11 @@ inline fun <R, E> observableTask(
 ): ObservableTask<R, E> =
     ObservableTaskImpl<R, E>(onDispose).apply(runnable)
 
-inline fun <R, E> progressTask(runnable: ProgressTaskImpl<R, E>.() -> Unit): ProgressTask<R, E> =
-    ProgressTaskImpl<R, E>().apply(runnable)
+inline fun <R, E> progressTask(
+    noinline onDispose: (() -> Unit)? = null,
+    runnable: ProgressTaskImpl<R, E>.() -> Unit
+): ProgressTask<R, E> =
+    ProgressTaskImpl<R, E>(onDispose).apply(runnable)
 
 inline fun <R, E, V> Task<R, E>.map(crossinline transform: (R) -> V) =
     task<V, E> {
@@ -169,7 +177,7 @@ fun <R, E, V> Task<R, E>.flatMap(transform: (R) -> Task<V, E>): Task<V, E> =
             transform(result).onSuccess {
                 this.invokeSuccess(it)
             }.onError { error ->
-                this.invokeError(error )
+                this.invokeError(error)
             }
         }
 

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.TextView
 import com.strv.chat.library.R
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class TimeTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : TextView(context, attrs, defStyleAttr) {
 
