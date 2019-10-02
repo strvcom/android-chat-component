@@ -50,8 +50,6 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 putExtra(ARGUMENT_CONVERSATION_ID, conversationId)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
-
-
     }
 
     private val disposable = LinkedList<Disposable>()
@@ -88,6 +86,11 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
 
     override fun onDestroy() {
         logD("UploadPhotoService is destroyed")
+
+        while (disposable.isNotEmpty()) {
+            disposable.pop().dispose()
+        }
+
         super.onDestroy()
     }
 

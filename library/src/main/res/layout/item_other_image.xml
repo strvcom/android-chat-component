@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--todo update-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +6,6 @@
     android:animateLayoutChanges="true"
     android:orientation="horizontal"
     android:padding="@dimen/spacing_8">
-    <!--    android:onClick="@{() -> listener.onMessageClick(item)}"-->
 
     <ImageView
         android:id="@+id/iv_user_icon"
@@ -16,15 +14,11 @@
         android:layout_gravity="bottom"
         android:layout_marginEnd="10dp"
         tools:src="@drawable/placeholder_avatar_round" />
-    <!--    android:onClick="@{() -> listener.onOtherProfileClick(item.otherUserId)}"-->
-    <!--    app:imageCircleUrl="@{item.otherUserPhotoUrl}"-->
 
     <ImageView
         android:id="@+id/iv_photo"
         android:layout_width="200dp"
         android:layout_height="200dp" />
-    <!--    android:background="@drawable/overlay_giphy"-->
-
 
     <com.strv.chat.library.core.ui.view.TimeTextView
         android:id="@+id/tv_message_date"
@@ -36,8 +30,6 @@
         android:lines="1"
         android:textAppearance="@style/TextAppearance.Chat.Component.Date"
         tools:text="now" />
-    <!--    app:show="@{item.showSentDate}"-->
-    <!--    android:date="@{item.message.sentDate}"-->
 
 </LinearLayout>
 
