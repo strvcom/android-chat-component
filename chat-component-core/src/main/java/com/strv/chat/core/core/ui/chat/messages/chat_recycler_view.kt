@@ -143,6 +143,10 @@ class ChatRecyclerView @JvmOverloads constructor(
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
+
+            if (items.isNotEmpty()) {
+                scrollToPosition(0)
+            }
         }
     }
 }
