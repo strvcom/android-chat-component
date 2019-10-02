@@ -23,7 +23,7 @@ import com.strv.chat.library.firestore.model.FirestoreImageMessageModel
 import com.strv.chat.library.firestore.model.FirestoreImageModel
 import com.strv.chat.library.firestore.model.FirestoreTextMessageModel
 import strv.ktools.logE
-import java.util.*
+import java.util.Date
 
 internal fun conversationModels(list: List<FirestoreConversationEntity>) =
     list.map { entity -> conversationModel(entity)}

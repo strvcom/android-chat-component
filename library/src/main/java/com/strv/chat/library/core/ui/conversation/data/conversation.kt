@@ -1,6 +1,6 @@
 package com.strv.chat.library.core.ui.conversation.data
 
-import java.util.*
+import java.util.Date
 
 class ConversationItemView(
     val id: String,

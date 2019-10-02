@@ -19,7 +19,8 @@ import com.strv.chat.library.domain.Disposable
 import com.strv.chat.library.domain.ObservableTask
 import com.strv.chat.library.domain.map
 import strv.ktools.logE
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 class ChatRecyclerView @JvmOverloads constructor(
     context: Context,

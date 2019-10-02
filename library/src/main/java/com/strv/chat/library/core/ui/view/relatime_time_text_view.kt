@@ -5,8 +5,11 @@ import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.widget.TextView
 import com.strv.chat.library.R
+import com.strv.chat.library.core.session.ChatComponent.string
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 private const val DAY = 60000 * 60 * 24
 
@@ -34,10 +37,10 @@ class RelativeTimeTextView @JvmOverloads constructor(context: Context, attrs: At
             }
 
             if (DateUtils.isToday(date.time)) { //is today
-                context.getString(R.string.today)
+                string(R.string.today)
             } else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
                 calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) { //is yesterday
-                context.getString(R.string.yesterday)
+                string(R.string.yesterday)
             } else { //other
                 calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
             }
