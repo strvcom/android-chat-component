@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 
-fun Uri.toBitmap(context: Context) =
+internal fun Uri.toBitmap(context: Context) =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, this))
     } else {

@@ -38,6 +38,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         }
     }
 
+    @JvmOverloads
     fun init(
         viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
         layoutManager: LinearLayoutManager? = null,

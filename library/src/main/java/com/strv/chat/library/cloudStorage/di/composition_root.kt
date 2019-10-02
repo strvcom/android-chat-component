@@ -1,3 +1,5 @@
+@file:JvmName("CloudStorageCompositionRoot")
+
 package com.strv.chat.library.cloudStorage.di
 
 import com.google.firebase.storage.FirebaseStorage

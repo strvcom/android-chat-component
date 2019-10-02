@@ -53,6 +53,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
     }
 
+    @JvmOverloads
     fun init(
         conversationId: String,
         onClickAction: OnClickAction<ChatItemView>,
