@@ -46,6 +46,10 @@ class SendWidget @JvmOverloads constructor(
         findViewById<EditText>(R.id.et_message_input)
     }
 
+    private val buttonText by lazy {
+        findViewById<ImageButton>(R.id.ib_text)
+    }
+
     private val buttonImage by lazy {
         findViewById<ImageButton>(R.id.ib_image)
     }
@@ -155,5 +159,7 @@ class SendWidget @JvmOverloads constructor(
     private fun applyStyle(style: SendWidgetStyle) {
         setBackgroundColor(style.backgroundColor)
         buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
+        buttonText.setColorFilter(style.filterColorActivated)
+        buttonImage.setColorFilter(style.filterColorNormal)
     }
 }

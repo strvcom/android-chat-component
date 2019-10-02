@@ -28,8 +28,11 @@ abstract class Style(
     protected fun systemBackgroundColor(): Int =
         systemColor(R.attr.background)
 
-    protected fun systemColorButtonNormal(): Int =
-        systemColor(R.attr.colorButtonNormal)
+    protected fun systemControlNormalColor(): Int =
+        systemColor(R.attr.colorControlNormal)
+
+    protected fun systemControlActivatedColor(): Int =
+        systemColor(R.attr.colorControlActivated)
 
     protected fun systemPrimaryColor(): Int =
         systemColor(R.attr.colorPrimary)
