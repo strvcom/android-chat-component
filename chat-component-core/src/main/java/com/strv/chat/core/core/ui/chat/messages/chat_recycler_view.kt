@@ -11,7 +11,8 @@ import com.strv.chat.core.core.session.ChatComponent.chatAdapter
 import com.strv.chat.core.core.session.ChatComponent.chatClient
 import com.strv.chat.core.core.session.ChatComponent.memberProvider
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
-import com.strv.chat.core.core.ui.chat.data.mapper.chatItemView
+import com.strv.chat.core.core.ui.chat.data.creator.ChatItemViewListConfiguration
+import com.strv.chat.core.core.ui.chat.data.creator.ChatItemViewListCreator
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
@@ -112,7 +113,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 response.first()
             )
         }.map { model ->
-            chatItemView(model, memberProvider())
+            ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
         }.onNext { itemViews ->
             onMessagesChanged(itemViews)
         }.also { task ->
@@ -127,7 +128,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         chatClient().messages(
             conversationId, startAfter
         ).map { model ->
-            chatItemView(model, memberProvider())
+            ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
         }.onSuccess { response ->
             chatAdapter.submitList(chatAdapter.getItems().plus(response))
         }.onError { error ->

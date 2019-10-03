@@ -11,7 +11,8 @@ import com.strv.chat.core.core.session.ChatComponent.memberProvider
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationAdapter
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationViewHolderProvider
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.core.core.ui.conversation.data.mapper.conversationItemView
+import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewListConfiguration
+import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewListCreator
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
@@ -55,7 +56,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { model ->
-            conversationItemView(model, memberProvider()).also(::onConversationsChanged)
+            ConversationItemViewListCreator.create(ConversationItemViewListConfiguration(model, memberProvider())).also(::onConversationsChanged)
         }.also { task ->
             disposable.add(task)
         }
