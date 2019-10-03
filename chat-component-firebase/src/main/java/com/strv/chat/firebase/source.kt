@@ -1,4 +1,4 @@
-package com.strv.chat.core.firebase
+package com.strv.chat.firebase
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -45,6 +45,6 @@ data class FirebaseListSource<Entity : SourceEntity>(
 
     override fun unsubscribe() {
         eventListener?.let(source::removeEventListener)
-        eventListener == null
+        eventListener = null
     }
 }

@@ -1,4 +1,4 @@
-package com.strv.chat.core.firebase
+package com.strv.chat.firebase
 
 import com.google.firebase.database.DatabaseReference
 import com.strv.chat.core.data.entity.SourceEntity
