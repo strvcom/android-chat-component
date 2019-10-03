@@ -13,11 +13,14 @@ import com.strv.chat.firestore.MESSAGES_COLLECTION
 import com.strv.chat.firestore.SEEN_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreMessageEntity
 import com.strv.chat.firestore.entity.LAST_MESSAGE
+import com.strv.chat.firestore.entity.creator.MessageEntityConfiguration
+import com.strv.chat.firestore.entity.creator.MessageEntityCreator
+import com.strv.chat.firestore.entity.creator.SeenEntityConfiguration
+import com.strv.chat.firestore.entity.creator.SeenEntityCreator
 import com.strv.chat.firestore.firestoreChatMessages
 import com.strv.chat.firestore.listSource
-import com.strv.chat.firestore.model.mapper.messageEntity
-import com.strv.chat.firestore.model.mapper.messageModels
-import com.strv.chat.firestore.model.mapper.seenEntity
+import com.strv.chat.firestore.model.creator.MessageModelListConfiguration
+import com.strv.chat.firestore.model.creator.MessageModelListCreator
 import java.util.Date
 
 class FirestoreChatClient(
@@ -25,9 +28,17 @@ class FirestoreChatClient(
 ) : ChatClient {
 
     override fun messages(conversationId: String, startAfter: Date, limit: Long) =
-        firestoreListSource(firestoreChatMessages(firebaseDb, conversationId, Timestamp(startAfter)))
+        firestoreListSource(
+            firestoreChatMessages(
+                firebaseDb,
+                conversationId,
+                Timestamp(startAfter)
+            )
+        )
             .get()
-            .map(::messageModels)
+            .map { messages ->
+                MessageModelListCreator.create(MessageModelListConfiguration(messages))
+            }
 
     override fun subscribeMessages(
         conversationId: String,
@@ -35,7 +46,9 @@ class FirestoreChatClient(
     ) =
         firestoreListSource(firestoreChatMessages(firebaseDb, conversationId))
             .subscribe()
-            .map(::messageModels)
+            .map { messages ->
+                MessageModelListCreator.create(MessageModelListConfiguration(messages))
+            }
 
 
     override fun sendMessage(message: MessageInputModel) =
@@ -46,11 +59,24 @@ class FirestoreChatClient(
 
             firebaseDb.batch()
                 .run {
-                    set(messageDocument, messageEntity(messageDocument.id, message).toMap())
+                    set(
+                        messageDocument,
+                        MessageEntityCreator.create(
+                            MessageEntityConfiguration(
+                                messageDocument.id,
+                                message
+                            )
+                        ).toMap()
+                    )
                     update(
                         conversationDocument,
                         LAST_MESSAGE,
-                        messageEntity(messageDocument.id, message).toLastMessageMap()
+                        MessageEntityCreator.create(
+                            MessageEntityConfiguration(
+                                messageDocument.id,
+                                message
+                            )
+                        ).toLastMessageMap()
                     )
                     commit()
                 }
@@ -70,7 +96,7 @@ class FirestoreChatClient(
                 .collection(SEEN_COLLECTION)
                 .document(userId)
 
-            seenSenderDocument.set(seenEntity(model).toMap())
+            seenSenderDocument.set(SeenEntityCreator.create(SeenEntityConfiguration(model)).toMap())
                 .addOnSuccessListener {
                     invokeSuccess(model.id)
                 }

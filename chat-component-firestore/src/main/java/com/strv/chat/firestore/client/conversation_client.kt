@@ -7,15 +7,19 @@ import com.strv.chat.core.domain.map
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.firestore.firestoreConversations
 import com.strv.chat.firestore.listSource
-import com.strv.chat.firestore.model.mapper.conversationModels
+import com.strv.chat.firestore.model.creator.ConversationModelListConfiguration
+import com.strv.chat.firestore.model.creator.ConversationModelListCreator
 
 class FirestoreConversationClient(
     val firebaseDb: FirebaseFirestore
-): ConversationClient {
+) : ConversationClient {
 
     override fun subscribeConversations(userId: String) =
         firestoreListSource(firestoreConversations(firebaseDb, userId))
-            .subscribe().map(::conversationModels)
+            .subscribe()
+            .map { conversation ->
+                ConversationModelListCreator.create(ConversationModelListConfiguration(conversation))
+            }
 
 
     private fun firestoreListSource(source: Query) =
