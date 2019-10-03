@@ -3,13 +3,14 @@ package com.strv.chat.core.domain
 import com.strv.chat.core.domain.ObservableTask.ObservableTaskImpl
 import com.strv.chat.core.domain.ProgressTask.ProgressTaskImpl
 import com.strv.chat.core.domain.Task.TaskImpl
+import java.util.LinkedList
 
 interface Disposable {
 
     fun dispose()
 }
 
-sealed class Task<R, E> : Disposable {
+sealed class Task<R, E> {
 
     abstract fun onSuccess(callback: (result: R) -> Unit): Task<R, E>
 
@@ -22,42 +23,37 @@ sealed class Task<R, E> : Disposable {
         private var completed = false
         private val successful get() = completed && error == null
 
-        private val successCallbacks = mutableListOf<(R) -> Unit>()
-        private val errorCallbacks = mutableListOf<(E) -> Unit>()
+        private val successCallbacks = LinkedList<(R) -> Unit>()
+        private val errorCallbacks = LinkedList<(E) -> Unit>()
 
         override fun onSuccess(callback: (result: R) -> Unit) = apply {
-            successCallbacks.add(callback)
-
-            if (completed && successful && result != null)
+            if (completed && successful && result != null) {
                 callback(result!!)
+            } else {
+                successCallbacks.add(callback)
+            }
         }
 
         override fun onError(callback: (error: E) -> Unit) = apply {
-            errorCallbacks.add(callback)
-
-            if (completed && !successful && error != null)
+            if (completed && !successful && error != null) {
                 callback(error!!)
+            } else {
+                errorCallbacks.add(callback)
+            }
         }
 
         fun invokeSuccess(result: R) {
             completed = true
             this.result = result
 
-            successCallbacks.forEach { it.invoke(result) }
+            successCallbacks.collect { it.invoke(result) }
         }
 
         fun invokeError(error: E) {
             completed = true
             this.error = error
 
-            errorCallbacks.forEach { it.invoke(error) }
-        }
-
-        override fun dispose() {
-            result = null
-            error = null
-            successCallbacks.removeAll(successCallbacks)
-            errorCallbacks.removeAll(errorCallbacks)
+            errorCallbacks.collect { it.invoke(error) }
         }
     }
 }
@@ -81,7 +77,6 @@ sealed class ProgressTask<R, E> : TaskImpl<R, E>(), Disposable {
         }
 
         override fun dispose() {
-            super.dispose()
             progressCallbacks.removeAll(progressCallbacks)
 
             onDispose?.invoke()

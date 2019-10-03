@@ -15,6 +15,7 @@ import com.strv.chat.core.core.ui.conversation.data.mapper.conversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
+import com.strv.chat.core.domain.collect
 import strv.ktools.logE
 import java.util.LinkedList
 
@@ -61,9 +62,7 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
 
     fun onStop() {
-        while (disposable.isNotEmpty()) {
-            disposable.pop().dispose()
-        }
+        disposable.collect(Disposable::dispose)
     }
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {

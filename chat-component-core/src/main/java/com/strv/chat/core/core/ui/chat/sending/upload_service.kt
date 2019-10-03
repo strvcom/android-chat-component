@@ -29,6 +29,7 @@ import com.strv.chat.core.core.ui.extensions.toBitmap
 import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.Task
 import com.strv.chat.core.domain.client.DownloadUrl
+import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.flatMap
 import com.strv.chat.core.domain.model.MessageInputModel
 import com.strv.chat.core.domain.model.MessageInputModel.ImageInputModel.ImageModel
@@ -88,31 +89,29 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
     override fun onDestroy() {
         logD("UploadPhotoService is destroyed")
 
-        while (disposable.isNotEmpty()) {
-            disposable.pop().dispose()
-        }
+        disposable.collect(Disposable::dispose)
 
         super.onDestroy()
     }
 
     private fun uploadImage(startId: Int, name: String, bitmap: Bitmap) =
-        disposable.add(
-            mediaClient().uploadUrl(name)
-                .flatMap { url ->
-                    mediaClient().uploadImage(bitmap, url)
-                        .onProgress { progress ->
-                            showNotification(startId, uploadingNotification(progress))
-                        }
-                }.flatMap { url ->
-                    sendImageMessage(url)
-                }.onError { error ->
-                    logE(error.localizedMessage ?: "Unknown error")
-                    showNotification(startId, errorNotification())
-                }.onSuccess { id ->
-                    logD("IImageModel message $id has been sent")
-                    showNotification(startId, doneNotification())
-                }
-        )
+        mediaClient().uploadUrl(name)
+            .flatMap { url ->
+                mediaClient().uploadImage(bitmap, url)
+                    .onProgress { progress ->
+                        showNotification(startId, uploadingNotification(progress))
+                    }.also {
+                        disposable.add(it)
+                    }
+            }.flatMap { url ->
+                sendImageMessage(url)
+            }.onError { error ->
+                logE(error.localizedMessage ?: "Unknown error")
+                showNotification(startId, errorNotification())
+            }.onSuccess { id ->
+                logD("IImageModel message $id has been sent")
+                showNotification(startId, doneNotification())
+            }
 
     private fun sendImageMessage(messageUrl: DownloadUrl): Task<String, Throwable> =
         sendMessage(

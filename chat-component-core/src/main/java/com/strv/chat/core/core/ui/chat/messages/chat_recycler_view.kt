@@ -18,6 +18,7 @@ import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.ObservableTask
+import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.map
 import strv.ktools.logE
 import java.util.Date
@@ -61,7 +62,7 @@ class ChatRecyclerView @JvmOverloads constructor(
     private val onLayoutChangeListener =
         OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
-                postDelayed( { scrollToPosition(0) }, 50)
+                postDelayed({ scrollToPosition(0) }, 50)
             }
         }
 
@@ -109,9 +110,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 memberProvider().currentUserId(),
                 conversationId,
                 response.first()
-            ).also { task ->
-                disposable.add(task)
-            }
+            )
         }.map { model ->
             chatItemView(model, memberProvider())
         }.onNext { itemViews ->
@@ -121,23 +120,19 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
 
     fun onStop() {
-        while (disposable.isNotEmpty()) {
-            disposable.pop().dispose()
-        }
+        disposable.collect(Disposable::dispose)
     }
 
     private fun loadMoreMessages(startAfter: Date) {
-        disposable.add(
-            chatClient().messages(
-                conversationId, startAfter
-            ).map { model ->
-                chatItemView(model, memberProvider())
-            }.onSuccess { response ->
-                chatAdapter.submitList(chatAdapter.getItems().plus(response))
-            }.onError { error ->
-                logE(error.localizedMessage ?: "Unknown error")
-            }
-        )
+        chatClient().messages(
+            conversationId, startAfter
+        ).map { model ->
+            chatItemView(model, memberProvider())
+        }.onSuccess { response ->
+            chatAdapter.submitList(chatAdapter.getItems().plus(response))
+        }.onError { error ->
+            logE(error.localizedMessage ?: "Unknown error")
+        }
     }
 
     private fun onMessagesChanged(items: List<ChatItemView>) {
