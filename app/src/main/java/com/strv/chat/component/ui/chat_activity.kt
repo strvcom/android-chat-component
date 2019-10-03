@@ -3,7 +3,6 @@ package com.strv.chat.component.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -39,9 +38,6 @@ class ChatActivity : BaseActivity() {
     val progress by lazy {
         findViewById<ProgressBar>(R.id.progress)
     }
-
-    //normally would be in ViewModel
-    private var uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +80,6 @@ class ChatActivity : BaseActivity() {
         super.onStop()
 
         chatRecyclerView.onStop()
-        sendWidget.onStop()
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -95,7 +90,7 @@ class ChatActivity : BaseActivity() {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
                     sendWidget.uploadImage(
-                        requireNotNull(uri) { "Uri has to be defined" }
+                        requireNotNull(controllerCompositionRoot().mediaProvider().uri) { "Uri has to be defined" }
                     )
                 }
                 REQUEST_IMAGE_GALLERY -> {

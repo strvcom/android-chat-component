@@ -15,9 +15,24 @@ import com.strv.chat.storage.di.cloudStorageMediaClient
 
 class CompositionRoot {
 
-    fun mediaProvider(): MediaProvider = MediaProviderImpl()
+    private var mediaProvider: MediaProvider? = null
+    private var memberProvider: MemberProvider? = null
 
-    fun memberProvider(): MemberProvider = MemberProviderImpl()
+    fun mediaProvider(): MediaProvider {
+        if (mediaProvider == null) {
+            mediaProvider = MediaProviderImpl()
+        }
+
+        return mediaProvider!!
+    }
+
+    fun memberProvider(): MemberProvider {
+        if (memberProvider == null) {
+            memberProvider = MemberProviderImpl()
+        }
+
+        return memberProvider!!
+    }
 
     fun chatClient(firebaseDb: FirebaseFirestore): ChatClient = firestoreChatClient(firebaseDb)
 

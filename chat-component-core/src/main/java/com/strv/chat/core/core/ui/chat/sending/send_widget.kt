@@ -21,20 +21,16 @@ import com.strv.chat.core.core.ui.extensions.reset
 import com.strv.chat.core.core.ui.extensions.selector
 import com.strv.chat.core.core.ui.extensions.tint
 import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
-import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.model.MessageInputModel
 import com.strv.chat.core.domain.provider.MediaProvider
 import strv.ktools.logD
 import strv.ktools.logE
-import java.util.LinkedList
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-
-    private val disposable = LinkedList<Disposable>()
 
     private lateinit var conversationId: String
     private lateinit var mediaProvider: MediaProvider
@@ -72,12 +68,6 @@ class SendWidget @JvmOverloads constructor(
     ) {
         this@SendWidget.conversationId = conversationId
         this@SendWidget.mediaProvider = mediaProvider
-    }
-
-    fun onStop() {
-        while (disposable.isNotEmpty()) {
-            disposable.pop().dispose()
-        }
     }
 
     fun uploadImage(uri: Uri) {
@@ -146,14 +136,12 @@ class SendWidget @JvmOverloads constructor(
     }
 
     private fun sendMessage(message: MessageInputModel) {
-        disposable.add(
-            chatClient().sendMessage(message)
-                .onError { error ->
-                    logE(error.localizedMessage ?: "Unknown error")
-                }.onSuccess {
-                    logD("Message $it has been sent")
-                }
-        )
+        chatClient().sendMessage(message)
+            .onError { error ->
+                logE(error.localizedMessage ?: "Unknown error")
+            }.onSuccess {
+                logD("Message $it has been sent")
+            }
     }
 
     private fun applyStyle(style: SendWidgetStyle) {
