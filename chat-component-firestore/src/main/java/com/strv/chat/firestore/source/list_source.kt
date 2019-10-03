@@ -55,6 +55,6 @@ internal data class FirestoreListSource<Entity : SourceEntity>(
 
     override fun unsubscribe() {
         listenerRegistration?.remove()
-        listenerRegistration == null
+        listenerRegistration = null
     }
 }
