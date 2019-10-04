@@ -55,6 +55,7 @@ class FirestoreChatClient(
         task<String, Throwable> {
             val conversationDocument =
                 firebaseDb.collection(CONVERSATIONS_COLLECTION).document(message.conversationId)
+
             val messageDocument = conversationDocument.collection(MESSAGES_COLLECTION).document()
 
             firebaseDb.batch()
