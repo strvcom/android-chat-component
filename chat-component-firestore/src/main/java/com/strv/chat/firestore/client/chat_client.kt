@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Transaction
 import com.google.firebase.firestore.WriteBatch
 import com.strv.chat.core.domain.client.ChatClient
 import com.strv.chat.core.domain.map
@@ -63,7 +64,7 @@ class FirestoreChatClient(
 
             newMessage(batch, messageDocument, message)
             lastMessage(batch, conversationDocument, messageDocument, message)
-            seen(batch, conversationDocument, messageDocument, message)
+            seen(batch, conversationDocument, messageDocument.id, message.senderId)
 
             batch.commit()
                 .addOnSuccessListener {
@@ -74,19 +75,23 @@ class FirestoreChatClient(
                 }
         }
 
-    override fun setSeen(currentUserId: String, conversationId: String, messageId: String) {
-        val conversationDocument =
-            firebaseDb.collection(CONVERSATIONS_COLLECTION).document(conversationId)
+    override fun setSeenIfNot(currentUserId: String, conversationId: String, messageId: String) =
+        task<String, Throwable> {
+            val conversationDocument =
+                firebaseDb.collection(CONVERSATIONS_COLLECTION).document(conversationId)
 
-        conversationDocument.update(
-            "$SEEN.$currentUserId",
-            SeenEntityCreator.create(
-                SeenEntityConfiguration(
-                    messageId
-                )
-            ).toMap()
-        )
-    }
+            firebaseDb.runTransaction { transaction ->
+                val conversation = transaction.get(conversationDocument)
+
+                if (conversation.getString("$LAST_MESSAGE.$currentUserId") !== messageId) {
+                    seen(transaction, conversationDocument, messageId, currentUserId)
+                }
+            }.addOnSuccessListener {
+                invokeSuccess(messageId)
+            }.addOnFailureListener { error ->
+                invokeError(error)
+            }
+        }
 
     private fun newMessage(
         batch: WriteBatch,
@@ -125,15 +130,32 @@ class FirestoreChatClient(
     private fun seen(
         batch: WriteBatch,
         conversationDocument: DocumentReference,
-        messageDocument: DocumentReference,
-        message: MessageInputModel
+        messageId: String,
+        senderId: String
     ) {
         batch.update(
             conversationDocument,
-            "$SEEN.${message.senderId}",
+            "$SEEN.$senderId",
             SeenEntityCreator.create(
                 SeenEntityConfiguration(
-                    messageDocument.id
+                    messageId
+                )
+            ).toMap()
+        )
+    }
+
+    private fun seen(
+        transaction: Transaction,
+        conversationDocument: DocumentReference,
+        messageId: String,
+        senderId: String
+    ) {
+        transaction.update(
+            conversationDocument,
+            "$SEEN.$senderId",
+            SeenEntityCreator.create(
+                SeenEntityConfiguration(
+                    messageId
                 )
             ).toMap()
         )

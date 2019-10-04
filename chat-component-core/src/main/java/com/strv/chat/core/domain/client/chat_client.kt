@@ -10,7 +10,7 @@ interface ChatClient {
 
     fun sendMessage(message: MessageInputModel): Task<String, Throwable>
 
-    fun setSeen(currentUserId: String, conversationId: String, messageId: String)
+    fun setSeenIfNot(currentUserId: String, conversationId: String, messageId: String): Task<String, Throwable>
 
     fun messages(conversationId: String, startAfter: Date, limit: Long = 50): Task<List<IMessageModel>, Throwable>
 
