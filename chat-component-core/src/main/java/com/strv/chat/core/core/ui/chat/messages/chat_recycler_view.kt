@@ -107,10 +107,10 @@ class ChatRecyclerView @JvmOverloads constructor(
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { response ->
-            chatClient().setSeen(
+            chatClient().setSeenIfNot(
                 memberProvider().currentUserId(),
                 conversationId,
-                response.first()
+                response.first().id
             )
         }.map { model ->
             ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
@@ -141,7 +141,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             submitList(items)
 
             if (items.isNotEmpty()) {
-                scrollToPosition(0)
+                postDelayed({ scrollToPosition(0) }, 50)
             }
         }
     }

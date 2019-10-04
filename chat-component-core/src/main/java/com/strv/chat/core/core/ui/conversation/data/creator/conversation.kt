@@ -17,7 +17,7 @@ object ConversationItemViewCreator :
     override val create: ConversationItemViewConfiguration.() -> ConversationItemView = {
         ConversationItemView(
             conversation.id,
-            false,
+            conversation.seen[memberProvider.currentUserId()]?.messageId != conversation.lastMessage.id,
             //todo what if there is just one user/more than two users
             conversation.members
                 .filterNot { memberId ->
