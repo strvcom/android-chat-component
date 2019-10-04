@@ -1,5 +1,7 @@
 package com.strv.chat.core.core.ui.conversation.adapter
 
+import android.graphics.Typeface.BOLD
+import android.graphics.Typeface.NORMAL
 import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,7 +16,8 @@ import com.strv.chat.core.core.ui.view.TimeTextView
 
 internal class DefaultConversationViewHolder(
     parent: ViewGroup
-) : ConversationViewHolder(parent, R.layout.item_conversation), Styleable<ConversationRecyclerViewStyle> {
+) : ConversationViewHolder(parent, R.layout.item_conversation),
+    Styleable<ConversationRecyclerViewStyle> {
     private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_photo)
     private val textUserName = itemView.findViewById<TextView>(R.id.tv_user_name)
     private val textLastMessage = itemView.findViewById<TextView>(R.id.tv_message)
@@ -27,6 +30,7 @@ internal class DefaultConversationViewHolder(
         imageIcon.imageCircleUrl(item.iconUrl)
         textUserName.text = item.title
         textLastMessage.text = item.message
+        textLastMessage.setTypeface(null, if (item.unread) BOLD else NORMAL)
         textDate.date = item.sentDate
 
         itemView.setOnClickListener {

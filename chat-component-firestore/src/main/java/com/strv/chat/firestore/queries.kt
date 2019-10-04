@@ -10,7 +10,6 @@ import com.strv.chat.firestore.entity.TIMESTAMP
 
 const val CONVERSATIONS_COLLECTION = "conversations"
 const val MESSAGES_COLLECTION = "messages"
-const val SEEN_COLLECTION = "seen"
 
 internal fun firestoreConversations(
     firestoreDb: FirebaseFirestore,

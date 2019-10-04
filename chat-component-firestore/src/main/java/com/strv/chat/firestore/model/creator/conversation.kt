@@ -7,6 +7,7 @@ import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.firestore.entity.LAST_MESSAGE
 import com.strv.chat.firestore.entity.MEMBERS
+import com.strv.chat.firestore.entity.SEEN
 import com.strv.chat.firestore.model.FirestoreConversationModel
 import strv.ktools.logE
 
@@ -18,6 +19,9 @@ object ConversationModelCreator : Creator<IConversationModel, ConversationModelC
             requireNotNull(conversation.members) { logE("$MEMBERS must be specified") }.also { members ->
                 require(members.isNotEmpty()) { logE("$MEMBERS can not be empty") }
             },
+            requireNotNull(conversation.seen?.mapValues { entry ->
+                SeenModelCreator.create(SeenModelConfiguration(requireNotNull(entry.value) { "$SEEN data must be specified" }))
+            }) { "$SEEN must be specified" },
             MessageModelCreator.create(MessageModelConfiguration(requireNotNull(conversation.lastMessage) {
                 "$LAST_MESSAGE must be specified"
             }))

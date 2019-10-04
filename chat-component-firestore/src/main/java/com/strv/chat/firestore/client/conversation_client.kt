@@ -7,9 +7,7 @@ import com.strv.chat.core.domain.client.ConversationClient
 import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
-import com.strv.chat.firestore.SEEN_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
-import com.strv.chat.firestore.entity.FirestoreSeenEntity
 import com.strv.chat.firestore.firestoreConversations
 import com.strv.chat.firestore.listSource
 import com.strv.chat.firestore.model.creator.ConversationModelListConfiguration
@@ -24,19 +22,12 @@ class FirestoreConversationClient(
             val conversationDocument =
                 firebaseDb.collection(CONVERSATIONS_COLLECTION).document()
 
-            val seenCollection = conversationDocument.collection(SEEN_COLLECTION)
-
-            firebaseDb.batch().run {
-                set(
-                    conversationDocument, FirestoreConversationEntity(members = memberIds).toMap()
-                )
-
-                for (id in memberIds) {
-                    set(seenCollection.document(id), FirestoreSeenEntity().toMap(false))
-                }
-
-                commit()
-            }.addOnSuccessListener {
+            conversationDocument.set(
+                FirestoreConversationEntity(
+                    members = memberIds,
+                    seen = memberIds.associateWith { null }
+                ).toMap()
+            ).addOnSuccessListener {
                 invokeSuccess(conversationDocument.id)
 
             }.addOnFailureListener { error ->

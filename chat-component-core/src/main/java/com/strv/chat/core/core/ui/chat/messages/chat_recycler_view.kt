@@ -110,7 +110,7 @@ class ChatRecyclerView @JvmOverloads constructor(
             chatClient().setSeen(
                 memberProvider().currentUserId(),
                 conversationId,
-                response.first()
+                response.first().id
             )
         }.map { model ->
             ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
