@@ -18,9 +18,9 @@ The `conversations` is the top level collection in firestore
 * `last_message` - container for the minimum necessary info about the last message - the structure same as a standard message
     * ...
 * `members` [] - an array of users who are members of this conversation
-* `seen` - a sub-collection of users as documents saving the last message they read
-    * `message_id` - identifier of the last message read by user with `userId == documentId`
-	* `timestamp` - timestamp of seeing the last message by user with `userId == documentId`
+* `seen` [] - a map with `userId` as an identifier saving the last message that was read
+	* `message_id` - identifier of the last message read by the user
+	* `timestamp` - timestamp of seeing the last message by the user
 * `messages` - as a subcollection of the conversation that can be paged and queried independently
 
 #### Messages
@@ -114,12 +114,9 @@ val conversationDocument = conversationCollection.document(conversationId) // a 
 val messagesCollection = conversationDocument.collection("messages")
 val messagesDocument = messagesCollection.document() // creates an empty document to receive message_id to update seen-collection
 
-val seenCollection = conversationDocument.collection("seen")
-val seenSenderDocument = seenCollection.document(senderId)
-
 writeBatch.set(messagesDocument, message)
 writeBatch.update(conversationDocument, "last_message", message)
-writeBatch.set(seenSenderDocument, seenData)
+writeBatch.update(conversationDocument, "seen.userId", seenData)
 	
 //Commit the batch and set listeners for success and failure
 writeBatch.commit()						
@@ -136,7 +133,7 @@ firestoreDb
     .document(conversationId)
     .collection("seen")
     .document(userId)
-    .set(seenData)
+    .update("seen.userId", seenData)
 ```
 
 #### Loading user metadata
