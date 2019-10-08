@@ -4,7 +4,7 @@ import com.strv.chat.core.data.entity.SourceEntity
 import com.strv.chat.core.domain.ObservableTask
 import com.strv.chat.core.domain.Task
 
-interface ListSource<Entity : SourceEntity> {
+interface ListQuerySource<Entity : SourceEntity> {
 
     fun get(): Task<List<Entity>, Throwable>
 

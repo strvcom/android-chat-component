@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.strv.chat.component.di.CompositionRoot
+import com.strv.chat.component.model.CURRENT_USER_ID
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.config.Configuration
 import com.strv.chat.core.core.ui.extensions.serviceConfig
@@ -59,6 +60,7 @@ class App : Application() {
             Configuration(
                 compositionRoot.chatClient(firestoreDb),
                 compositionRoot.conversationClient(firestoreDb),
+                compositionRoot.memberClient(firestoreDb, CURRENT_USER_ID),
                 compositionRoot.mediaClient(firebaseStorage),
                 serviceConfig(CHANNEL_ID),
                 compositionRoot.memberProvider()

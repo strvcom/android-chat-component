@@ -11,6 +11,6 @@ class MemberProviderImpl : MemberProvider {
 
     override fun member(memberId: String): IMemberModel =
         members.first { member ->
-            member.userId == memberId
+            member.memberId == memberId
         }
 }

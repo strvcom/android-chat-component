@@ -7,10 +7,12 @@ import com.strv.chat.component.business.MemberProviderImpl
 import com.strv.chat.core.domain.client.ChatClient
 import com.strv.chat.core.domain.client.ConversationClient
 import com.strv.chat.core.domain.client.MediaClient
+import com.strv.chat.core.domain.client.MemberClient
 import com.strv.chat.core.domain.provider.MediaProvider
 import com.strv.chat.core.domain.provider.MemberProvider
 import com.strv.chat.firestore.di.firestoreChatClient
 import com.strv.chat.firestore.di.firestoreConversationClient
+import com.strv.chat.firestore.di.firestoreMemberClient
 import com.strv.chat.storage.di.cloudStorageMediaClient
 
 class CompositionRoot {
@@ -38,6 +40,9 @@ class CompositionRoot {
 
     fun conversationClient(firebaseDb: FirebaseFirestore): ConversationClient =
         firestoreConversationClient(firebaseDb)
+
+    fun memberClient(firebaseDb: FirebaseFirestore, currentUserId: String): MemberClient =
+        firestoreMemberClient(firebaseDb, currentUserId)
 
     fun mediaClient(firebaseStore: FirebaseStorage): MediaClient =
         cloudStorageMediaClient(firebaseStore)

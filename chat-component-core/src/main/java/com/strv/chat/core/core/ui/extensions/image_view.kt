@@ -6,7 +6,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import com.strv.chat.core.R
 
-internal fun ImageView.imageCircleUrl(imageUrl: String) {
+internal fun ImageView.imageCircleUrl(imageUrl: String?) {
     Glide.with(context)
         .load(imageUrl)
         .apply(RequestOptions().apply { circleCrop() })

@@ -16,7 +16,7 @@ val user2 = Member(OTHER_USER_ID, OTHER_USER_NAME, OTHER_USER_IMAGE)
 val members = listOf(user1, user2)
 
 data class Member(
-    override val userId: String,
-    override val userName: String,
-    override val userPhotoUrl: String
+    override val memberId: String,
+    override val memberName: String,
+    override val memberPhotoUrl: String
 ): IMemberModel

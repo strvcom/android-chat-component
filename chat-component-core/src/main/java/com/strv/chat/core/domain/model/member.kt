@@ -1,7 +1,7 @@
 package com.strv.chat.core.domain.model
 
 interface IMemberModel {
-    val userId: String
-    val userName: String
-    val userPhotoUrl: String
+    val memberId: String
+    val memberName: String
+    val memberPhotoUrl: String
 }

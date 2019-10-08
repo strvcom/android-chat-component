@@ -181,7 +181,6 @@ fun <R, E, V> Task<R, E>.flatMap(transform: (R) -> Task<V, E>): Task<V, E> =
         }
     }
 
-
 inline fun <R, E, V> ObservableTask<R, E>.map(crossinline transform: (R) -> V) =
     when (this) {
         is ObservableTaskImpl -> {
@@ -197,4 +196,19 @@ inline fun <R, E, V> ObservableTask<R, E>.map(crossinline transform: (R) -> V) =
         }
     }
 
+internal fun <R, E, V> ObservableTask<List<R>, E>.mapIterable(transform: (R) -> V) =
+    when (this) {
+        is ObservableTaskImpl -> {
+            observableTask<List<V>, E>(onDispose) {
+                this@mapIterable.onNext { rResult ->
+
+                    invokeNext(rResult.map(transform))
+                }
+
+                this@mapIterable.onError { error ->
+                    invokeError(error)
+                }
+            }
+        }
+    }
 

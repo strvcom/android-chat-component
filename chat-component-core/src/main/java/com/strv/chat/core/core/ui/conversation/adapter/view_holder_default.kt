@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.strv.chat.core.R
+import com.strv.chat.core.core.session.ChatComponent.string
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.core.ui.extensions.imageCircleUrl
 import com.strv.chat.core.core.ui.view.TimeTextView
+import strv.ktools.logE
 
 internal class DefaultConversationViewHolder(
     parent: ViewGroup
@@ -27,8 +29,19 @@ internal class DefaultConversationViewHolder(
         item: ConversationItemView,
         onClickAction: OnClickAction<ConversationItemView>
     ) {
-        imageIcon.imageCircleUrl(item.iconUrl)
-        textUserName.text = item.title
+        item.membersTask
+            .onSuccess { memberViews ->
+                //todo what to do if we have more users, see (34, 7) //todo how to handle title + picture of the conversation?
+                imageIcon.imageCircleUrl(memberViews[0].userPhotoUrl)
+                textUserName.text = memberViews
+                    .fold(listOf<String>()) { acc, memberView ->
+                        acc.plus(memberView.userName)
+                    }.joinToString()
+            }.onError { error ->
+                textUserName.text = string(R.string.error)
+                logE(error.localizedMessage ?: "Unknown error")
+            }
+
         textLastMessage.text = item.message
         textLastMessage.setTypeface(null, if (item.unread) BOLD else NORMAL)
         textDate.date = item.sentDate
