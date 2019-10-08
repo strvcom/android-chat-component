@@ -7,16 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.ChatComponent.conversationAdapter
 import com.strv.chat.core.core.session.ChatComponent.conversationViewHolderProvider
+import com.strv.chat.core.core.session.ChatComponent.memberClient
 import com.strv.chat.core.core.session.ChatComponent.memberProvider
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationAdapter
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationViewHolderProvider
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewListConfiguration
-import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewListCreator
+import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewConfiguration
+import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewCreator
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.collect
+import com.strv.chat.core.domain.mapIterable
 import strv.ktools.logE
 import java.util.LinkedList
 
@@ -55,8 +57,15 @@ class ConversationRecyclerView @JvmOverloads constructor(
             memberProvider().currentUserId()
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
-        }.onNext { model ->
-            ConversationItemViewListCreator.create(ConversationItemViewListConfiguration(model, memberProvider())).also(::onConversationsChanged)
+        }.mapIterable { model ->
+            ConversationItemViewCreator.create(
+                ConversationItemViewConfiguration(
+                    model,
+                    memberClient()
+                )
+            )
+        }.onNext { list ->
+            onConversationsChanged(list)
         }.also { task ->
             disposable.add(task)
         }

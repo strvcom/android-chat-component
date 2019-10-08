@@ -3,14 +3,14 @@ package com.strv.chat.firestore.source
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.strv.chat.core.data.entity.SourceEntity
-import com.strv.chat.core.data.source.ListSource
+import com.strv.chat.core.data.source.ListQuerySource
 import com.strv.chat.core.domain.observableTask
 import com.strv.chat.core.domain.task
 
-internal data class FirestoreListSource<Entity : SourceEntity>(
+internal data class FirestoreListQuerySource<Entity : SourceEntity>(
     private val source: Query,
     private val clazz: Class<Entity>
-) : ListSource<Entity> {
+) : ListQuerySource<Entity> {
 
     private var listenerRegistration: ListenerRegistration? = null
 

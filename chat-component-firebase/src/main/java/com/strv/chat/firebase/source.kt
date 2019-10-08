@@ -5,14 +5,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.strv.chat.core.data.entity.SourceEntity
-import com.strv.chat.core.data.source.ListSource
+import com.strv.chat.core.data.source.ListQuerySource
 import com.strv.chat.core.domain.Task
 import com.strv.chat.core.domain.observableTask
 
-data class FirebaseListSource<Entity : SourceEntity>(
+data class FirebaseListQuerySource<Entity : SourceEntity>(
     private val source: DatabaseReference,
     private val clazz: Class<Entity>
-) : ListSource<Entity> {
+) : ListQuerySource<Entity> {
 
     private var eventListener: ValueEventListener? = null
 

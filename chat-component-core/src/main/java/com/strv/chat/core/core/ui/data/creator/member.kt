@@ -7,7 +7,7 @@ import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 
 object MemberViewCreator : Creator<MemberView, MemberViewConfiguration> {
     override val create: MemberViewConfiguration.() -> MemberView = {
-        MemberView(member.userName, member.userPhotoUrl)
+        MemberView(member.memberName, member.memberPhotoUrl)
     }
 }
 

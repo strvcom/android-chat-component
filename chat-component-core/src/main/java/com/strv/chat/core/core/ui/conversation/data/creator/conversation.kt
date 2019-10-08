@@ -3,13 +3,16 @@ package com.strv.chat.core.core.ui.conversation.data.creator
 import com.strv.chat.core.R
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
+import com.strv.chat.core.core.ui.data.creator.MemberViewsConfiguration
+import com.strv.chat.core.core.ui.data.creator.MemberViewsCreator
+import com.strv.chat.core.domain.client.MemberClient
+import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.IConversationModel
 import com.strv.chat.core.domain.model.IImageMessageModel
 import com.strv.chat.core.domain.model.IMessageModel
 import com.strv.chat.core.domain.model.ITextMessageModel
 import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
-import com.strv.chat.core.domain.provider.MemberProvider
 
 object ConversationItemViewCreator :
     Creator<ConversationItemView, ConversationItemViewConfiguration> {
@@ -17,20 +20,15 @@ object ConversationItemViewCreator :
     override val create: ConversationItemViewConfiguration.() -> ConversationItemView = {
         ConversationItemView(
             conversation.id,
-            conversation.seen[memberProvider.currentUserId()]?.messageId != conversation.lastMessage.id,
-            //todo what if there is just one user/more than two users
-            conversation.members
-                .filterNot { memberId ->
-                    memberId != memberProvider.currentUserId()
-                }.map { memberId ->
-                    memberProvider.member(memberId).userPhotoUrl
-                }.first(),
-            conversation.members
-                .filterNot { memberId ->
-                    memberId != memberProvider.currentUserId()
-                }.fold(listOf<String>()) { acc, id ->
-                    acc.plus(memberProvider.member(id).userName)
-                }.joinToString(),
+            conversation.seen[memberClient.currentUserId()]?.messageId != conversation.lastMessage.id,
+            memberClient.members(
+                conversation.members
+                    .filter { memberId ->
+                        memberId != memberClient.currentUserId()
+                    }
+            ).map { modelList ->
+                MemberViewsCreator.create(MemberViewsConfiguration(modelList))
+            },
             lastMessage(conversation.lastMessage),
             conversation.lastMessage.sentDate
         )
@@ -46,5 +44,5 @@ object ConversationItemViewCreator :
 
 class ConversationItemViewConfiguration(
     val conversation: IConversationModel,
-    val memberProvider: MemberProvider
+    val memberClient: MemberClient
 ) : CreatorConfiguration

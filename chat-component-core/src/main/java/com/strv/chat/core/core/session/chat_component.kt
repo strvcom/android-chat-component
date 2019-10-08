@@ -25,6 +25,7 @@ object ChatComponent {
 
     internal fun chatClient() = configuration.chatClient
     internal fun conversationClient() = configuration.conversationClient
+    internal fun memberClient() = configuration.memberClient
     internal fun mediaClient() = configuration.mediaClient
 
     internal fun memberProvider() = configuration.memberProvider
