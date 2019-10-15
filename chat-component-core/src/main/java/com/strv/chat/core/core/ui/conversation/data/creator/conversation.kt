@@ -3,8 +3,6 @@ package com.strv.chat.core.core.ui.conversation.data.creator
 import com.strv.chat.core.R
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
-import com.strv.chat.core.core.ui.data.creator.MemberViewsConfiguration
-import com.strv.chat.core.core.ui.data.creator.MemberViewsCreator
 import com.strv.chat.core.domain.client.MemberClient
 import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.IConversationModel
@@ -19,18 +17,22 @@ object ConversationItemViewCreator :
 
     override val create: ConversationItemViewConfiguration.() -> ConversationItemView = {
         ConversationItemView(
-            conversation.id,
-            conversation.seen[memberClient.currentUserId()]?.messageId != conversation.lastMessage.id,
-            memberClient.members(
-                conversation.members
-                    .filter { memberId ->
-                        memberId != memberClient.currentUserId()
-                    }
-            ).map { modelList ->
-                MemberViewsCreator.create(MemberViewsConfiguration(modelList))
-            },
-            lastMessage(conversation.lastMessage),
-            conversation.lastMessage.sentDate
+            id = conversation.id,
+            unread = conversation.seen[memberClient.currentUserId()]?.messageId != conversation.lastMessage.id,
+            title = conversation.members
+                .filter { member ->
+                    member.memberId != memberClient.currentUserId()
+                }.joinToString { member ->
+                    member.memberName
+                },
+            //todo what to do if we have more users?
+            pictureTask = memberClient.member(
+                conversation.members.first { member ->
+                    member.memberId != memberClient.currentUserId()
+                }.memberId
+            ).map { model -> model.memberPhotoUrl },
+            message = lastMessage(conversation.lastMessage),
+            sentDate = conversation.lastMessage.sentDate
         )
     }
 

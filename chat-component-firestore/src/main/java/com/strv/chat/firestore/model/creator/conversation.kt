@@ -6,7 +6,7 @@ import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.firestore.entity.LAST_MESSAGE
-import com.strv.chat.firestore.entity.MEMBERS
+import com.strv.chat.firestore.entity.MEMBERS_META
 import com.strv.chat.firestore.entity.SEEN
 import com.strv.chat.firestore.model.FirestoreConversationModel
 import strv.ktools.logE
@@ -16,9 +16,7 @@ object ConversationModelCreator : Creator<IConversationModel, ConversationModelC
     override val create: ConversationModelConfiguration.() -> IConversationModel = {
         FirestoreConversationModel(
             requireNotNull(conversation.id) { "$ID must me specified" },
-            requireNotNull(conversation.members) { logE("$MEMBERS must be specified") }.also { members ->
-                require(members.isNotEmpty()) { logE("$MEMBERS can not be empty") }
-            },
+            MemberMetaModelsCreator.create(MemberMetaModelsConfiguration(  requireNotNull(conversation.membersMeta) { logE("$MEMBERS_META must be specified") })),
             requireNotNull(conversation.seen?.mapValues { entry ->
                 SeenModelCreator.create(SeenModelConfiguration(requireNotNull(entry.value) { "$SEEN data must be specified" }))
             }) { "$SEEN must be specified" },

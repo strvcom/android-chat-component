@@ -5,6 +5,7 @@ import com.google.firebase.firestore.Query
 import com.strv.chat.core.domain.Task
 import com.strv.chat.core.domain.client.ConversationClient
 import com.strv.chat.core.domain.map
+import com.strv.chat.core.domain.model.IMemberModel
 import com.strv.chat.core.domain.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
@@ -17,15 +18,16 @@ class FirestoreConversationClient(
     val firebaseDb: FirebaseFirestore
 ) : ConversationClient {
 
-    override fun createConversation(memberIds: List<String>): Task<String, Throwable> =
+    override fun createConversation(members: List<IMemberModel>): Task<String, Throwable> =
         task {
             val conversationDocument =
                 firebaseDb.collection(CONVERSATIONS_COLLECTION).document()
 
             conversationDocument.set(
                 FirestoreConversationEntity(
-                    members = memberIds,
-                    seen = memberIds.associateWith { null }
+                    members = members.map { member -> member.memberId },
+                    membersMeta = members.map { member -> member.memberId to member.memberName }.toMap(),
+                    seen = members.map { member -> member.memberId to null }.toMap()
                 ).toMap()
             ).addOnSuccessListener {
                 invokeSuccess(conversationDocument.id)

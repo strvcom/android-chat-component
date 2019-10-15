@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent.string
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
@@ -29,19 +28,14 @@ internal class DefaultConversationViewHolder(
         item: ConversationItemView,
         onClickAction: OnClickAction<ConversationItemView>
     ) {
-        item.membersTask
-            .onSuccess { memberViews ->
-                //todo what to do if we have more users, see (34, 7) //todo how to handle title + picture of the conversation?
-                imageIcon.imageCircleUrl(memberViews[0].userPhotoUrl)
-                textUserName.text = memberViews
-                    .fold(listOf<String>()) { acc, memberView ->
-                        acc.plus(memberView.userName)
-                    }.joinToString()
+        item.pictureTask
+            .onSuccess { imageUrl ->
+                imageIcon.imageCircleUrl(imageUrl)
             }.onError { error ->
-                textUserName.text = string(R.string.error)
                 logE(error.localizedMessage ?: "Unknown error")
             }
 
+        textUserName.text = item.title
         textLastMessage.text = item.message
         textLastMessage.setTypeface(null, if (item.unread) BOLD else NORMAL)
         textDate.date = item.sentDate

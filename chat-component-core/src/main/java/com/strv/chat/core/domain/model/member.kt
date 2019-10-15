@@ -5,3 +5,8 @@ interface IMemberModel {
     val memberName: String
     val memberPhotoUrl: String
 }
+
+interface IMemberMetaModel {
+    val memberId: String
+    val memberName: String
+}
