@@ -44,12 +44,13 @@ class ChatComponent(
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
+    internal fun imageLoader() = configuration.imageLoader
+
     internal fun chatAdapter(
         chatViewHolderProvider: ChatViewHolderProvider,
         onClickAction: OnClickAction<ChatItemView>,
         style: ChatRecyclerViewStyle?
     ) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
-
     internal fun chatViewHolderProvider() = ChatViewHolderProvider()
 
     internal fun conversationAdapter(

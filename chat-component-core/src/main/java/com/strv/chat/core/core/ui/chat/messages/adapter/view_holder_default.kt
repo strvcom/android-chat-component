@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.strv.chat.core.R
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.HEADER
@@ -15,8 +16,6 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_IMAGE
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_TEXT_MESSAGE
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.core.ui.extensions.imageCenterCropUrl
-import com.strv.chat.core.core.ui.extensions.imageCircleUrl
 import com.strv.chat.core.core.ui.view.RelativeTimeTextView
 import com.strv.chat.core.core.ui.view.TimeTextView
 
@@ -74,7 +73,7 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
         item: ChatItemView.OtherTextMessage,
         onClickAction: OnClickAction<ChatItemView.OtherTextMessage>
     ) {
-        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
+        chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
         textMessage.text = item.text
 
         textDate.run {
@@ -104,7 +103,7 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
         item: ChatItemView.MyImageMessage,
         onClickAction: OnClickAction<ChatItemView.MyImageMessage>
     ) {
-        image.imageCenterCropUrl(item.imageUrl)
+        chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
 
         textDate.run {
             date = item.sentDate
@@ -132,8 +131,8 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
         item: ChatItemView.OtherImageMessage,
         onClickAction: OnClickAction<ChatItemView.OtherImageMessage>
     ) {
-        imageIcon.imageCircleUrl(item.sender.userPhotoUrl)
-        image.imageCenterCropUrl(item.imageUrl)
+        chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
+        chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
 
         textDate.run {
             date = item.sentDate

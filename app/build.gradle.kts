@@ -1,7 +1,8 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
     id("com.google.gms.google-services")
+    kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -37,4 +38,7 @@ dependencies {
     implementation(Dependencies.Androidx.appcompat)
     implementation(Dependencies.Androidx.recyclerView)
     implementation(Dependencies.Androidx.constraintLayout)
+
+    implementation(Dependencies.Glide.library)
+    kapt(Dependencies.Glide.compiler)
 }

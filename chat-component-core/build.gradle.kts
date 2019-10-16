@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
 }
 
 android {
@@ -20,7 +19,4 @@ dependencies {
     implementation(Dependencies.Androidx.recyclerView)
     implementation(Dependencies.Androidx.constraintLayout)
     implementation(Dependencies.Androidx.ktx)
-
-    implementation(Dependencies.Glide.library)
-    kapt(Dependencies.Glide.compiler)
 }

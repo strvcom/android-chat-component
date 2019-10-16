@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.strv.chat.core.R
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.core.ui.extensions.imageCircleUrl
 import com.strv.chat.core.core.ui.view.TimeTextView
 import strv.ktools.logE
 
@@ -30,7 +30,7 @@ internal class DefaultConversationViewHolder(
     ) {
         item.pictureTask
             .onSuccess { imageUrl ->
-                imageIcon.imageCircleUrl(imageUrl)
+                chatComponent.imageLoader().loadAvatar(imageIcon, imageUrl)
             }.onError { error ->
                 logE(error.localizedMessage ?: "Unknown error")
             }

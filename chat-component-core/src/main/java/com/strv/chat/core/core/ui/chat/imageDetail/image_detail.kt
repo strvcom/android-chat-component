@@ -3,7 +3,7 @@ package com.strv.chat.core.core.ui.chat.imageDetail
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-import com.strv.chat.core.core.ui.extensions.imageUrl
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 
 class ImageDetailView @JvmOverloads constructor(
     context: Context,
@@ -13,6 +13,6 @@ class ImageDetailView @JvmOverloads constructor(
 
 
     fun init(imageUrl: String) {
-        imageUrl(imageUrl)
+        chatComponent.imageLoader().loadImageDetail(this, imageUrl)
     }
 }
