@@ -78,6 +78,10 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         chatViewModel.members.observe(this, Observer { otherMembers ->
             chatRecyclerView.onStart(chatViewModel.conversationId, otherMembers)
