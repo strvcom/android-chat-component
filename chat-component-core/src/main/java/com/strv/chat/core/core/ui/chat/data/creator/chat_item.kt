@@ -8,7 +8,7 @@ import com.strv.chat.core.domain.model.IMessageModel
 import com.strv.chat.core.domain.model.ITextMessageModel
 import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
-import com.strv.chat.core.domain.provider.MemberProvider
+import com.strv.chat.core.domain.provider.ChatMemberProvider
 
 object ChatItemViewCreator :
     Creator<ChatItemView, ChatItemViewConfiguration> {
@@ -16,7 +16,7 @@ object ChatItemViewCreator :
     override val create: ChatItemViewConfiguration.() -> ChatItemView = {
         when (message) {
             is ITextMessageModel -> {
-                if (memberProvider.currentUserId() == message.senderId) {
+                if (currentUserId == message.senderId) {
                     ChatItemView.MyTextMessage(
                         message.id,
                         message.sentDate,
@@ -28,7 +28,7 @@ object ChatItemViewCreator :
                         message.sentDate,
                         MemberViewCreator.create(
                             MemberViewConfiguration(
-                                memberProvider.member(
+                                chatMemberProvider.member(
                                     message.senderId
                                 )
                             )
@@ -38,7 +38,7 @@ object ChatItemViewCreator :
                 }
             }
             is IImageMessageModel -> {
-                if (memberProvider.currentUserId() == message.senderId) {
+                if (currentUserId == message.senderId) {
                     ChatItemView.MyImageMessage(
                         message.id,
                         message.sentDate,
@@ -51,7 +51,7 @@ object ChatItemViewCreator :
                         message.imageModel.original,
                         MemberViewCreator.create(
                             MemberViewConfiguration(
-                                memberProvider.member(
+                                chatMemberProvider.member(
                                     message.senderId
                                 )
                             )
@@ -65,6 +65,7 @@ object ChatItemViewCreator :
 }
 
 class ChatItemViewConfiguration(
+    val currentUserId: String,
     val message: IMessageModel,
-    val memberProvider: MemberProvider
+    val chatMemberProvider: ChatMemberProvider
 ) : CreatorConfiguration

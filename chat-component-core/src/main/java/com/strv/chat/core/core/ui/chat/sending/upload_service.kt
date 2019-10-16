@@ -11,14 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent.channelId
-import com.strv.chat.core.core.session.ChatComponent.chatClient
-import com.strv.chat.core.core.session.ChatComponent.largeIconRes
-import com.strv.chat.core.core.session.ChatComponent.mediaClient
-import com.strv.chat.core.core.session.ChatComponent.smallIconErrorRes
-import com.strv.chat.core.core.session.ChatComponent.smallIconProgressRes
-import com.strv.chat.core.core.session.ChatComponent.smallIconSuccessRes
-import com.strv.chat.core.core.session.ChatComponent.string
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.extensions.autoCancel
 import com.strv.chat.core.core.ui.extensions.contentTitle
 import com.strv.chat.core.core.ui.extensions.largeIcon
@@ -95,13 +88,11 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
     }
 
     private fun uploadImage(startId: Int, name: String, bitmap: Bitmap) =
-        mediaClient().uploadUrl(name)
+        chatComponent.mediaClient().uploadUrl(name)
             .flatMap { url ->
-                mediaClient().uploadImage(bitmap, url)
+                chatComponent.mediaClient().uploadImage(bitmap, url)
                     .onProgress { progress ->
                         showNotification(startId, uploadingNotification(progress))
-                    }.also {
-                        disposable.add(it)
                     }
             }.flatMap { url ->
                 sendImageMessage(url)
@@ -123,7 +114,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
         )
 
     private fun sendMessage(message: MessageInputModel) =
-        chatClient().sendMessage(message)
+        chatComponent.chatClient().sendMessage(message)
 
 
     private fun showNotification(notificationId: Int, notification: Notification) {
@@ -133,15 +124,15 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
     }
 
     private fun uploadingNotification(progress: Int = 0) =
-        notification(channelId()) {
+        notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(
                 ContextCompat.getDrawable(
                     this@UploadPhotoService,
-                    largeIconRes()
+                    chatComponent.largeIconRes()
                 )
             ).toBitmap()
-            smallIcon = smallIconProgressRes()
-            contentTitle = string(R.string.uploading_photo)
+            smallIcon = chatComponent.smallIconProgressRes()
+            contentTitle = chatComponent.string(R.string.uploading_photo)
             autoCancel = true
             this.progress {
                 this.max = 100
@@ -150,28 +141,28 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
         }
 
     private fun errorNotification() =
-        notification(channelId()) {
+        notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(
                 ContextCompat.getDrawable(
                     this@UploadPhotoService,
-                    largeIconRes()
+                    chatComponent.largeIconRes()
                 )
             ).toBitmap()
-            smallIcon = smallIconErrorRes()
-            contentTitle = string(R.string.photo_was_not_uploaded)
+            smallIcon = chatComponent.smallIconErrorRes()
+            contentTitle = chatComponent.string(R.string.photo_was_not_uploaded)
             autoCancel = true
         }
 
     private fun doneNotification() =
-        notification(channelId()) {
+        notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(
                 ContextCompat.getDrawable(
                     this@UploadPhotoService,
-                    largeIconRes()
+                    chatComponent.largeIconRes()
                 )
             ).toBitmap()
-            smallIcon = smallIconSuccessRes()
-            contentTitle = string(R.string.photo_was_uploaded)
+            smallIcon = chatComponent.smallIconSuccessRes()
+            contentTitle = chatComponent.string(R.string.photo_was_uploaded)
             autoCancel = true
         }
 }

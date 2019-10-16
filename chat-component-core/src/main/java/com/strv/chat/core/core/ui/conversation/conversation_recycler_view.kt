@@ -4,11 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.core.core.session.ChatComponent
-import com.strv.chat.core.core.session.ChatComponent.conversationAdapter
-import com.strv.chat.core.core.session.ChatComponent.conversationViewHolderProvider
-import com.strv.chat.core.core.session.ChatComponent.memberClient
-import com.strv.chat.core.core.session.ChatComponent.memberProvider
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationAdapter
 import com.strv.chat.core.core.ui.conversation.adapter.ConversationViewHolderProvider
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
@@ -44,24 +40,24 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     @JvmOverloads
     fun init(
-        viewHolderProvider: ConversationViewHolderProvider = conversationViewHolderProvider(),
+        viewHolderProvider: ConversationViewHolderProvider = chatComponent.conversationViewHolderProvider(),
         layoutManager: LinearLayoutManager? = null,
         onConversationClick: OnClickAction<ConversationItemView>
     ) {
-        adapter = conversationAdapter(viewHolderProvider, onConversationClick, style)
+        adapter = chatComponent.conversationAdapter(viewHolderProvider, onConversationClick, style)
         setLayoutManager(layoutManager ?: LinearLayoutManager(context))
     }
 
     fun onStart() =
-        ChatComponent.conversationClient().subscribeConversations(
-            memberProvider().currentUserId()
+        chatComponent.conversationClient().subscribeConversations(
+            chatComponent.currentUserId
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.mapIterable { model ->
             ConversationItemViewCreator.create(
                 ConversationItemViewConfiguration(
                     model,
-                    memberClient()
+                    chatComponent.memberClient()
                 )
             )
         }.onNext { list ->

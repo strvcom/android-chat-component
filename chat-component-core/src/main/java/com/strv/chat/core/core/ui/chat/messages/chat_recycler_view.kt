@@ -6,10 +6,7 @@ import android.view.View
 import android.view.View.OnLayoutChangeListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.strv.chat.core.core.session.ChatComponent
-import com.strv.chat.core.core.session.ChatComponent.chatAdapter
-import com.strv.chat.core.core.session.ChatComponent.chatClient
-import com.strv.chat.core.core.session.ChatComponent.memberProvider
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.data.creator.ChatItemViewListConfiguration
 import com.strv.chat.core.core.ui.chat.data.creator.ChatItemViewListCreator
@@ -21,6 +18,7 @@ import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.ObservableTask
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.map
+import com.strv.chat.core.domain.provider.ChatMemberProvider
 import strv.ktools.logE
 import java.util.Date
 import java.util.LinkedList
@@ -38,6 +36,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         private set(value) = super.setAdapter(value)
 
     private lateinit var conversationId: String
+    private lateinit var chatMemberProvider: ChatMemberProvider
 
     private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
         override fun onLayoutChange(
@@ -80,11 +79,12 @@ class ChatRecyclerView @JvmOverloads constructor(
     @JvmOverloads
     fun init(
         conversationId: String,
+        chatMemberProvider: ChatMemberProvider,
         onClickAction: OnClickAction<ChatItemView>,
-        viewHolderProvider: ChatViewHolderProvider = ChatComponent.chatViewHolderProvider(),
+        viewHolderProvider: ChatViewHolderProvider = chatComponent.chatViewHolderProvider(),
         layoutManager: LinearLayoutManager? = null
     ) {
-        chatAdapter = chatAdapter(viewHolderProvider, onClickAction, style)
+        chatAdapter = chatComponent.chatAdapter(viewHolderProvider, onClickAction, style)
 
         setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
             reverseLayout = true
@@ -93,6 +93,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         })
 
         this@ChatRecyclerView.conversationId = conversationId
+        this@ChatRecyclerView.chatMemberProvider = chatMemberProvider
 
         addOnScrollListener(object : PaginationListener(getLayoutManager() as LinearLayoutManager) {
             override fun loadMoreItems(offset: Int) {
@@ -102,18 +103,24 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     fun onStart(): ObservableTask<List<ChatItemView>, Throwable> =
-        chatClient().subscribeMessages(
+        chatComponent.chatClient().subscribeMessages(
             conversationId
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
         }.onNext { response ->
-            chatClient().setSeenIfNot(
-                memberProvider().currentUserId(),
+            chatComponent.chatClient().setSeenIfNot(
+                chatComponent.memberClient().currentUserId(),
                 conversationId,
                 response.first().id
             )
         }.map { model ->
-            ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
+            ChatItemViewListCreator.create(
+                ChatItemViewListConfiguration(
+                    chatComponent.currentUserId,
+                    model,
+                    chatMemberProvider
+                )
+            )
         }.onNext { itemViews ->
             onMessagesChanged(itemViews)
         }.also { task ->
@@ -125,10 +132,16 @@ class ChatRecyclerView @JvmOverloads constructor(
     }
 
     private fun loadMoreMessages(startAfter: Date) {
-        chatClient().messages(
+        chatComponent.chatClient().messages(
             conversationId, startAfter
         ).map { model ->
-            ChatItemViewListCreator.create(ChatItemViewListConfiguration(model, memberProvider()))
+            ChatItemViewListCreator.create(
+                ChatItemViewListConfiguration(
+                    chatComponent.currentUserId,
+                    model,
+                    chatMemberProvider
+                )
+            )
         }.onSuccess { response ->
             chatAdapter.submitList(chatAdapter.getItems().plus(response))
         }.onError { error ->

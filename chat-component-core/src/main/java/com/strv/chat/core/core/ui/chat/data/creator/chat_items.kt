@@ -5,7 +5,7 @@ import com.strv.chat.core.domain.isDayEqual
 import com.strv.chat.core.domain.model.IMessageModel
 import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
-import com.strv.chat.core.domain.provider.MemberProvider
+import com.strv.chat.core.domain.provider.ChatMemberProvider
 import com.strv.chat.core.domain.runNonEmpty
 
 object ChatItemViewListCreator :
@@ -16,8 +16,9 @@ object ChatItemViewListCreator :
             .map { model ->
                 ChatItemViewCreator.create(
                     ChatItemViewConfiguration(
+                        currentUserId,
                         model,
-                        memberProvider
+                        chatMemberProvider
                     )
                 )
             }
@@ -37,6 +38,7 @@ object ChatItemViewListCreator :
 }
 
 class ChatItemViewListConfiguration(
+    val currentUserId: String,
     val messages: List<IMessageModel>,
-    val memberProvider: MemberProvider
+    val chatMemberProvider: ChatMemberProvider
 ) : CreatorConfiguration

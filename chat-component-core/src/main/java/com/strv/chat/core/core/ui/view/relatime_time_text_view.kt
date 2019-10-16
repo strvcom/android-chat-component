@@ -5,7 +5,8 @@ import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.widget.TextView
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent.string
+import com.strv.chat.core.core.session.ChatComponent
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -37,10 +38,10 @@ class RelativeTimeTextView @JvmOverloads constructor(context: Context, attrs: At
             }
 
             if (DateUtils.isToday(date.time)) { //is today
-                string(R.string.today)
+                chatComponent.string(R.string.today)
             } else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
                 calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) { //is yesterday
-                string(R.string.yesterday)
+                chatComponent.string(R.string.yesterday)
             } else { //other
                 calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
             }

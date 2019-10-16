@@ -38,8 +38,6 @@ class CloudStorageMediaClient(
                     logD("File was uploaded")
                 }.addOnFailureListener {
                     invokeError(it)
-                }.also { task ->
-                    onDispose = { task.cancel() }
                 }.addOnProgressListener { snapshot ->
                     invokeProgress((100.0 * snapshot.bytesTransferred / snapshot.totalByteCount).toInt())
                 }.continueWithTask {

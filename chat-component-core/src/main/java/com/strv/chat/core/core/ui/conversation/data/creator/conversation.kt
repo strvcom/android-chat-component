@@ -2,6 +2,7 @@ package com.strv.chat.core.core.ui.conversation.data.creator
 
 import com.strv.chat.core.R
 import com.strv.chat.core.core.session.ChatComponent
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.domain.client.MemberClient
 import com.strv.chat.core.domain.map
@@ -39,7 +40,7 @@ object ConversationItemViewCreator :
     private fun lastMessage(messageModel: IMessageModel) =
         when (messageModel) {
             is ITextMessageModel -> messageModel.text
-            is IImageMessageModel -> ChatComponent.string(R.string.user_has_sent_picture)
+            is IImageMessageModel -> chatComponent.string(R.string.user_has_sent_picture)
             else -> throw IllegalArgumentException("Unknown message type")
         }
 }

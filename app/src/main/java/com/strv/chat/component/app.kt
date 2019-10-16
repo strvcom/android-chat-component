@@ -11,7 +11,7 @@ import com.strv.chat.component.di.CompositionRoot
 import com.strv.chat.component.model.CURRENT_USER_ID
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.config.Configuration
-import com.strv.chat.core.core.ui.extensions.serviceConfig
+import com.strv.chat.core.core.session.config.di.serviceConfig
 
 private const val CHANNEL_ID = "upload"
 private const val CHANNEL_DESCRIPTION = "ImageModel upload"
@@ -62,8 +62,7 @@ class App : Application() {
                 compositionRoot.conversationClient(firestoreDb),
                 compositionRoot.memberClient(firestoreDb, CURRENT_USER_ID),
                 compositionRoot.mediaClient(firebaseStorage),
-                serviceConfig(CHANNEL_ID),
-                compositionRoot.memberProvider()
+                serviceConfig(CHANNEL_ID)
             )
         )
     }

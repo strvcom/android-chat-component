@@ -10,12 +10,14 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.strv.chat.component.R
+import com.strv.chat.component.business.ChatMemberProviderImpl
 import com.strv.chat.component.ui.base.BaseActivity
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.core.core.ui.chat.sending.SendWidget
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_GALLERY
+import com.strv.chat.core.domain.provider.ChatMemberProvider
 
 const val CONVERSATION_ID_EXTRA = "conversation_id"
 
@@ -45,6 +47,7 @@ class ChatActivity : BaseActivity() {
 
         chatRecyclerView.init(
             requireNotNull(intent.getStringExtra(CONVERSATION_ID_EXTRA)),
+            ChatMemberProviderImpl(),
             { itemView ->
                 when (itemView) {
                     is ChatItemView.Header -> {

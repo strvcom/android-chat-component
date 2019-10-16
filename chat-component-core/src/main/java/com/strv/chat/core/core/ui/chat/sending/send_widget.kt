@@ -11,9 +11,7 @@ import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent.chatClient
-import com.strv.chat.core.core.session.ChatComponent.memberProvider
-import com.strv.chat.core.core.session.ChatComponent.string
+import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.chat.sending.style.SendWidgetStyle
 import com.strv.chat.core.core.ui.extensions.openCamera
 import com.strv.chat.core.core.ui.extensions.openGalleryPhotoPicker
@@ -22,7 +20,7 @@ import com.strv.chat.core.core.ui.extensions.selector
 import com.strv.chat.core.core.ui.extensions.tint
 import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.core.domain.model.MessageInputModel
-import com.strv.chat.core.domain.provider.MediaProvider
+import com.strv.chat.core.domain.provider.FileProvider
 import strv.ktools.logD
 import strv.ktools.logE
 
@@ -33,7 +31,7 @@ class SendWidget @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private lateinit var conversationId: String
-    private lateinit var mediaProvider: MediaProvider
+    private lateinit var fileProvider: FileProvider
 
     private val buttonSend by lazy {
         findViewById<ImageButton>(R.id.ib_send)
@@ -64,10 +62,10 @@ class SendWidget @JvmOverloads constructor(
 
     fun init(
         conversationId: String,
-        mediaProvider: MediaProvider
+        fileProvider: FileProvider
     ) {
         this@SendWidget.conversationId = conversationId
-        this@SendWidget.mediaProvider = mediaProvider
+        this@SendWidget.fileProvider = fileProvider
     }
 
     fun uploadImage(uri: Uri) {
@@ -76,7 +74,7 @@ class SendWidget @JvmOverloads constructor(
                 UploadPhotoService.newIntent(
                     context,
                     uri.toString(),
-                    memberProvider().currentUserId(),
+                    chatComponent.currentUserId,
                     conversationId
                 )
             )
@@ -85,7 +83,7 @@ class SendWidget @JvmOverloads constructor(
                 UploadPhotoService.newIntent(
                     context,
                     uri.toString(),
-                    memberProvider().currentUserId(),
+                    chatComponent.currentUserId,
                     conversationId
                 )
             )
@@ -95,7 +93,7 @@ class SendWidget @JvmOverloads constructor(
     private fun buttonSendListener() {
         buttonSend.setOnClickListener {
             if (editInput.text.isNotBlank()) {
-                sendTextMessage(memberProvider().currentUserId(), editInput.text.toString())
+                sendTextMessage(chatComponent.currentUserId, editInput.text.toString())
                 editInput.reset()
             }
         }
@@ -109,17 +107,17 @@ class SendWidget @JvmOverloads constructor(
 
     private fun showPhotoPickerDialog() {
         selector(
-            string(R.string.choose_photo),
+            chatComponent.string(R.string.choose_photo),
             arrayOf(
-                string(R.string.take_photo),
-                string(R.string.select_from_library)
+                chatComponent.string(R.string.take_photo),
+                chatComponent.string(R.string.select_from_library)
             )
         ) {
             onClick { position ->
-                val uri = mediaProvider.newImageUri(requireContext())
+                val uri = fileProvider.newFile(requireContext())
                 when (position) {
                     0 -> activity?.openCamera(uri)
-                    1 -> activity?.openGalleryPhotoPicker(string(R.string.select_photo))
+                    1 -> activity?.openGalleryPhotoPicker(chatComponent.string(R.string.select_photo))
                 }
             }
         }.show((context as FragmentActivity).supportFragmentManager, DIALOG_PHOTO_PICKER)
@@ -136,7 +134,7 @@ class SendWidget @JvmOverloads constructor(
     }
 
     private fun sendMessage(message: MessageInputModel) {
-        chatClient().sendMessage(message)
+        chatComponent.chatClient().sendMessage(message)
             .onError { error ->
                 logE(error.localizedMessage ?: "Unknown error")
             }.onSuccess {

@@ -13,22 +13,30 @@ import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 
-object ChatComponent {
+class ChatComponent(
+    private val configuration: Configuration,
+    private val resourceProvider: ChatComponentResourceProvider
+) {
 
-    private lateinit var configuration: Configuration
-    private lateinit var resourceProvider: ChatComponentResourceProvider
+    companion object {
 
-    fun init(app: Application, configuration: Configuration) {
-        ChatComponent.configuration = configuration
-        ChatComponent.resourceProvider = ChatComponentResourceProvider(app)
+        internal lateinit var chatComponent: ChatComponent
+
+        private fun setInstance(instance: ChatComponent) {
+            chatComponent = instance
+        }
+
+        fun init(app: Application, configuration: Configuration) {
+            setInstance(ChatComponent(configuration, ChatComponentResourceProvider(app)))
+        }
     }
+
+    internal val currentUserId = memberClient().currentUserId()
 
     internal fun chatClient() = configuration.chatClient
     internal fun conversationClient() = configuration.conversationClient
     internal fun memberClient() = configuration.memberClient
     internal fun mediaClient() = configuration.mediaClient
-
-    internal fun memberProvider() = configuration.memberProvider
 
     internal fun channelId() = configuration.serviceConfig.channelId
     internal fun largeIconRes() = configuration.serviceConfig.largeIconRes
@@ -36,13 +44,19 @@ object ChatComponent {
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
-    internal fun chatAdapter(chatViewHolderProvider: ChatViewHolderProvider, onClickAction: OnClickAction<ChatItemView>, style: ChatRecyclerViewStyle?) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
+    internal fun chatAdapter(
+        chatViewHolderProvider: ChatViewHolderProvider,
+        onClickAction: OnClickAction<ChatItemView>,
+        style: ChatRecyclerViewStyle?
+    ) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
+
     internal fun chatViewHolderProvider() = ChatViewHolderProvider()
 
     internal fun conversationAdapter(
         conversationViewHolderProvider: ConversationViewHolderProvider,
         onClickAction: OnClickAction<ConversationItemView>,
-        style: ConversationRecyclerViewStyle?) =
+        style: ConversationRecyclerViewStyle?
+    ) =
         ConversationAdapter(conversationViewHolderProvider, onClickAction, style)
 
     internal fun conversationViewHolderProvider() = ConversationViewHolderProvider()

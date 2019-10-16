@@ -4,11 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.strv.chat.core.domain.provider.MediaProvider
+import com.strv.chat.core.domain.provider.FileProvider
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MediaProviderImpl : MediaProvider {
+class FileProviderImpl : FileProvider {
 
     override var uri: Uri? = null
 
@@ -17,7 +17,7 @@ class MediaProviderImpl : MediaProvider {
 
     private val directoryName = "Chat_component"
 
-    override fun newImageUri(context: Context): Uri =
+    override fun newFile(context: Context): Uri =
         imageFile(context, fileName, directoryName).also {
             uri = it
         }
