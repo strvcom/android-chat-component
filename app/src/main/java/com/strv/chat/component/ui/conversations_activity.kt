@@ -4,17 +4,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.strv.chat.component.R
-import com.strv.chat.component.ui.base.BaseActivity
 import com.strv.chat.core.core.ui.conversation.ConversationRecyclerView
 
-class ConversationsActivity : BaseActivity() {
+class ConversationsActivity : AppCompatActivity() {
 
-    val conversationRecyclerView by lazy {
+    private val conversationRecyclerView by lazy {
         findViewById<ConversationRecyclerView>(R.id.rv_chat)
     }
 
-    val progress by lazy {
+    private val progress by lazy {
         findViewById<ProgressBar>(R.id.progress)
     }
 
@@ -22,8 +22,10 @@ class ConversationsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
-        conversationRecyclerView.init { conversation ->
-            openChat(conversation.id)
+        conversationRecyclerView.init {
+            onConversationClick = { conversation ->
+                openChat(conversation.id, conversation.otherMemberIds)
+            }
         }
     }
 
@@ -44,12 +46,17 @@ class ConversationsActivity : BaseActivity() {
         conversationRecyclerView.onStop()
     }
 
-    private fun openChat(conversationId: String) =
-        startActivity(ChatActivity.newIntent(this@ConversationsActivity, conversationId))
+    private fun openChat(conversationId: String, otherMemberIds: List<String>) {
+        startActivity(
+            ChatActivity.newIntent(
+                this@ConversationsActivity,
+                conversationId,
+                otherMemberIds
+            )
+        )
+    }
 
     private fun showErrorToast(errorMessage: String) {
         Toast.makeText(this@ConversationsActivity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 }
-
-

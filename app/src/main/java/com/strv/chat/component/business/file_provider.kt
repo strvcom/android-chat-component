@@ -6,21 +6,18 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.strv.chat.core.domain.provider.FileProvider
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.Date
 
-class FileProviderImpl : FileProvider {
-
-    override var uri: Uri? = null
+class FileProviderImpl(
+    val directoryName: String
+) : FileProvider {
 
     private val fileName
         get() = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
-    private val directoryName = "Chat_component"
-
     override fun newFile(context: Context): Uri =
-        imageFile(context, fileName, directoryName).also {
-            uri = it
-        }
+        imageFile(context, fileName, directoryName)
 
     private fun imageFile(context: Context, fileName: String, albumDirectoryName: String): Uri {
         val values = ContentValues().apply {

@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,9 +22,9 @@ import com.strv.chat.core.core.ui.extensions.selector
 import com.strv.chat.core.core.ui.extensions.tint
 import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.core.domain.model.MessageInputModel
-import com.strv.chat.core.domain.provider.FileProvider
 import strv.ktools.logD
 import strv.ktools.logE
+import java.lang.IllegalArgumentException
 
 class SendWidget @JvmOverloads constructor(
     context: Context,
@@ -30,8 +32,20 @@ class SendWidget @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var conversationId: String
-    private lateinit var fileProvider: FileProvider
+    var conversationId: String?
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _conversationId = value
+        }
+
+    var newFile: ((Context) -> Uri)?
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _newFile = value
+        }
+
+    private var _conversationId: String? = null
+    private var _newFile: ((Context) -> Uri)? = null
 
     private val buttonSend by lazy {
         findViewById<ImageButton>(R.id.ib_send)
@@ -58,14 +72,20 @@ class SendWidget @JvmOverloads constructor(
 
         buttonSendListener()
         buttonCameraListener()
+
+        viewTreeObserver.addOnGlobalLayoutListener(
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    if (visibility == View.VISIBLE) {
+                        validateForNull()
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            })
     }
 
-    fun init(
-        conversationId: String,
-        fileProvider: FileProvider
-    ) {
-        this@SendWidget.conversationId = conversationId
-        this@SendWidget.fileProvider = fileProvider
+    fun init(builder: SendWidget.() -> Unit) {
+        builder()
     }
 
     fun uploadImage(uri: Uri) {
@@ -75,7 +95,7 @@ class SendWidget @JvmOverloads constructor(
                     context,
                     uri.toString(),
                     chatComponent.currentUserId,
-                    conversationId
+                    _conversationId!!
                 )
             )
         } else {
@@ -84,7 +104,7 @@ class SendWidget @JvmOverloads constructor(
                     context,
                     uri.toString(),
                     chatComponent.currentUserId,
-                    conversationId
+                    _conversationId!!
                 )
             )
         }
@@ -114,9 +134,8 @@ class SendWidget @JvmOverloads constructor(
             )
         ) {
             onClick { position ->
-                val uri = fileProvider.newFile(requireContext())
                 when (position) {
-                    0 -> activity?.openCamera(uri)
+                    0 -> activity?.openCamera(_newFile!!(requireContext()))
                     1 -> activity?.openGalleryPhotoPicker(chatComponent.string(R.string.select_photo))
                 }
             }
@@ -127,7 +146,7 @@ class SendWidget @JvmOverloads constructor(
         sendMessage(
             MessageInputModel.TextInputModel(
                 senderId = userId,
-                conversationId = conversationId,
+                conversationId = _conversationId!!,
                 text = message
             )
         )
@@ -147,5 +166,14 @@ class SendWidget @JvmOverloads constructor(
         buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
         buttonText.setColorFilter(style.filterColorActivated)
         buttonImage.setColorFilter(style.filterColorNormal)
+    }
+
+    private fun validateForNull() {
+        fun throwError(fieldName: String) {
+            throw IllegalArgumentException("$fieldName must be defined")
+        }
+
+        if (_conversationId == null) throwError("conversationId")
+        if (_newFile == null) throwError("newFile")
     }
 }

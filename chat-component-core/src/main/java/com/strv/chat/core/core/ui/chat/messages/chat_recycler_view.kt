@@ -18,7 +18,7 @@ import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.ObservableTask
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.map
-import com.strv.chat.core.domain.provider.ChatMemberProvider
+import com.strv.chat.core.domain.model.IMemberModel
 import strv.ktools.logE
 import java.util.Date
 import java.util.LinkedList
@@ -29,14 +29,28 @@ class ChatRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
+    var viewHolderProvider: ChatViewHolderProvider
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _viewHolderProvider = value
+        }
+
+    var onMessageClick: OnClickAction<ChatItemView>
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _onMessageClick = value
+        }
+
+    private var _viewHolderProvider: ChatViewHolderProvider =
+        chatComponent.chatViewHolderProvider()
+
+    private var _onMessageClick: OnClickAction<ChatItemView>? = null
+
     private val disposable = LinkedList<Disposable>()
 
     private var chatAdapter: ChatAdapter
         get() = super.getAdapter() as ChatAdapter
         private set(value) = super.setAdapter(value)
-
-    private lateinit var conversationId: String
-    private lateinit var chatMemberProvider: ChatMemberProvider
 
     private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
         override fun onLayoutChange(
@@ -76,34 +90,35 @@ class ChatRecyclerView @JvmOverloads constructor(
         }
     }
 
-    @JvmOverloads
-    fun init(
-        conversationId: String,
-        chatMemberProvider: ChatMemberProvider,
-        onClickAction: OnClickAction<ChatItemView>,
-        viewHolderProvider: ChatViewHolderProvider = chatComponent.chatViewHolderProvider(),
-        layoutManager: LinearLayoutManager? = null
-    ) {
-        chatAdapter = chatComponent.chatAdapter(viewHolderProvider, onClickAction, style)
+    fun init(builder: ChatRecyclerView.() -> Unit) {
+        builder()
 
-        setLayoutManager(layoutManager ?: LinearLayoutManager(context).apply {
-            reverseLayout = true
-            stackFromEnd = true
-            setClipToPadding(false)
-        })
-
-        this@ChatRecyclerView.conversationId = conversationId
-        this@ChatRecyclerView.chatMemberProvider = chatMemberProvider
-
-        addOnScrollListener(object : PaginationListener(getLayoutManager() as LinearLayoutManager) {
-            override fun loadMoreItems(offset: Int) {
-                loadMoreMessages(chatAdapter.getItem(offset).sentDate)
+        if (layoutManager == null) {
+            layoutManager = LinearLayoutManager(context).apply {
+                reverseLayout = true
+                stackFromEnd = true
+                setClipToPadding(false)
             }
-        })
+        }
+
+        if (adapter == null) {
+            adapter =
+                chatComponent.chatAdapter(_viewHolderProvider, _onMessageClick, style)
+        }
     }
 
-    fun onStart(): ObservableTask<List<ChatItemView>, Throwable> =
-        chatComponent.chatClient().subscribeMessages(
+    fun onStart(
+        conversationId: String,
+        otherMembers: List<IMemberModel>
+    ): ObservableTask<List<ChatItemView>, Throwable> {
+
+        addOnScrollListener(object : PaginationListener(layoutManager as LinearLayoutManager) {
+            override fun loadMoreItems(offset: Int) {
+                loadMoreMessages(chatAdapter.getItem(offset).sentDate, conversationId, otherMembers)
+            }
+        })
+
+        return chatComponent.chatClient().subscribeMessages(
             conversationId
         ).onError { error ->
             logE(error.localizedMessage ?: "Unknown error")
@@ -118,7 +133,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 ChatItemViewListConfiguration(
                     chatComponent.currentUserId,
                     model,
-                    chatMemberProvider
+                    otherMembers
                 )
             )
         }.onNext { itemViews ->
@@ -126,12 +141,17 @@ class ChatRecyclerView @JvmOverloads constructor(
         }.also { task ->
             disposable.add(task)
         }
+    }
 
     fun onStop() {
         disposable.collect(Disposable::dispose)
     }
 
-    private fun loadMoreMessages(startAfter: Date) {
+    private fun loadMoreMessages(
+        startAfter: Date,
+        conversationId: String,
+        otherMembers: List<IMemberModel>
+    ) {
         chatComponent.chatClient().messages(
             conversationId, startAfter
         ).map { model ->
@@ -139,7 +159,7 @@ class ChatRecyclerView @JvmOverloads constructor(
                 ChatItemViewListConfiguration(
                     chatComponent.currentUserId,
                     model,
-                    chatMemberProvider
+                    otherMembers
                 )
             )
         }.onSuccess { response ->

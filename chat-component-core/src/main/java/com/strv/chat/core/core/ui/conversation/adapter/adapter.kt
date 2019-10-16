@@ -11,7 +11,7 @@ import com.strv.chat.core.core.ui.extensions.OnClickAction
 
 class ConversationAdapter(
     private val conversationViewHolderProvider: ConversationViewHolderProvider,
-    private val onConversationClick: OnClickAction<ConversationItemView>,
+    private val onConversationClick: OnClickAction<ConversationItemView>?,
     private val style: ConversationRecyclerViewStyle?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

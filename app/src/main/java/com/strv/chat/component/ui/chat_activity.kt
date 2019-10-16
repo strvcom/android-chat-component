@@ -3,41 +3,57 @@ package com.strv.chat.component.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.strv.chat.component.R
-import com.strv.chat.component.business.ChatMemberProviderImpl
-import com.strv.chat.component.ui.base.BaseActivity
+import com.strv.chat.component.toLiveData
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.core.core.ui.chat.sending.SendWidget
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_GALLERY
-import com.strv.chat.core.domain.provider.ChatMemberProvider
+import com.strv.chat.core.domain.client.MemberClient
+import com.strv.chat.core.domain.provider.FileProvider
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 const val CONVERSATION_ID_EXTRA = "conversation_id"
+const val OTHER_MEMBER_IDS_EXTRA = "member_ids"
 
-class ChatActivity : BaseActivity() {
+class ChatActivity : AppCompatActivity() {
 
     companion object {
-        fun newIntent(context: Context, conversationId: String) = Intent(context, ChatActivity::class.java).apply {
-            putExtra(CONVERSATION_ID_EXTRA, conversationId)
-        }
+        fun newIntent(context: Context, conversationId: String, otherMemberIds: List<String>) =
+            Intent(context, ChatActivity::class.java).apply {
+                putExtra(CONVERSATION_ID_EXTRA, conversationId)
+                putExtra(OTHER_MEMBER_IDS_EXTRA, otherMemberIds.toTypedArray())
+            }
     }
 
-    val chatRecyclerView by lazy {
+    private val chatViewModel: ChatViewModel by viewModel {
+        parametersOf(
+            requireNotNull(intent.getStringExtra(CONVERSATION_ID_EXTRA)) { "$CONVERSATION_ID_EXTRA must be defined" },
+            requireNotNull(intent.getStringArrayExtra(OTHER_MEMBER_IDS_EXTRA)) { "$OTHER_MEMBER_IDS_EXTRA must be defined" }.toList()
+        )
+    }
+
+    private val chatRecyclerView by lazy {
         findViewById<ChatRecyclerView>(R.id.rv_chat)
     }
 
-    val sendWidget by lazy {
+    private val sendWidget by lazy {
         findViewById<SendWidget>(R.id.w_send)
     }
 
-    val progress by lazy {
+    private val progress by lazy {
         findViewById<ProgressBar>(R.id.progress)
     }
 
@@ -45,38 +61,32 @@ class ChatActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        chatRecyclerView.init(
-            requireNotNull(intent.getStringExtra(CONVERSATION_ID_EXTRA)),
-            ChatMemberProviderImpl(),
-            { itemView ->
+        chatRecyclerView.init {
+            onMessageClick = { itemView ->
                 when (itemView) {
-                    is ChatItemView.Header -> {
-                    }
-                    is ChatItemView.MyTextMessage -> {
-                    }
-                    is ChatItemView.OtherTextMessage -> {
-                    }
                     is ChatItemView.MyImageMessage -> openImageDetail(itemView.imageUrl)
                     is ChatItemView.OtherImageMessage -> openImageDetail(itemView.imageUrl)
                 }
             }
-        )
+        }
 
-        sendWidget.init(
-            requireNotNull(intent.getStringExtra(CONVERSATION_ID_EXTRA)),
-            controllerCompositionRoot().mediaProvider()
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        chatRecyclerView.onStart()
-            .onNext {
-                progress.visibility = View.GONE
-            }.onError {
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_SHORT).show()
+        sendWidget.init {
+            conversationId = chatViewModel.conversationId
+            newFile = { context ->
+                chatViewModel.fileProvider.newFile(context).also { uri ->
+                    chatViewModel.photoUri = uri
+                }
             }
+        }
+
+        chatViewModel.members.observe(this, Observer { otherMembers ->
+            chatRecyclerView.onStart(chatViewModel.conversationId, otherMembers)
+                .onNext {
+                    progress.visibility = View.GONE
+                }.onError {
+                    Toast.makeText(this, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+        })
     }
 
     override fun onStop() {
@@ -93,7 +103,7 @@ class ChatActivity : BaseActivity() {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
                     sendWidget.uploadImage(
-                        requireNotNull(controllerCompositionRoot().mediaProvider().uri) { "Uri has to be defined" }
+                        requireNotNull(chatViewModel.photoUri) { "Uri has to be defined" }
                     )
                 }
                 REQUEST_IMAGE_GALLERY -> {
@@ -107,6 +117,21 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun openImageDetail(imageUrl: String) {
-        ImageDetailActivity.newIntent(this, imageUrl)
+        startActivity(ImageDetailActivity.newIntent(this, imageUrl))
     }
+}
+
+class ChatViewModel(
+    val conversationId: String,
+    val fileProvider: FileProvider,
+    otherUserIds: List<String>,
+    memberClient: MemberClient
+) : ViewModel() {
+
+    var photoUri: Uri? = null
+
+    val members = members(memberClient, otherUserIds).toLiveData()
+
+    private fun members(memberClient: MemberClient, userIds: List<String>) =
+        memberClient.members(userIds)
 }

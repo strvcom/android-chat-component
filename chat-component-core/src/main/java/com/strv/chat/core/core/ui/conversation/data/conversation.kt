@@ -9,5 +9,6 @@ class ConversationItemView(
     val title: String,
     val pictureTask: Task<String, Throwable>,
     val message: String,
-    val sentDate: Date
+    val sentDate: Date,
+    val otherMemberIds: List<String>
 )

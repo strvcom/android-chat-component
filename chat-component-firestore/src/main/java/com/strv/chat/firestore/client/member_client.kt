@@ -31,10 +31,6 @@ class FirestoreMemberClient(
                 MemberModelCreator.create(MemberModelConfiguration(requireNotNull(entity)))
             }
 
-    //todo how to handle title + picture of the conversation?
-    //it is not possible to fetch multiple documents at the same time - with a transaction is possible but
-    //!! every document read in a transaction must also be written !!
-    //one solution would be to have a picture and a name of the conversation dirrectly in the structure
     override fun members(memberIds: List<String>): Task<List<IMemberModel>, Throwable> =
         task<List<FirestoreMemberEntity>, Throwable> {
             firebaseDb.runTransaction { transaction ->

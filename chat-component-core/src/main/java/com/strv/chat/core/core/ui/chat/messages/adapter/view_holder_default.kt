@@ -26,7 +26,7 @@ open class DefaultHeaderViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.Header,
-        onClickAction: OnClickAction<ChatItemView.Header>
+        onClickAction: OnClickAction<ChatItemView.Header>?
     ) {
         textDate.date = item.sentDate
     }
@@ -40,7 +40,7 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.MyTextMessage,
-        onClickAction: OnClickAction<ChatItemView.MyTextMessage>
+        onClickAction: OnClickAction<ChatItemView.MyTextMessage>?
     ) {
         textMessage.text = item.text
 
@@ -71,7 +71,7 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.OtherTextMessage,
-        onClickAction: OnClickAction<ChatItemView.OtherTextMessage>
+        onClickAction: OnClickAction<ChatItemView.OtherTextMessage>?
     ) {
         chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
         textMessage.text = item.text
@@ -101,7 +101,7 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.MyImageMessage,
-        onClickAction: OnClickAction<ChatItemView.MyImageMessage>
+        onClickAction: OnClickAction<ChatItemView.MyImageMessage>?
     ) {
         chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
 
@@ -111,7 +111,7 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
         }
 
         image.setOnClickListener {
-            onClickAction(item)
+            onClickAction?.invoke(item)
         }
 
         itemView.setOnClickListener {
@@ -129,7 +129,7 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.OtherImageMessage,
-        onClickAction: OnClickAction<ChatItemView.OtherImageMessage>
+        onClickAction: OnClickAction<ChatItemView.OtherImageMessage>?
     ) {
         chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
         chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
@@ -140,7 +140,7 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
         }
 
         image.setOnClickListener {
-            onClickAction(item)
+            onClickAction?.invoke(item)
         }
 
         itemView.setOnClickListener {

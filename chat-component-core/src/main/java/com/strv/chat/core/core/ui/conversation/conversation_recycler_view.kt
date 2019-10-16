@@ -24,11 +24,28 @@ class ConversationRecyclerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
+    var viewHolderProvider: ConversationViewHolderProvider
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _viewHolderProvider = value
+        }
+
+    var onConversationClick: OnClickAction<ConversationItemView>
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _onConversationClick = value
+        }
+
+    private var _viewHolderProvider: ConversationViewHolderProvider =
+        chatComponent.conversationViewHolderProvider()
+
+    private var _onConversationClick: OnClickAction<ConversationItemView>? = null
+
     private val disposable = LinkedList<Disposable>()
 
-    private var conversationAdapter: ConversationAdapter
-        get() = super.getAdapter() as ConversationAdapter
-        private set(value) = super.setAdapter(value)
+    private var conversationAdapter: ConversationAdapter?
+        get() = super.getAdapter() as ConversationAdapter?
+        set(value) = super.setAdapter(value)
 
     private var style: ConversationRecyclerViewStyle? = null
 
@@ -38,14 +55,17 @@ class ConversationRecyclerView @JvmOverloads constructor(
         }
     }
 
-    @JvmOverloads
-    fun init(
-        viewHolderProvider: ConversationViewHolderProvider = chatComponent.conversationViewHolderProvider(),
-        layoutManager: LinearLayoutManager? = null,
-        onConversationClick: OnClickAction<ConversationItemView>
-    ) {
-        adapter = chatComponent.conversationAdapter(viewHolderProvider, onConversationClick, style)
-        setLayoutManager(layoutManager ?: LinearLayoutManager(context))
+    fun init(builder: ConversationRecyclerView.() -> Unit) {
+        builder()
+
+        if (layoutManager == null) {
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        if (adapter == null) {
+            adapter =
+                chatComponent.conversationAdapter(_viewHolderProvider, _onConversationClick, style)
+        }
     }
 
     fun onStart() =
@@ -72,6 +92,6 @@ class ConversationRecyclerView @JvmOverloads constructor(
     }
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {
-        conversationAdapter.submitList(items)
+        conversationAdapter?.submitList(items)
     }
 }

@@ -22,6 +22,7 @@ object Versions {
         const val recyclerView = "1.0.0"
         const val constraintLayout = "1.1.3"
         const val ktx = "1.1.0"
+        const val lifecycle = "2.1.0"
     }
 
     object Glide {
@@ -33,6 +34,8 @@ object Versions {
         const val firestore = "21.1.1"
         const val storage = "19.1.0"
     }
+
+    const val koin = "2.0.1"
 }
 
 object Dependencies {
@@ -50,6 +53,10 @@ object Dependencies {
         const val constraintLayout =
             "androidx.constraintlayout:constraintlayout:${Versions.Androidx.constraintLayout}"
         const val ktx = "androidx.core:core-ktx:${Versions.Androidx.ktx}"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Androidx.lifecycle}"
+        const val liveData = "androidx.lifecycle:lifecycle-livedata:${Versions.Androidx.lifecycle}"
+        const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime:${Versions.Androidx.lifecycle}"
+        const val lifecycleCompiler =  "androidx.lifecycle:lifecycle-compiler:${Versions.Androidx.lifecycle}"
     }
 
     object Glide {
@@ -62,5 +69,10 @@ object Dependencies {
         const val firestore =
             "com.google.firebase:firebase-firestore:${Versions.Firebase.firestore}"
         const val storage = "com.google.firebase:firebase-storage:${Versions.Firebase.storage}"
+    }
+
+    object Koin {
+        const val library = "org.koin:koin-android:${Versions.koin}"
+        const val viewmodel = "org.koin:koin-androidx-viewmodel:${Versions.koin}"
     }
 }

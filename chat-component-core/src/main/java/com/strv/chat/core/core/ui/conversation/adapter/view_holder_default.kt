@@ -26,7 +26,7 @@ internal class DefaultConversationViewHolder(
 
     override fun bind(
         item: ConversationItemView,
-        onClickAction: OnClickAction<ConversationItemView>
+        onClickAction: OnClickAction<ConversationItemView>?
     ) {
         item.pictureTask
             .onSuccess { imageUrl ->
@@ -41,7 +41,7 @@ internal class DefaultConversationViewHolder(
         textDate.date = item.sentDate
 
         itemView.setOnClickListener {
-            onClickAction(item)
+            onClickAction?.invoke(item)
         }
     }
 

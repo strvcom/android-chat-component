@@ -38,6 +38,13 @@ dependencies {
     implementation(Dependencies.Androidx.appcompat)
     implementation(Dependencies.Androidx.recyclerView)
     implementation(Dependencies.Androidx.constraintLayout)
+    implementation(Dependencies.Androidx.viewModel)
+    implementation(Dependencies.Androidx.liveData)
+    implementation(Dependencies.Androidx.lifecycleRuntime)
+    kapt(Dependencies.Androidx.lifecycleCompiler)
+
+    implementation(Dependencies.Koin.library)
+    implementation(Dependencies.Koin.viewmodel)
 
     implementation(Dependencies.Glide.library)
     kapt(Dependencies.Glide.compiler)

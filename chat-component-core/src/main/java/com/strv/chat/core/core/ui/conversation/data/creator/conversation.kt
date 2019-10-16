@@ -1,7 +1,6 @@
 package com.strv.chat.core.core.ui.conversation.data.creator
 
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.domain.client.MemberClient
@@ -33,7 +32,12 @@ object ConversationItemViewCreator :
                 }.memberId
             ).map { model -> model.memberPhotoUrl },
             message = lastMessage(conversation.lastMessage),
-            sentDate = conversation.lastMessage.sentDate
+            sentDate = conversation.lastMessage.sentDate,
+            otherMemberIds = conversation.members.filter { memberMeta ->
+                memberMeta.memberId != memberClient.currentUserId()
+            }.map { memberMeta ->
+                memberMeta.memberId
+            }
         )
     }
 

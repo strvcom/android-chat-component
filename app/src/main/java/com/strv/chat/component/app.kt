@@ -5,29 +5,34 @@ import android.app.NotificationManager
 import android.app.Service
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.strv.chat.component.business.ImageLoaderImpl
-import com.strv.chat.component.di.CompositionRoot
-import com.strv.chat.component.model.CURRENT_USER_ID
+import com.strv.chat.component.di.applicationModules
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.config.Configuration
 import com.strv.chat.core.core.session.config.di.serviceConfig
+import com.strv.chat.core.domain.ImageLoader
+import com.strv.chat.core.domain.client.ChatClient
+import com.strv.chat.core.domain.client.ConversationClient
+import com.strv.chat.core.domain.client.MediaClient
+import com.strv.chat.core.domain.client.MemberClient
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.parameter.parametersOf
 
 private const val CHANNEL_ID = "upload"
 private const val CHANNEL_DESCRIPTION = "ImageModel upload"
+private const val CURRENT_USER_ID = "user-1"
 
 class App : Application() {
 
-    private lateinit var compositionRoot: CompositionRoot
-
-    val firestoreDb by lazy {
-        FirebaseFirestore.getInstance()
+    private val chatClient: ChatClient by inject()
+    private val conversationClient: ConversationClient by inject()
+    private val memberClient: MemberClient by inject {
+        parametersOf(CURRENT_USER_ID)
     }
-
-    val firebaseStorage by lazy {
-        FirebaseStorage.getInstance()
-    }
+    private val mediaClient: MediaClient by inject()
+    private val imageLoader: ImageLoader by inject()
 
     private val zoeNotificationChannels
         @RequiresApi(Build.VERSION_CODES.O)
@@ -37,7 +42,7 @@ class App : Application() {
                 CHANNEL_DESCRIPTION,
                 NotificationManager.IMPORTANCE_DEFAULT
             ) {
-                vibration = true
+                vibration = false
                 lights = true
                 showBadge = true
                 setSound(null, null)
@@ -47,7 +52,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        compositionRoot = CompositionRoot()
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            modules(applicationModules)
+        }
 
         //register notification channels
         (getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager).run {
@@ -59,16 +68,13 @@ class App : Application() {
         ChatComponent.init(
             this,
             Configuration(
-                compositionRoot.chatClient(firestoreDb),
-                compositionRoot.conversationClient(firestoreDb),
-                compositionRoot.memberClient(firestoreDb, CURRENT_USER_ID),
-                compositionRoot.mediaClient(firebaseStorage),
-                ImageLoaderImpl(),
+                chatClient,
+                conversationClient,
+                memberClient,
+                mediaClient,
+                imageLoader,
                 serviceConfig(CHANNEL_ID)
             )
         )
     }
-
-    fun compositionRoot() =
-        compositionRoot
 }

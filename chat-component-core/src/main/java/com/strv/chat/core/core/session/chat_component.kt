@@ -48,14 +48,14 @@ class ChatComponent(
 
     internal fun chatAdapter(
         chatViewHolderProvider: ChatViewHolderProvider,
-        onClickAction: OnClickAction<ChatItemView>,
+        onClickAction: OnClickAction<ChatItemView>?,
         style: ChatRecyclerViewStyle?
     ) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
     internal fun chatViewHolderProvider() = ChatViewHolderProvider()
 
     internal fun conversationAdapter(
         conversationViewHolderProvider: ConversationViewHolderProvider,
-        onClickAction: OnClickAction<ConversationItemView>,
+        onClickAction: OnClickAction<ConversationItemView>?,
         style: ConversationRecyclerViewStyle?
     ) =
         ConversationAdapter(conversationViewHolderProvider, onClickAction, style)

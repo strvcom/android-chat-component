@@ -10,8 +10,8 @@ import com.strv.chat.core.core.ui.extensions.OnClickAction
 
 class ChatAdapter(
     private val chatViewHolderProvider: ChatViewHolderProvider,
-    private val onClickAction: OnClickAction<ChatItemView>,
-    private val style: ChatRecyclerViewStyle?
+    private val onClickAction: OnClickAction<ChatItemView>?,
+    private val style: ChatRecyclerViewStyle? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val diffUtilCallback = object : DiffUtil.ItemCallback<ChatItemView>() {

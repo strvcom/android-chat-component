@@ -5,7 +5,5 @@ import android.net.Uri
 
 interface FileProvider {
 
-    var uri: Uri?
-
     fun newFile(context: Context): Uri
 }
