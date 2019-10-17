@@ -4,14 +4,16 @@ import com.strv.chat.core.domain.model.ISeenModel
 import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreSeenEntity
+import com.strv.chat.firestore.entity.MESSAGE_ID
+import com.strv.chat.firestore.entity.TIMESTAMP
 import com.strv.chat.firestore.model.FirestoreSeenModel
 
 object SeenModelCreator : Creator<ISeenModel, SeenModelConfiguration> {
 
     override val create: SeenModelConfiguration.() -> ISeenModel = {
         FirestoreSeenModel(
-            seen.messageId,
-            seen.timestamp?.toDate()
+            requireNotNull(seen.messageId) { "$MESSAGE_ID must be specified" },
+            requireNotNull(seen.timestamp?.toDate()) { "$TIMESTAMP must be specified" }
         )
     }
 }

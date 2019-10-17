@@ -9,11 +9,11 @@ import java.util.Date
 internal data class FirestoreConversationModel(
     override val id: String,
     override val members: List<IMemberMetaModel>,
-    override val seen: Map<String, ISeenModel>,
+    override val seen: Map<String, ISeenModel?>,
     override val lastMessage: IMessageModel
 ): IConversationModel
 
 internal data class FirestoreSeenModel(
-    override val messageId: String?,
-    override val date: Date?
+    override val messageId: String,
+    override val date: Date
 ): ISeenModel

@@ -26,6 +26,7 @@ data class FirestoreConversationEntity(
     fun toMap(): HashMap<String, Any?> = hashMapOf(
         LAST_MESSAGE to lastMessage?.toMap(),
         MEMBERS to members,
+        MEMBERS_META to membersMeta,
         SEEN to seen
     )
 }

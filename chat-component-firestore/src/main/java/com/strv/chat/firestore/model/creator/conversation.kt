@@ -18,7 +18,7 @@ object ConversationModelCreator : Creator<IConversationModel, ConversationModelC
             requireNotNull(conversation.id) { "$ID must me specified" },
             MemberMetaModelsCreator.create(MemberMetaModelsConfiguration(  requireNotNull(conversation.membersMeta) { logE("$MEMBERS_META must be specified") })),
             requireNotNull(conversation.seen?.mapValues { entry ->
-                SeenModelCreator.create(SeenModelConfiguration(requireNotNull(entry.value) { "$SEEN data must be specified" }))
+                entry.value?.let { value -> SeenModelCreator.create(SeenModelConfiguration(value)) }
             }) { "$SEEN must be specified" },
             MessageModelCreator.create(MessageModelConfiguration(requireNotNull(conversation.lastMessage) {
                 "$LAST_MESSAGE must be specified"
