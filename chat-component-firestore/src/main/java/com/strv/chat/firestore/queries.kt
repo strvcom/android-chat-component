@@ -20,6 +20,14 @@ internal fun firestoreMember(
         .collection(USERS_COLLECTION)
         .document(userId)
 
+internal fun firestoreConversation(
+    firestoreDb: FirebaseFirestore,
+    conversationId: String
+) =
+    firestoreDb
+        .collection(CONVERSATIONS_COLLECTION)
+        .document(conversationId)
+
 internal fun firestoreConversations(
     firestoreDb: FirebaseFirestore,
     userId: String

@@ -4,11 +4,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.strv.chat.core.domain.Task
 import com.strv.chat.core.domain.client.ConversationClient
+import com.strv.chat.core.domain.flatMap
 import com.strv.chat.core.domain.map
+import com.strv.chat.core.domain.model.IMemberMetaModel
 import com.strv.chat.core.domain.model.IMemberModel
 import com.strv.chat.core.domain.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
+import com.strv.chat.firestore.entity.MEMBERS_META
+import com.strv.chat.firestore.firestoreConversation
 import com.strv.chat.firestore.firestoreConversations
 import com.strv.chat.firestore.listSource
 import com.strv.chat.firestore.model.creator.ConversationModelListConfiguration
@@ -37,6 +41,29 @@ class FirestoreConversationClient(
             }
         }
 
+    override fun updateMemberMeta(memberMeta: IMemberMetaModel): Task<String, Throwable> =
+        conversations(memberMeta.memberId)
+            .flatMap { models ->
+                task<String, Throwable> {
+                    firebaseDb.runTransaction { transaction ->
+
+                        models.forEach { model ->
+                            transaction.update(
+                                firestoreConversation(firebaseDb, model.id),
+                                "$MEMBERS_META.${memberMeta.memberId}",
+                                memberMeta.memberName
+                            )
+                        }
+
+                        memberMeta.memberId
+                    }.addOnSuccessListener { memberId ->
+                        invokeSuccess(memberId)
+                    }.addOnFailureListener { error ->
+                        invokeError(error)
+                    }
+                }
+            }
+
     override fun subscribeConversations(memberId: String) =
         firestoreListSource(firestoreConversations(firebaseDb, memberId))
             .subscribe()
@@ -44,6 +71,12 @@ class FirestoreConversationClient(
                 ConversationModelListCreator.create(ConversationModelListConfiguration(conversation))
             }
 
+    override fun conversations(memberId: String) =
+        firestoreListSource(firestoreConversations(firebaseDb, memberId))
+            .get()
+            .map { conversation ->
+                ConversationModelListCreator.create(ConversationModelListConfiguration(conversation))
+            }
 
     private fun firestoreListSource(source: Query) =
         source.listSource<FirestoreConversationEntity>()
