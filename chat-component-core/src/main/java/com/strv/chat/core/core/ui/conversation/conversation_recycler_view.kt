@@ -22,7 +22,7 @@ import java.util.LinkedList
 
 class ConversationRecyclerView @JvmOverloads constructor(
     context: Context,
-    val attrs: AttributeSet? = null,
+    attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
