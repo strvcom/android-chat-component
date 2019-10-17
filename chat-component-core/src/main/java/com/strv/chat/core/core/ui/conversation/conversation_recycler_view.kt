@@ -15,6 +15,7 @@ import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.mapIterable
+import com.strv.chat.core.domain.sortedBy
 import strv.ktools.logE
 import java.util.LinkedList
 
@@ -80,12 +81,13 @@ class ConversationRecyclerView @JvmOverloads constructor(
                     chatComponent.memberClient()
                 )
             )
+        }.sortedBy { conversation ->
+            !conversation.unread
         }.onNext { list ->
             onConversationsChanged(list)
         }.also { task ->
             disposable.add(task)
         }
-
 
     fun onStop() {
         disposable.collect(Disposable::dispose)

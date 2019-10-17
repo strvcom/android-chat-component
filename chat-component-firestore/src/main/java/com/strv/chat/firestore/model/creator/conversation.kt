@@ -16,7 +16,7 @@ object ConversationModelCreator : Creator<IConversationModel, ConversationModelC
     override val create: ConversationModelConfiguration.() -> IConversationModel = {
         FirestoreConversationModel(
             requireNotNull(conversation.id) { "$ID must me specified" },
-            MemberMetaModelsCreator.create(MemberMetaModelsConfiguration(  requireNotNull(conversation.membersMeta) { logE("$MEMBERS_META must be specified") })),
+            MemberMetaModelsCreator.create(MemberMetaModelsConfiguration(requireNotNull(conversation.membersMeta) { logE("$MEMBERS_META must be specified") })),
             requireNotNull(conversation.seen?.mapValues { entry ->
                 entry.value?.let { value -> SeenModelCreator.create(SeenModelConfiguration(value)) }
             }) { "$SEEN must be specified" },

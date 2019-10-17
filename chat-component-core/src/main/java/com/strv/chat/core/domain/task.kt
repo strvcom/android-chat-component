@@ -208,3 +208,18 @@ internal fun <R, E, V> ObservableTask<List<R>, E>.mapIterable(transform: (R) -> 
         }
     }
 
+internal fun <T, R : Comparable<R>, E> ObservableTask<List<T>, E>.sortedBy(transform: (T) -> R?) =
+    when (this) {
+        is ObservableTaskImpl -> {
+            observableTask<List<T>, E>(onDispose) {
+                this@sortedBy.onNext { result ->
+                    invokeNext(result.sortedBy(transform))
+                }
+
+                this@sortedBy.onError { error ->
+                    invokeError(error)
+                }
+            }
+        }
+    }
+
