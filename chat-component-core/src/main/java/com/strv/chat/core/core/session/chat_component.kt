@@ -13,7 +13,7 @@ import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 
-class ChatComponent(
+class ChatComponent private constructor(
     private val configuration: Configuration,
     private val resourceProvider: ChatComponentResourceProvider
 ) {
@@ -51,6 +51,7 @@ class ChatComponent(
         onClickAction: OnClickAction<ChatItemView>?,
         style: ChatRecyclerViewStyle?
     ) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
+
     internal fun chatViewHolderProvider() = ChatViewHolderProvider()
 
     internal fun conversationAdapter(
