@@ -173,7 +173,7 @@ class SendWidget @JvmOverloads constructor(
             throw IllegalArgumentException("$fieldName must be defined")
         }
 
-        if (_conversationId == null) throwError("conversationId")
-        if (_newFile == null) throwError("newFile")
+        if (_conversationId == null) throwError(::_conversationId.name)
+        if (_newFile == null) throwError(::_newFile.name)
     }
 }
