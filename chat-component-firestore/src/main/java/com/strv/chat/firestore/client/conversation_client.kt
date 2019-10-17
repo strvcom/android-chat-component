@@ -12,6 +12,8 @@ import com.strv.chat.core.domain.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.firestore.entity.MEMBERS_META
+import com.strv.chat.firestore.entity.creator.MemberMetaEntityConfiguration
+import com.strv.chat.firestore.entity.creator.MemberMetaEntityCreator
 import com.strv.chat.firestore.firestoreConversation
 import com.strv.chat.firestore.firestoreConversations
 import com.strv.chat.firestore.listSource
@@ -30,7 +32,11 @@ class FirestoreConversationClient(
             conversationDocument.set(
                 FirestoreConversationEntity(
                     members = members.map { member -> member.memberId },
-                    membersMeta = members.map { member -> member.memberId to member.memberName }.toMap(),
+                    membersMeta = members.map { member ->
+                        member.memberId to MemberMetaEntityCreator.create(
+                            MemberMetaEntityConfiguration(member.memberName)
+                        )
+                    }.toMap(),
                     seen = members.map { member -> member.memberId to null }.toMap()
                 ).toMap()
             ).addOnSuccessListener {
@@ -51,7 +57,11 @@ class FirestoreConversationClient(
                             transaction.update(
                                 firestoreConversation(firebaseDb, model.id),
                                 "$MEMBERS_META.${memberMeta.memberId}",
-                                memberMeta.memberName
+                                MemberMetaEntityCreator.create(
+                                    MemberMetaEntityConfiguration(
+                                        memberMeta.memberName
+                                    )
+                                ).toMap()
                             )
                         }
 
