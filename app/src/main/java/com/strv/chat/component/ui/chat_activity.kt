@@ -20,8 +20,10 @@ import com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
 import com.strv.chat.core.core.ui.chat.sending.SendWidget
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_CAPTURE
 import com.strv.chat.core.core.ui.extensions.REQUEST_IMAGE_GALLERY
+import com.strv.chat.core.domain.ImageLoader
 import com.strv.chat.core.domain.client.MemberClient
 import com.strv.chat.core.domain.provider.FileProvider
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -45,6 +47,8 @@ class ChatActivity : AppCompatActivity() {
         )
     }
 
+    private val loader by inject<ImageLoader>()
+
     private val chatRecyclerView by lazy {
         findViewById<ChatRecyclerView>(R.id.rv_chat)
     }
@@ -62,6 +66,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chatRecyclerView.init {
+            imageLoader = loader
             onMessageClick = { itemView ->
                 when (itemView) {
                     is ChatItemView.MyImageMessage -> openImageDetail(itemView.imageUrl)

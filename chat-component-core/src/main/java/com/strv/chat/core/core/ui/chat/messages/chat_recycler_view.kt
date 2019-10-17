@@ -15,6 +15,7 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
+import com.strv.chat.core.domain.ImageLoader
 import com.strv.chat.core.domain.ObservableTask
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.map
@@ -41,10 +42,17 @@ class ChatRecyclerView @JvmOverloads constructor(
             _onMessageClick = value
         }
 
+    var imageLoader: ImageLoader
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _imageLoader = value
+        }
+
     private var _viewHolderProvider: ChatViewHolderProvider =
         chatComponent.chatViewHolderProvider()
 
     private var _onMessageClick: OnClickAction<ChatItemView>? = null
+    private var _imageLoader: ImageLoader? = null
 
     private val disposable = LinkedList<Disposable>()
 
@@ -103,7 +111,7 @@ class ChatRecyclerView @JvmOverloads constructor(
 
         if (adapter == null) {
             adapter =
-                chatComponent.chatAdapter(_viewHolderProvider, _onMessageClick, style)
+                chatComponent.chatAdapter(_viewHolderProvider, _imageLoader, _onMessageClick, style)
         }
     }
 

@@ -8,10 +8,12 @@ import com.strv.chat.core.core.ui.conversation.adapter.ConversationViewType.CONV
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
+import com.strv.chat.core.domain.ImageLoader
 
 class ConversationAdapter(
     private val conversationViewHolderProvider: ConversationViewHolderProvider,
-    private val onConversationClick: OnClickAction<ConversationItemView>?,
+    private val imageLoader: ImageLoader? = null,
+    private val onConversationClick: OnClickAction<ConversationItemView>? = null,
     private val style: ConversationRecyclerViewStyle?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -39,7 +41,11 @@ class ConversationAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ConversationViewHolder -> holder.bind(getItem(position), onConversationClick)
+            is ConversationViewHolder -> holder.bind(
+                getItem(position),
+                imageLoader,
+                onConversationClick
+            )
         }
     }
 

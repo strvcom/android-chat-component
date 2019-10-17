@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.strv.chat.component.R
 import com.strv.chat.core.core.ui.conversation.ConversationRecyclerView
+import com.strv.chat.core.domain.ImageLoader
+import org.koin.android.ext.android.inject
 
 class ConversationsActivity : AppCompatActivity() {
 
@@ -18,11 +20,14 @@ class ConversationsActivity : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.progress)
     }
 
+    private val loader by inject<ImageLoader>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversations)
 
         conversationRecyclerView.init {
+            imageLoader = loader
             onConversationClick = { conversation ->
                 openChat(conversation.id, conversation.otherMemberIds)
             }

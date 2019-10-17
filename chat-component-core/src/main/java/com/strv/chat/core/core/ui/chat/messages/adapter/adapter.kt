@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
+import com.strv.chat.core.domain.ImageLoader
 
 class ChatAdapter(
     private val chatViewHolderProvider: ChatViewHolderProvider,
-    private val onClickAction: OnClickAction<ChatItemView>?,
+    private val imageLoader: ImageLoader? = null,
+    private val onClickAction: OnClickAction<ChatItemView>? = null,
     private val style: ChatRecyclerViewStyle? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -35,11 +37,11 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header, onClickAction)
-            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage, onClickAction)
-            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage, onClickAction)
-            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage, onClickAction)
-            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage, onClickAction)
+            is HeaderViewHolder -> holder.bind(getItem(position) as ChatItemView.Header, imageLoader, onClickAction)
+            is MyTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyTextMessage, imageLoader, onClickAction)
+            is OtherTextMessageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherTextMessage, imageLoader, onClickAction)
+            is MyImageViewHolder -> holder.bind(getItem(position) as ChatItemView.MyImageMessage, imageLoader, onClickAction)
+            is OtherImageViewHolder -> holder.bind(getItem(position) as ChatItemView.OtherImageMessage, imageLoader, onClickAction)
         }
     }
 

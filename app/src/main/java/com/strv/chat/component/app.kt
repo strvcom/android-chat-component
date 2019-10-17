@@ -32,7 +32,6 @@ class App : Application() {
         parametersOf(CURRENT_USER_ID)
     }
     private val mediaClient: MediaClient by inject()
-    private val imageLoader: ImageLoader by inject()
 
     private val zoeNotificationChannels
         @RequiresApi(Build.VERSION_CODES.O)
@@ -72,7 +71,6 @@ class App : Application() {
                 conversationClient,
                 memberClient,
                 mediaClient,
-                imageLoader,
                 serviceConfig(CHANNEL_ID)
             )
         )

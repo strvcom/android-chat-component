@@ -13,6 +13,7 @@ import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.Disposable
+import com.strv.chat.core.domain.ImageLoader
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.mapIterable
 import com.strv.chat.core.domain.sortedBy
@@ -31,6 +32,12 @@ class ConversationRecyclerView @JvmOverloads constructor(
             _viewHolderProvider = value
         }
 
+    var imageLoader: ImageLoader
+        get() = throw UnsupportedOperationException("")
+        set(value) {
+            _imageLoader = value
+        }
+
     var onConversationClick: OnClickAction<ConversationItemView>
         get() = throw UnsupportedOperationException("")
         set(value) {
@@ -39,6 +46,8 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private var _viewHolderProvider: ConversationViewHolderProvider =
         chatComponent.conversationViewHolderProvider()
+
+    private var _imageLoader: ImageLoader? = null
 
     private var _onConversationClick: OnClickAction<ConversationItemView>? = null
 
@@ -65,7 +74,12 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
         if (adapter == null) {
             adapter =
-                chatComponent.conversationAdapter(_viewHolderProvider, _onConversationClick, style)
+                chatComponent.conversationAdapter(
+                    _viewHolderProvider,
+                    _imageLoader,
+                    _onConversationClick,
+                    style
+                )
         }
     }
 

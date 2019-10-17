@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.HEADER
@@ -15,9 +14,13 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.MY_TEXT_MES
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_IMAGE_MESSAGE
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_TEXT_MESSAGE
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
+import com.strv.chat.core.core.ui.extensions.ON_CLICK_ACTION
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.core.ui.view.RelativeTimeTextView
 import com.strv.chat.core.core.ui.view.TimeTextView
+import com.strv.chat.core.domain.IMAGE_LOADER
+import com.strv.chat.core.domain.ImageLoader
+import strv.ktools.logE
 
 open class DefaultHeaderViewHolder(parent: ViewGroup) :
     HeaderViewHolder(parent, HEADER.id) {
@@ -26,6 +29,7 @@ open class DefaultHeaderViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.Header,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView.Header>?
     ) {
         textDate.date = item.sentDate
@@ -40,6 +44,7 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.MyTextMessage,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView.MyTextMessage>?
     ) {
         textMessage.text = item.text
@@ -50,7 +55,7 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
         }
 
         itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate), onClickAction)
+            bind(item.copy(showSentDate = !item.showSentDate), imageLoader, onClickAction)
         }
     }
 
@@ -71,9 +76,11 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.OtherTextMessage,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView.OtherTextMessage>?
     ) {
-        chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
+        imageLoader?.loadAvatar(imageIcon, item.sender.userPhotoUrl)
+            ?: logE("$IMAGE_LOADER is not defined")
         textMessage.text = item.text
 
         textDate.run {
@@ -82,7 +89,7 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
         }
 
         itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate), onClickAction)
+            bind(item.copy(showSentDate = !item.showSentDate), imageLoader, onClickAction)
         }
     }
 
@@ -101,9 +108,10 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.MyImageMessage,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView.MyImageMessage>?
     ) {
-        chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
+        imageLoader?.loadImageMessage(image, item.imageUrl) ?: logE("$IMAGE_LOADER is not defined")
 
         textDate.run {
             date = item.sentDate
@@ -111,11 +119,11 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
         }
 
         image.setOnClickListener {
-            onClickAction?.invoke(item)
+            onClickAction?.invoke(item) ?: logE("$ON_CLICK_ACTION is not defined")
         }
 
         itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate), onClickAction)
+            bind(item.copy(showSentDate = !item.showSentDate), imageLoader, onClickAction)
         }
     }
 }
@@ -129,10 +137,13 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
 
     override fun bind(
         item: ChatItemView.OtherImageMessage,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView.OtherImageMessage>?
     ) {
-        chatComponent.imageLoader().loadAvatar(imageIcon, item.sender.userPhotoUrl)
-        chatComponent.imageLoader().loadImageMessage(image, item.imageUrl)
+        imageLoader?.loadAvatar(imageIcon, item.sender.userPhotoUrl)
+            ?: logE("$IMAGE_LOADER is not defined")
+
+        imageLoader?.loadImageMessage(image, item.imageUrl) ?: logE("$IMAGE_LOADER is not defined")
 
         textDate.run {
             date = item.sentDate
@@ -140,11 +151,11 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
         }
 
         image.setOnClickListener {
-            onClickAction?.invoke(item)
+            onClickAction?.invoke(item) ?: logE("$ON_CLICK_ACTION is not defined")
         }
 
         itemView.setOnClickListener {
-            bind(item.copy(showSentDate = !item.showSentDate), onClickAction)
+            bind(item.copy(showSentDate = !item.showSentDate), imageLoader, onClickAction)
         }
     }
 }

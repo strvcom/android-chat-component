@@ -12,6 +12,7 @@ import com.strv.chat.core.core.ui.conversation.adapter.ConversationViewHolderPro
 import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
+import com.strv.chat.core.domain.ImageLoader
 
 class ChatComponent private constructor(
     private val configuration: Configuration,
@@ -44,22 +45,22 @@ class ChatComponent private constructor(
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
-    internal fun imageLoader() = configuration.imageLoader
-
     internal fun chatAdapter(
         chatViewHolderProvider: ChatViewHolderProvider,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ChatItemView>?,
         style: ChatRecyclerViewStyle?
-    ) = ChatAdapter(chatViewHolderProvider, onClickAction, style)
+    ) = ChatAdapter(chatViewHolderProvider, imageLoader, onClickAction, style)
 
     internal fun chatViewHolderProvider() = ChatViewHolderProvider()
 
     internal fun conversationAdapter(
         conversationViewHolderProvider: ConversationViewHolderProvider,
+        imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ConversationItemView>?,
         style: ConversationRecyclerViewStyle?
     ) =
-        ConversationAdapter(conversationViewHolderProvider, onClickAction, style)
+        ConversationAdapter(conversationViewHolderProvider, imageLoader, onClickAction, style)
 
     internal fun conversationViewHolderProvider() = ConversationViewHolderProvider()
 
