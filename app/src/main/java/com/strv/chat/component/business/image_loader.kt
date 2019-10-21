@@ -8,7 +8,7 @@ import com.strv.chat.component.R
 import com.strv.chat.core.domain.ImageLoader
 
 class ImageLoaderImpl : ImageLoader {
-    override fun loadAvatar(imageView: ImageView, url: String) {
+    override fun loadAvatar(imageView: ImageView, url: String?) {
         Glide.with(imageView.context)
             .load(url)
             .apply(RequestOptions().apply { circleCrop() })
@@ -17,7 +17,7 @@ class ImageLoaderImpl : ImageLoader {
             .into(imageView)
     }
 
-    override fun loadImageMessage(imageView: ImageView, url: String) {
+    override fun loadImageMessage(imageView: ImageView, url: String?) {
         Glide.with(imageView.context)
             .load(url)
             .placeholder(R.drawable.placeholder_image)
@@ -26,7 +26,7 @@ class ImageLoaderImpl : ImageLoader {
             .into(imageView)
     }
 
-    override fun loadImageDetail(imageView: ImageView, url: String) {
+    override fun loadImageDetail(imageView: ImageView, url: String?) {
         Glide.with(imageView.context)
             .load(url)
             .centerCrop()

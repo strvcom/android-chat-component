@@ -31,6 +31,9 @@ internal class DefaultConversationViewHolder(
         imageLoader: ImageLoader?,
         onClickAction: OnClickAction<ConversationItemView>?
     ) {
+
+        imageLoader?.loadAvatar(imageIcon, null) ?: logE("$IMAGE_LOADER is not defined")
+
         item.pictureTask
             .onSuccess { imageUrl ->
                 imageLoader?.loadAvatar(imageIcon, imageUrl) ?: logE("$IMAGE_LOADER is not defined")
