@@ -71,6 +71,12 @@ internal inline var NotificationCompat.Builder.sound: Uri?
         setSound(value)
     }
 
+internal inline var NotificationCompat.Builder.dismissible: Boolean
+    get() = throw UnsupportedOperationException("")
+    set(value) {
+        setOngoing(!value)
+    }
+
 internal fun NotificationCompat.Builder.progress(setup: Progress.() -> Unit) {
     val progress = Progress().apply(setup)
     setProgress(progress.max, progress.progress, progress.indeterminate)

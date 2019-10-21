@@ -14,6 +14,7 @@ import com.strv.chat.core.R
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import com.strv.chat.core.core.ui.extensions.autoCancel
 import com.strv.chat.core.core.ui.extensions.contentTitle
+import com.strv.chat.core.core.ui.extensions.dismissible
 import com.strv.chat.core.core.ui.extensions.largeIcon
 import com.strv.chat.core.core.ui.extensions.notification
 import com.strv.chat.core.core.ui.extensions.progress
@@ -131,6 +132,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                     chatComponent.largeIconRes()
                 )
             ).toBitmap()
+            dismissible = false
             smallIcon = chatComponent.smallIconProgressRes()
             contentTitle = chatComponent.string(R.string.uploading_photo)
             autoCancel = true
