@@ -9,7 +9,6 @@ import com.strv.chat.component.di.applicationModules
 import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.config.Configuration
 import com.strv.chat.core.core.session.config.di.serviceConfig
-import com.strv.chat.core.domain.ImageLoader
 import com.strv.chat.core.domain.client.ChatClient
 import com.strv.chat.core.domain.client.ConversationClient
 import com.strv.chat.core.domain.client.MediaClient
@@ -33,7 +32,7 @@ class App : Application() {
     }
     private val mediaClient: MediaClient by inject()
 
-    private val zoeNotificationChannels
+    private val appChannels
         @RequiresApi(Build.VERSION_CODES.O)
         get() = listOf(
             notificationChannel(
@@ -59,7 +58,7 @@ class App : Application() {
 
         //register notification channels
         (getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager).run {
-            zoeNotificationChannels.forEach { channel ->
+            appChannels.forEach { channel ->
                 createNotificationChannel(channel)
             }
         }
