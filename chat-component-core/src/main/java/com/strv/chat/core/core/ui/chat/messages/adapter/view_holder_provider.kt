@@ -9,11 +9,7 @@ import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyImageMessage
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyTextMessage
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.OtherImageMessage
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.OtherTextMessage
-import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.HEADER
-import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.MY_IMAGE_MESSAGE
-import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.MY_TEXT_MESSAGE
-import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_IMAGE_MESSAGE
-import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_TEXT_MESSAGE
+import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.*
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.LayoutId
 
@@ -70,6 +66,9 @@ class ChatViewHolderProvider(
                 otherImageMessageConfig.viewHolder(parent).also { holder ->
                     checkStyle(holder, style)
                 }
+            }
+            PROGRESS -> {
+                ProgressViewHolder(parent)
             }
             null -> throw IllegalStateException("Wrong message view type.")
         }

@@ -8,7 +8,6 @@ abstract class PaginationListener(
 ) : RecyclerView.OnScrollListener() {
 
     private var previousTotal = 0
-    private var loading = true
 
     private val visibleThreshold = 15
 
@@ -24,18 +23,20 @@ abstract class PaginationListener(
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        if (loading && totalItemCount > previousTotal) {
-            loading = false
-            previousTotal = totalItemCount
-        }
+        if (dy < 0) {
 
-        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItemPosition + visibleThreshold)) {
-            loadMoreItems(totalItemCount - 1)
+            if (isLoading() && totalItemCount > (previousTotal + 1)) {
+                previousTotal = totalItemCount - 1
+            }
 
-            loading = true
+            if (!isLoading() && (totalItemCount - visibleItemCount) <= (firstVisibleItemPosition + visibleThreshold)) {
+                loadMoreItems(totalItemCount - 1)
+            }
         }
     }
 
     protected abstract fun loadMoreItems(offset: Int)
+
+    protected abstract fun isLoading(): Boolean
 
 }

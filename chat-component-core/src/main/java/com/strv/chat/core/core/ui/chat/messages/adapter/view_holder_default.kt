@@ -1,10 +1,12 @@
 package com.strv.chat.core.core.ui.chat.messages.adapter
 
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
@@ -159,3 +161,9 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
         }
     }
 }
+
+internal class ProgressViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(
+        ChatViewType.PROGRESS.id, parent, false
+    )
+)

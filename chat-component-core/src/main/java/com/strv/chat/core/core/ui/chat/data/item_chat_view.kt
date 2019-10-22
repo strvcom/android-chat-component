@@ -3,7 +3,7 @@ package com.strv.chat.core.core.ui.chat.data
 import com.strv.chat.core.core.ui.data.MemberView
 import java.util.Date
 
-const val HEADER_ID = "NO_ID"
+const val HEADER_ID = "HEADER_ID"
 
 sealed class ChatItemView(open val id: String, open val sentDate: Date) {
 

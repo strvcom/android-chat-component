@@ -3,7 +3,6 @@ package com.strv.chat.core.core.ui.chat.messages
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.View.OnLayoutChangeListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
@@ -104,7 +103,7 @@ class ChatRecyclerView @JvmOverloads constructor(
         if (layoutManager == null) {
             layoutManager = LinearLayoutManager(context).apply {
                 reverseLayout = true
-                stackFromEnd = true
+                stackFromEnd = false
                 setClipToPadding(false)
             }
         }
@@ -121,6 +120,9 @@ class ChatRecyclerView @JvmOverloads constructor(
     ): ObservableTask<List<ChatItemView>, Throwable> {
 
         addOnScrollListener(object : PaginationListener(layoutManager as LinearLayoutManager) {
+            override fun isLoading(): Boolean =
+                chatAdapter.loading
+
             override fun loadMoreItems(offset: Int) {
                 loadMoreMessages(chatAdapter.getItem(offset).sentDate, conversationId, otherMembers)
             }
@@ -160,6 +162,8 @@ class ChatRecyclerView @JvmOverloads constructor(
         conversationId: String,
         otherMembers: List<IMemberModel>
     ) {
+        chatAdapter.loading = true
+
         chatComponent.chatClient().messages(
             conversationId, startAfter
         ).map { model ->
@@ -171,8 +175,10 @@ class ChatRecyclerView @JvmOverloads constructor(
                 )
             )
         }.onSuccess { response ->
+            chatAdapter.loading = false
             chatAdapter.submitList(chatAdapter.getItems().plus(response))
         }.onError { error ->
+            chatAdapter.loading = false
             logE(error.localizedMessage ?: "Unknown error")
         }
     }
