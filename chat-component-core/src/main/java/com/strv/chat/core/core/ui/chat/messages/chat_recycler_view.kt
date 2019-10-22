@@ -23,11 +23,7 @@ import strv.ktools.logE
 import java.util.Date
 import java.util.LinkedList
 
-class ChatRecyclerView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr) {
+class ChatRecyclerView : RecyclerView {
 
     var viewHolderProvider: ChatViewHolderProvider
         get() = throw UnsupportedOperationException("")
@@ -89,12 +85,20 @@ class ChatRecyclerView @JvmOverloads constructor(
 
     private var style: ChatRecyclerViewStyle? = null
 
-    init {
-        addOnLayoutChangeListener(onFirstLayoutChangeListener)
+    constructor(context: Context) : super(context) {
+        init()
+    }
 
-        if (attrs != null) {
-            style = ChatRecyclerViewStyle.parse(context, attrs)
-        }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init(attrs)
     }
 
     fun init(builder: ChatRecyclerView.() -> Unit) {
@@ -190,6 +194,14 @@ class ChatRecyclerView @JvmOverloads constructor(
             if (items.isNotEmpty()) {
                 postDelayed({ scrollToPosition(0) }, 50)
             }
+        }
+    }
+
+    private fun init(attrs: AttributeSet? = null) {
+        addOnLayoutChangeListener(onFirstLayoutChangeListener)
+
+        if (attrs != null) {
+            style = ChatRecyclerViewStyle.parse(context, attrs)
         }
     }
 }

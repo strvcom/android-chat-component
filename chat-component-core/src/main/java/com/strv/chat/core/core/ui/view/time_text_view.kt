@@ -7,7 +7,7 @@ import com.strv.chat.core.R
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class TimeTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : TextView(context, attrs, defStyleAttr) {
+class TimeTextView : TextView {
 
     var date: Date? = null
         set(value) {
@@ -17,6 +17,16 @@ class TimeTextView @JvmOverloads constructor(context: Context, attrs: AttributeS
             field = value
         }
 
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
+
     private fun getTime(date: Date): String {
         val now = Date()
         val diff = now.time - date.time
@@ -24,10 +34,8 @@ class TimeTextView @JvmOverloads constructor(context: Context, attrs: AttributeS
         return if (diff < 60000) {
             context.getString(R.string.now)
         } else {
-            var str: String? = null
             val dateFormat = SimpleDateFormat("HH:mm")
-            str = dateFormat.format(date)
-            str
+            dateFormat.format(date)
         }
     }
 }

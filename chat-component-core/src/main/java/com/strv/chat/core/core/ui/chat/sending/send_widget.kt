@@ -24,13 +24,8 @@ import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.core.domain.model.MessageInputModel
 import strv.ktools.logD
 import strv.ktools.logE
-import java.lang.IllegalArgumentException
 
-class SendWidget @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+class SendWidget : ConstraintLayout {
 
     var conversationId: String?
         get() = throw UnsupportedOperationException("")
@@ -63,25 +58,20 @@ class SendWidget @JvmOverloads constructor(
         findViewById<ImageButton>(R.id.ib_image)
     }
 
-    init {
-        LayoutInflater.from(context).inflate(R.layout.layout_send_widget, this)
+    constructor(context: Context) : super(context) {
+        init(context)
+    }
 
-        if (attrs != null) {
-            applyStyle(SendWidgetStyle.parse(context, attrs))
-        }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(context, attrs)
+    }
 
-        buttonSendListener()
-        buttonCameraListener()
-
-        viewTreeObserver.addOnGlobalLayoutListener(
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    if (visibility == View.VISIBLE) {
-                        validateForNull()
-                        viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                }
-            })
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init(context, attrs)
     }
 
     fun init(builder: SendWidget.() -> Unit) {
@@ -175,5 +165,26 @@ class SendWidget @JvmOverloads constructor(
 
         if (_conversationId == null) throwError(::_conversationId.name)
         if (_newFile == null) throwError(::_newFile.name)
+    }
+
+    private fun init(context: Context, attrs: AttributeSet? = null) {
+        LayoutInflater.from(context).inflate(R.layout.layout_send_widget, this)
+
+        if (attrs != null) {
+            applyStyle(SendWidgetStyle.parse(context, attrs))
+        }
+
+        buttonSendListener()
+        buttonCameraListener()
+
+        viewTreeObserver.addOnGlobalLayoutListener(
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    if (visibility == View.VISIBLE) {
+                        validateForNull()
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            })
     }
 }

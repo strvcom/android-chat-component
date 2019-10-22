@@ -5,7 +5,6 @@ import android.text.format.DateUtils
 import android.util.AttributeSet
 import android.widget.TextView
 import com.strv.chat.core.R
-import com.strv.chat.core.core.session.ChatComponent
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -14,7 +13,7 @@ import java.util.Locale
 
 private const val DAY = 60000 * 60 * 24
 
-class RelativeTimeTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : TextView(context, attrs, defStyleAttr) {
+class RelativeTimeTextView : TextView {
 
     var date: Date? = null
         set(value) {
@@ -23,6 +22,16 @@ class RelativeTimeTextView @JvmOverloads constructor(context: Context, attrs: At
             }
             field = value
         }
+
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     private fun getRelativeString(date: Date): String {
         val now = Date()
@@ -40,7 +49,8 @@ class RelativeTimeTextView @JvmOverloads constructor(context: Context, attrs: At
             if (DateUtils.isToday(date.time)) { //is today
                 chatComponent.string(R.string.today)
             } else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
-                calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) { //is yesterday
+                calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)
+            ) { //is yesterday
                 chatComponent.string(R.string.yesterday)
             } else { //other
                 calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())

@@ -20,11 +20,7 @@ import com.strv.chat.core.domain.sortedBy
 import strv.ktools.logE
 import java.util.LinkedList
 
-class ConversationRecyclerView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr) {
+class ConversationRecyclerView : RecyclerView {
 
     var viewHolderProvider: ConversationViewHolderProvider
         get() = throw UnsupportedOperationException("")
@@ -59,10 +55,20 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private var style: ConversationRecyclerViewStyle? = null
 
-    init {
-        if (attrs != null) {
-            style = ConversationRecyclerViewStyle.parse(context, attrs)
-        }
+    constructor(context: Context) : super(context) {
+        init()
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init(attrs)
     }
 
     fun init(builder: ConversationRecyclerView.() -> Unit) {
@@ -109,5 +115,11 @@ class ConversationRecyclerView @JvmOverloads constructor(
 
     private fun onConversationsChanged(items: List<ConversationItemView>) {
         conversationAdapter?.submitList(items)
+    }
+
+    private fun init(attrs: AttributeSet? = null) {
+        if (attrs != null) {
+            style = ConversationRecyclerViewStyle.parse(context, attrs)
+        }
     }
 }

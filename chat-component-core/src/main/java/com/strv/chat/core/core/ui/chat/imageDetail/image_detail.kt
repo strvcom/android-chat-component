@@ -9,11 +9,7 @@ import strv.ktools.logE
 
 const val IMAGE_URL = "imageUrl"
 
-class ImageDetailView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr) {
+class ImageDetailView : AppCompatImageView {
 
     private var _imageLoader: ImageLoader? = null
     private var _imageUrl: String? = null
@@ -29,6 +25,16 @@ class ImageDetailView @JvmOverloads constructor(
         set(value) {
             _imageUrl = value
         }
+
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     fun init(builder: ImageDetailView.() -> Unit) {
         builder()
