@@ -30,8 +30,7 @@ import org.koin.core.parameter.parametersOf
 const val CONVERSATION_ID_EXTRA = "conversation_id"
 const val OTHER_MEMBER_IDS_EXTRA = "member_ids"
 
-class ChatActivity : AppCompatActivity() {
-
+class ChatActivity : AppCompatActivity(), FileProvider {
     companion object {
         fun newIntent(context: Context, conversationId: String, otherMemberIds: List<String>) =
             Intent(context, ChatActivity::class.java).apply {
@@ -77,11 +76,7 @@ class ChatActivity : AppCompatActivity() {
 
         sendWidget.init {
             conversationId = chatViewModel.conversationId
-            newFile = { context ->
-                chatViewModel.fileProvider.newFile(context).also { uri ->
-                    chatViewModel.photoUri = uri
-                }
-            }
+            newFileProvider = this@ChatActivity
         }
     }
 
@@ -102,6 +97,7 @@ class ChatActivity : AppCompatActivity() {
         super.onStop()
 
         chatRecyclerView.onStop()
+        sendWidget.newFileProvider = null
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -124,6 +120,11 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun newFile(context: Context): Uri =
+        chatViewModel.fileProvider.newFile(context).also { uri ->
+            chatViewModel.photoUri = uri
+        }
 
     private fun openImageDetail(imageUrl: String) {
         startActivity(ImageDetailActivity.newIntent(this, imageUrl))

@@ -22,6 +22,7 @@ import com.strv.chat.core.core.ui.extensions.selector
 import com.strv.chat.core.core.ui.extensions.tint
 import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.core.domain.model.MessageInputModel
+import com.strv.chat.core.domain.provider.FileProvider
 import strv.ktools.logD
 import strv.ktools.logE
 
@@ -33,14 +34,14 @@ class SendWidget : ConstraintLayout {
             _conversationId = value
         }
 
-    var newFile: ((Context) -> Uri)?
+    var newFileProvider: FileProvider?
         get() = throw UnsupportedOperationException("")
         set(value) {
-            _newFile = value
+            _newFileProvider = value
         }
 
     private var _conversationId: String? = null
-    private var _newFile: ((Context) -> Uri)? = null
+    private var _newFileProvider: FileProvider? = null
 
     private val buttonSend by lazy {
         findViewById<ImageButton>(R.id.ib_send)
@@ -125,7 +126,7 @@ class SendWidget : ConstraintLayout {
         ) {
             onClick { position ->
                 when (position) {
-                    0 -> activity?.openCamera(_newFile!!(requireContext()))
+                    0 -> activity?.openCamera(_newFileProvider!!.newFile(requireContext()))
                     1 -> activity?.openGalleryPhotoPicker(chatComponent.string(R.string.select_photo))
                 }
             }
@@ -164,7 +165,7 @@ class SendWidget : ConstraintLayout {
         }
 
         if (_conversationId == null) throwError(::_conversationId.name)
-        if (_newFile == null) throwError(::_newFile.name)
+        if (_newFileProvider == null) throwError(::_newFileProvider.name)
     }
 
     private fun init(context: Context, attrs: AttributeSet? = null) {
