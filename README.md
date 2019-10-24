@@ -98,14 +98,17 @@ class App : Application() {
 calls**.
 
 There are three implementations of Task API:
-- `Task<Result, Error>` - Represents a **single result of an
-  asynchronous call** that returns `<Result>` type in case of success
-  and `<Error>` in case of an error.
-- `ProgressTask<Result, Error>` - Represents a **single result of an
+- `Task<Result, Error>` 
+  - Represents a **single result of an asynchronous call** that returns
+    `<Result>` type in case of success and `<Error>` in case of an
+    error.
+- `ProgressTask<Result, Error>`
+  - Represents a **single result of an
   asynchronous call that periodically notify about its progress** and
   returns `<Result>` type in case of success and `<Error>` in case of an
   error.
-- `ObservableTask<Result, Error>` - Represents a **stream with real time
+- `ObservableTask<Result, Error>`
+  - Represents a **stream with real time
   updates** of the result of type `<Result>`. Returns `<Error>` when an
   error occurs.
 

@@ -10,7 +10,7 @@ steps.
 
 ### Add `ChatRecyclerView` widget into your xml layout
 
-```
+```xml
 <com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
     android:id="@+id/rv_chat"
     android:layout_width="match_parent"
@@ -22,30 +22,28 @@ the component.
 
 **Optional items**:
 - `imageLoader: ImageLoader` 
-  -   Tells the component how to upload picture's urls to `ImageView`s.
-  -   In case that the entity is not defined, images will be empty and
-      an error message will be logged.
+  -   Defines a way how to upload picture's urls to `ImageView`s.
 - `onItemClick: OnClickAction<ChatItemView>`
-  -  Having `onClickListener` defined is needed in order to perform an
-     action when the user clicks on a message.
-- `viewHolderProvider: ChatViewHolderProvider` - a provider of custom implementations of
-  ViewHolders
+  -  Defines an action that is performed after the user clicks on a
+     message.
+- `viewHolderProvider: ChatViewHolderProvider`
+  - Allows to add custom implementations of `ViewHolders`.
      
-```
+```kotlin
 chatRecyclerView.init {
     imageLoader = loader
 }
 ```
 
 ### Get realtime updates
-`ChatRecyclerView` is not lifecycle-aware. You must manually configure
+`ChatRecyclerView` **is not lifecycle-aware**. You must manually configure
 when to start observing data and when to stop by calling `onStart()`,
 with `conversationId` and `members` provided, and `onStop()` functions.
 A recommended way is to start listening in `onStart()` method or as soon
 as you receive a list of members and to stop listening in `onStop()`
 method.
 
-```
+```kotlin
 override fun onStart() {
     super.onStart()
         
@@ -67,34 +65,40 @@ override fun onStop() {
 ## Customization
 
 ### Styling via attributes
-- `app:chrv_textMessageTextSize` Custom outgoing text message text size
-- `app:chrv_myTextMessageBackground` Custom outgoing text message background
-- `app:chrv_myTextMessageBackgroundColor` Custom outgoing text message background
-  color
-- `app:chrv_myTextMessageCornerRadius` Custom outgoing text message corner radius
-- `app:chrv_myTextMessageStrokeColor` Custom outgoing text message stroke color
-- `app:chrv_myTextMessageStrokeWidth` Custom outgoing text message stroke width
-- `app:chrv_myTextMessageTextColor` Custom outgoing text message text color
-- `app:chrv_otherTextMessageBackground` Custom outgoing text message
-  backgroud
-- `app:chrv_otherTextMessageBackgroundColor` Custom incoming text
-  message background color
-- `app:chrv_myTextMessageCornerRadius` Custom incoming text message corner
-  radius 
-- `app:chrv_myTextMessageStrokeColor` Custom incoming text message
-  stroke color
-- `app:chrv_otherTextMessageStrokeWidth` Custom incoming text message
-  stroke width
-- `app:chrv_otherTextMessageTextColor` Custom incoming text message text
-  color
-- `app:chrv_otherTextMessageTextSize` Custom incoming text message text
+- `app:chrv_textMessageTextSize` - custom outgoing text message text
   size
+- `app:chrv_myTextMessageBackground` - custom outgoing text message
+  background
+- `app:chrv_myTextMessageBackgroundColor` - custom outgoing text message
+  background color
+- `app:chrv_myTextMessageCornerRadius` - custom outgoing text message
+  corner radius
+- `app:chrv_myTextMessageStrokeColor` - custom outgoing text message
+  stroke color
+- `app:chrv_myTextMessageStrokeWidth` - custom outgoing text message
+  stroke width
+- `app:chrv_myTextMessageTextColor` - custom outgoing text message text
+  color
+- `app:chrv_otherTextMessageBackground` - custom outgoing text message
+  backgroud
+- `app:chrv_otherTextMessageBackgroundColor` - custom incoming text
+  message background color
+- `app:chrv_myTextMessageCornerRadius` - custom incoming text message
+  corner radius
+- `app:chrv_myTextMessageStrokeColor` - custom incoming text message
+  stroke color
+- `app:chrv_otherTextMessageStrokeWidth` - custom incoming text message
+  stroke width
+- `app:chrv_otherTextMessageTextColor` - custom incoming text message
+  text color
+- `app:chrv_otherTextMessageTextSize` - custom incoming text message
+  text size
 
 ### Create your own holder
 You can define your own holder classes with the help of
 `ChatViewHolderProvider` and `ChatVHConfig<T : ChatItemView>`.
 
-```
+```kotlin
 val incomingTextMessageVHConfig =
     ChatVHConfig(
         layoutId = ChatViewType.MY_TEXT_MESSAGE.id,
@@ -124,9 +128,9 @@ chatRecyclerView.viewHolderProvider = viewHolderProvider
 You can either inherit from `ChatViewHolder<T : ChatItemView>` class or
 from one of the default `ViewHolder`s in case you are not planning to
 rewrite the behaviour from scratch:
-- `DefaultHeaderViewHolder` Header item view
-- `DefaultMyMessageViewHolder` Outgoing text message item view
-- `DefaultOtherMessageViewHolder` Incoming text message item view
-- `DefaultMyImageViewHolder` Outgoing image message item view
-- `DefaultOtherImageViewHolder` Incoming image message item view
+- `DefaultHeaderViewHolder` - header item view
+- `DefaultMyMessageViewHolder` - outgoing text message item view
+- `DefaultOtherMessageViewHolder` - incoming text message item view
+- `DefaultMyImageViewHolder` - outgoing image message item view
+- `DefaultOtherImageViewHolder` - incoming image message item view
 

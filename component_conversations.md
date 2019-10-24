@@ -67,12 +67,12 @@ override fun onStop() {
 ## Customization
 
 ### Styling via attributes
-- `app:crv_titleTextSize` - Custom title text size
-- `app:crv_titleTextColor` - Custom title text color
-- `app:crv_titleTextStyle` - Custom title fond style
-- `app:crv_messageTextSize` - Custom message text size
-- `app:crv_messageTextColor` - Custom message text color
-- `app:crv_messageTextStyle` - Custom title fond style
+- `app:crv_titleTextSize` - custom title text size
+- `app:crv_titleTextColor` - custom title text color
+- `app:crv_titleTextStyle` - custom title fond style
+- `app:crv_messageTextSize` - custom message text size
+- `app:crv_messageTextColor` - custom message text color
+- `app:crv_messageTextStyle` - custom title fond style
 
 
 ### Create your own holder
