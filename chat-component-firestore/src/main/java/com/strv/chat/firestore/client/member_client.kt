@@ -4,8 +4,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.client.MemberClient
-import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.IMemberModel
+import com.strv.chat.core.domain.task.map
 import com.strv.chat.core.domain.task.task
 import com.strv.chat.firestore.USERS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreMemberEntity
