@@ -13,26 +13,17 @@ Chat component SDK is designed to simplify the development of chat functionality
 - **API Level 21+** Compatible with 85% of Android devices
 
 #### Features
-- Hook up to the selected backed support
-- Ready-to-use UI
-  - A list of conversations
-  - An infinite list of messages with lazy loading
+- **Hook up to the selected backed support**
+- **Ready-to-use and customizable UI**
+  - Conversations list
+  - Messages list
   - Sending widget
   - Image detail widget
-- Various types of messages
+- **Various types of messages**
   - Text message
-  - Image message (picking an image from camera or gallery)
-- Notification about the state of image upload
-- Show timestamp on tap
-- Customizable UI
-
-#### UI components
-To implement all of the features above you can use the following
-components:
-- Conversations list
-- Messages list
-- Message input
-- Image detail
+  - Image message (from camera or gallery)
+- **Notification about the state of an image upload**
+- **Show Timestamp on tap**
 
 ## Adding the Chat component SDK to your project
 
@@ -103,34 +94,34 @@ class App : Application() {
 ```
 
 ## Task interface
-`Task` API is widely used in SDK to represents asynchronous method
-calls.
+`Task` API is widely used in SDK to **represents asynchronous method
+calls**.
 
-There are three implementations of Task API
-- `Task<Result, Error>` Represents a single result of an asynchronous
-  call that returns `<Result>` type in case of success and `<Error>` in
-  case of an error
-- `ProgressTask<Result, Error>` Represents a single result of an
-  asynchronous call that periodically notify about the progress and
+There are three implementations of Task API:
+- `Task<Result, Error>` - Represents a **single result of an
+  asynchronous call** that returns `<Result>` type in case of success
+  and `<Error>` in case of an error.
+- `ProgressTask<Result, Error>` - Represents a **single result of an
+  asynchronous call that periodically notify about its progress** and
   returns `<Result>` type in case of success and `<Error>` in case of an
-  error
-- `ObservableTask<Result, Error>` Represents a stream with real time
-  updates of the result of type `<Result>`. Returns `<Error>` when an
+  error.
+- `ObservableTask<Result, Error>` - Represents a **stream with real time
+  updates** of the result of type `<Result>`. Returns `<Error>` when an
   error occurs.
 
 #### Handling task results
 
 #### `Task<Result, Error>` 
 
-To be notified when the task succeeds succeeds, call `onSuccess`: 
-```
+To be notified when the task succeeds **succeeds**, call `onSuccess`: 
+```kotlin
 task.onSuccess { result ->
     Log.d("TAG", "Task completed successfully with result: $result")
 }
 ```
 
-To be notified when the task fails, call `onError`:
-```
+To be notified when the task **fails**, call `onError`:
+```kotlin
 task.onError { error ->
     Log.e("TAG", "Task failed with an exception: ${error.localizedMessage ?: "Unknown error"}")
 }
@@ -138,22 +129,22 @@ task.onError { error ->
 
 #### `ProgressTask<Result, Error>` 
 
-To be notified when the task succeeds succeeds, call `onSuccess`: 
-```
+To be notified when the task succeeds **succeeds**, call `onSuccess`: 
+```kotlin
 progressTask.onSuccess { result ->
     Log.d("TAG", "Task completed successfully with result: $result")
 }
 ```
 
-To be notified when the task fails, call `onError`:
-```
+To be notified when the task **fails**, call `onError`:
+```kotlin
 progressTask.onError { error ->
     Log.e("TAG", "Task failed with an exception: ${error.localizedMessage ?: "Unknown error"}")
 }
 ```
 
-To be periodically notified about the progress, call `onProgress`:
-```
+To be periodically notified about the **progress**, call `onProgress`:
+```kotlin
 progressTask.onProgress { progress ->
     Log.d("TAG", "Task progress is: $progress")
 }
@@ -161,15 +152,15 @@ progressTask.onProgress { progress ->
 
 #### `ObservableTask<Result, Error>` 
 
-To subscribe to the source od data, call `onNext`" 
-```
+To **subscribe** to the source od data, call `onNext`" 
+```kotlin
 observableTask.onNext { result ->
     Log.d("TAG", "Task has a new result: $result")
 }
 ```
 
-To be notified when the task fails, call `onError`:
-```
+To be notified when the task **fails**, call `onError`:
+```kotlin
 observableTask.onError { error ->
     Log.e("TAG", "Task failed with an exception: ${error.localizedMessage ?: "Unknown error"}")
 }
@@ -184,7 +175,7 @@ You can convert any existing callback-based API to the Task API via
 functions:
 
 #### `Task<Result, Error>` 
-```
+```kotlin
 interface Callback<T> {
     fun onSuccess(result: T)
     fun onError(e: Exception)
@@ -203,7 +194,7 @@ fun <T> taskCallback(block: (Callback<T>) -> Unit): Task<T, Throwable> = task<T,
 }
 ```
 #### `ProgressTask<Result, Error>` 
-```
+```kotlin
 fun subscribe(): ObservableTask<List<Entity>, Throwable> =
     observableTask<List<Entity>, Throwable>(::unsubscribe) {
         listenerRegistration =
@@ -225,7 +216,7 @@ fun subscribe(): ObservableTask<List<Entity>, Throwable> =
     }
 ```
 #### `ObservableTask<Result, Error>` 
-```
+```kotlin
 fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
     progressTask<DownloadUrl, Throwable> {
         val metadata = storageMetadata {
@@ -256,5 +247,5 @@ fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
 
 ### Task operators
 Task operators were created to provide users smooth possibility to
-transform task data. You can find the list of supported operators here.
+**transform task data**. You can find the list of supported operators here.
 //todo link
