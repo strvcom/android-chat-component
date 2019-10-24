@@ -10,7 +10,7 @@ steps.
 
 ### Add `ConversationRecyclerView` widget into your xml layout
 
-```
+```xml
 <com.strv.chat.core.core.ui.conversation.ConversationRecyclerView
     android:id="@+id/rv_chat"
     android:layout_width="match_parent"
@@ -22,16 +22,14 @@ the component.
 
 **Optional items**:
 - `imageLoader: ImageLoader` 
-  -   Tells the component how to upload picture's urls to `ImageView`s.
-  -   In case that the entity is not defined, images will be empty and
-      an error message will be logged.
+  -   Defines a way how to upload picture's urls to `ImageView`s.
 - `onItemClick: OnClickAction<ConversationItemView>`
-  -  Having `onClickListener` defined is needed in order to perform an
-     action when the user clicks on a conversation.
-- `viewHolderProvider: ConversationViewHolderProvider` - a provider of
-  custom implementations of ViewHolders
+  -  Defines an action that is performed after the user clicks on a
+     conversation.
+- `viewHolderProvider: ConversationViewHolderProvider` 
+  - Allows to add custom implementations of `ViewHolders`.
      
-```
+```kotlin
 conversationRecyclerView.init {
     imageLoader = loader
     onConversationClick = { conversation ->
@@ -41,13 +39,13 @@ conversationRecyclerView.init {
 ```
 
 ### Get realtime updates
-`ConversationRecyclerView` is not lifecycle-aware. You must manually
+`ConversationRecyclerView` **is not lifecycle-aware**. You must manually
 configure when to start observing data and when to stop by calling
 `onStart()` and `onStop()` functions. A recommended way is to start
 listening in `onStart()` method and to stop listening in `onStop()`
 method.
 
-```
+```kotlin
 override fun onStart() {
     super.onStart()
 
@@ -69,19 +67,19 @@ override fun onStop() {
 ## Customization
 
 ### Styling via attributes
-- `app:crv_titleTextSize` Custom title text size
-- `app:crv_titleTextColor` Custom title text color
-- `app:crv_titleTextStyle` Custom title fond style
-- `app:crv_messageTextSize` Custom message text size
-- `app:crv_messageTextColor` Custom message text color
-- `app:crv_messageTextStyle` Custom title fond style
+- `app:crv_titleTextSize` - Custom title text size
+- `app:crv_titleTextColor` - Custom title text color
+- `app:crv_titleTextStyle` - Custom title fond style
+- `app:crv_messageTextSize` - Custom message text size
+- `app:crv_messageTextColor` - Custom message text color
+- `app:crv_messageTextStyle` - Custom title fond style
 
 
 ### Create your own holder
 You can define your own holder classes with the help of
 `ConversationViewHolderProvider` and `ConversationVHConfig`.
 
-```
+```kotlin
 val vhConfig = ConversationVHConfig(
     layoutId = R.layout.item_conversation,
     constructor = { parent, _ ->
