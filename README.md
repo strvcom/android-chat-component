@@ -5,12 +5,13 @@ Chat component SDK is designed to simplify the development of chat functionality
 #### Technical details
   
 - **Multiple backend support**
-  [Firestore](https://firebase.google.com/docs/firestore/),
-  [Firebase](https://firebase.google.com/docs/database) (under
-  development)
-- **Cloud Storage support using Cloud Firestore**
-- **Kotlin**
-- **API Level 21+** Compatible with 85% of Android devices
+  - [Firestore](https://firebase.google.com/docs/firestore/)
+  - [Firebase](https://firebase.google.com/docs/database) (under 
+    development)
+- **Cloud Storage support**
+  - [Cloud Firestore](https://firebase.google.com/docs/firestore)
+- **Kotlin-first**
+- **API Level 21+** (compatible with 85% of Android devices)
 
 #### Features
 - **Hook up to the selected backed support**
