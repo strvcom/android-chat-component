@@ -1,6 +1,6 @@
 # Image detail widget
 
-Messages is a component that displays an image fetched from a given
+Image detail widget is a component that displays an image fetched from a given
 url.
 
 ## How to use
