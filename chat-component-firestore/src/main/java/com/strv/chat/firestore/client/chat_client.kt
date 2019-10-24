@@ -9,7 +9,7 @@ import com.google.firebase.firestore.WriteBatch
 import com.strv.chat.core.domain.client.ChatClient
 import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.MessageInputModel
-import com.strv.chat.core.domain.task
+import com.strv.chat.core.domain.task.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.firestore.MESSAGES_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreMessageEntity

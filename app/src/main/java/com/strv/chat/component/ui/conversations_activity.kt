@@ -28,7 +28,7 @@ class ConversationsActivity : AppCompatActivity() {
 
         conversationRecyclerView.init {
             imageLoader = loader
-            onConversationClick = { conversation ->
+            onItemClick = { conversation ->
                 openChat(conversation.id, conversation.otherMemberIds)
             }
         }

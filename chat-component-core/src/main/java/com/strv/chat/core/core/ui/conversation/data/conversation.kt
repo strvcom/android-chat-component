@@ -1,6 +1,6 @@
 package com.strv.chat.core.core.ui.conversation.data
 
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Task
 import java.util.Date
 
 class ConversationItemView(

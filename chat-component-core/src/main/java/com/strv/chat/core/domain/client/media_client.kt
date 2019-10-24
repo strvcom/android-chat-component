@@ -2,8 +2,8 @@ package com.strv.chat.core.domain.client
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.strv.chat.core.domain.ProgressTask
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.ProgressTask
+import com.strv.chat.core.domain.task.Task
 
 typealias DownloadUrl = Uri
 typealias UploadUrl = String

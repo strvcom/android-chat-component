@@ -4,8 +4,8 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.strv.chat.core.data.entity.SourceEntity
 import com.strv.chat.core.data.source.ListQuerySource
-import com.strv.chat.core.domain.observableTask
-import com.strv.chat.core.domain.task
+import com.strv.chat.core.domain.task.observableTask
+import com.strv.chat.core.domain.task.task
 
 internal data class FirestoreListQuerySource<Entity : SourceEntity>(
     private val source: Query,

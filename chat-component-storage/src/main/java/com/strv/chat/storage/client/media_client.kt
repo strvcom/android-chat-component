@@ -5,12 +5,12 @@ import com.google.firebase.storage.FirebaseStorage
 import com.strv.chat.storage.IMAGE_REFERENCE
 import com.strv.chat.storage.path
 import com.strv.chat.storage.storageMetadata
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.client.DownloadUrl
 import com.strv.chat.core.domain.client.MediaClient
 import com.strv.chat.core.domain.client.UploadUrl
-import com.strv.chat.core.domain.progressTask
-import com.strv.chat.core.domain.task
+import com.strv.chat.core.domain.task.progressTask
+import com.strv.chat.core.domain.task.task
 import strv.ktools.logD
 import java.io.ByteArrayOutputStream
 
@@ -18,9 +18,10 @@ class CloudStorageMediaClient(
     val firebaseStorage: FirebaseStorage
 ) : MediaClient {
 
-    override fun uploadUrl(fileName: String): Task<UploadUrl, Throwable> = task {
-        invokeSuccess("$IMAGE_REFERENCE/$fileName.jpg")
-    }
+    override fun uploadUrl(fileName: String): Task<UploadUrl, Throwable> =
+        task {
+            invokeSuccess("$IMAGE_REFERENCE/$fileName.jpg")
+        }
 
     override fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
         progressTask<DownloadUrl, Throwable> {

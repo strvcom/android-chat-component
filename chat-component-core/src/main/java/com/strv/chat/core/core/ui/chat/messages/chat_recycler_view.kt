@@ -13,12 +13,12 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.domain.Disposable
+import com.strv.chat.core.domain.task.Disposable
 import com.strv.chat.core.domain.ImageLoader
-import com.strv.chat.core.domain.ObservableTask
+import com.strv.chat.core.domain.task.ObservableTask
 import com.strv.chat.core.domain.collect
-import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.IMemberModel
+import com.strv.chat.core.domain.task.map
 import strv.ktools.logE
 import java.util.Date
 import java.util.LinkedList
@@ -31,10 +31,10 @@ class ChatRecyclerView : RecyclerView {
             _viewHolderProvider = value
         }
 
-    var onMessageClick: OnClickAction<ChatItemView>
+    var onItemClick: OnClickAction<ChatItemView>
         get() = throw UnsupportedOperationException("")
         set(value) {
-            _onMessageClick = value
+            _onItemClick = value
         }
 
     var imageLoader: ImageLoader
@@ -46,7 +46,7 @@ class ChatRecyclerView : RecyclerView {
     private var _viewHolderProvider: ChatViewHolderProvider =
         chatComponent.chatViewHolderProvider()
 
-    private var _onMessageClick: OnClickAction<ChatItemView>? = null
+    private var _onItemClick: OnClickAction<ChatItemView>? = null
     private var _imageLoader: ImageLoader? = null
 
     private val disposable = LinkedList<Disposable>()
@@ -114,7 +114,7 @@ class ChatRecyclerView : RecyclerView {
 
         if (adapter == null) {
             adapter =
-                chatComponent.chatAdapter(_viewHolderProvider, _imageLoader, _onMessageClick, style)
+                chatComponent.chatAdapter(_viewHolderProvider, _imageLoader, _onItemClick, style)
         }
     }
 

@@ -12,11 +12,11 @@ import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.data.creator.ConversationItemViewCreator
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.domain.Disposable
+import com.strv.chat.core.domain.task.Disposable
 import com.strv.chat.core.domain.ImageLoader
 import com.strv.chat.core.domain.collect
-import com.strv.chat.core.domain.mapIterable
-import com.strv.chat.core.domain.sortedBy
+import com.strv.chat.core.domain.task.mapIterable
+import com.strv.chat.core.domain.task.sortedBy
 import strv.ktools.logE
 import java.util.LinkedList
 
@@ -34,10 +34,10 @@ class ConversationRecyclerView : RecyclerView {
             _imageLoader = value
         }
 
-    var onConversationClick: OnClickAction<ConversationItemView>
+    var onItemClick: OnClickAction<ConversationItemView>
         get() = throw UnsupportedOperationException("")
         set(value) {
-            _onConversationClick = value
+            _onItemClick = value
         }
 
     private var _viewHolderProvider: ConversationViewHolderProvider =
@@ -45,7 +45,7 @@ class ConversationRecyclerView : RecyclerView {
 
     private var _imageLoader: ImageLoader? = null
 
-    private var _onConversationClick: OnClickAction<ConversationItemView>? = null
+    private var _onItemClick: OnClickAction<ConversationItemView>? = null
 
     private val disposable = LinkedList<Disposable>()
 
@@ -83,7 +83,7 @@ class ConversationRecyclerView : RecyclerView {
                 chatComponent.conversationAdapter(
                     _viewHolderProvider,
                     _imageLoader,
-                    _onConversationClick,
+                    _onItemClick,
                     style
                 )
         }

@@ -1,6 +1,6 @@
 package com.strv.chat.core.domain.client
 
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.model.IMemberModel
 
 interface MemberClient {

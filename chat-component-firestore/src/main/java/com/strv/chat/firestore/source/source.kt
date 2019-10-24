@@ -4,8 +4,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.strv.chat.core.data.entity.SourceEntity
 import com.strv.chat.core.data.source.DocumentSource
-import com.strv.chat.core.domain.observableTask
-import com.strv.chat.core.domain.task
+import com.strv.chat.core.domain.task.observableTask
+import com.strv.chat.core.domain.task.task
 
 internal data class FirestoreDocumentSource<Entity : SourceEntity>(
     private val documentReference: DocumentReference,
