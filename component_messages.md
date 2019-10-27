@@ -5,7 +5,7 @@ selected conversation and listens for realtime updates.
 
 ## How to use
 
-To make the component works correctly, you need to perform several
+To make the component works correctly, you need to perform following
 steps.
 
 ### Add `ChatRecyclerView` widget into your xml layout
@@ -17,17 +17,18 @@ steps.
     android:layout_height="match_parent" />
 ```
 ### Initialize the component
-Call `init()` builder function in `onCreate()` method in order to setup
-the component.
+Call type-safe `init()` builder function in `onCreate()` method that
+allows creating Kotlin-based domain-specific language (DSL) suitable for
+configuring the component.
 
-**Optional items**:
+**Optional properties**:
 - `imageLoader: ImageLoader` 
   -   Defines a way how to upload picture's urls to `ImageView`s.
 - `onItemClick: OnClickAction<ChatItemView>`
-  -  Defines an action that is performed after the user clicks on a
+  -  Defines an action that is performed after a user clicks on a
      message.
 - `viewHolderProvider: ChatViewHolderProvider`
-  - Allows to add custom implementations of `ViewHolders`.
+  - Allows to add a custom implementations of `ViewHolders`.
      
 ```kotlin
 chatRecyclerView.init {
@@ -36,12 +37,13 @@ chatRecyclerView.init {
 ```
 
 ### Get realtime updates
-`ChatRecyclerView` **is not lifecycle-aware**. You must manually configure
-when to start observing data and when to stop by calling `onStart()`,
-with `conversationId` and `members` provided, and `onStop()` functions.
-A recommended way is to start listening in `onStart()` method or as soon
-as you receive a list of members and to stop listening in `onStop()`
-method.
+`ChatRecyclerView` **is not lifecycle-aware**. You have to configure
+manually when to start or stop observing data by calling `onStart()`,
+with `conversationId` and `members` provided, and `onStop()` functions
+respectively. A recommended way is to start listening in `onStart()`
+method or as soon as you receive a `conversationId` and a list of
+members and to stop listening in `onStop()` method of your
+activity/fragment.
 
 ```kotlin
 override fun onStart() {
@@ -126,7 +128,7 @@ chatRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
 You can either inherit from `ChatViewHolder<T : ChatItemView>` class or
-from one of the default `ViewHolder`s in case you are not planning to
+from one of the default `ViewHolder`s in case if you are not planning to
 rewrite the behaviour from scratch:
 - `DefaultHeaderViewHolder` - header item view
 - `DefaultMyMessageViewHolder` - outgoing text message item view

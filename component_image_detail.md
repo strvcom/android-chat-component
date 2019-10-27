@@ -5,7 +5,7 @@ url.
 
 ## How to use
 
-To make the component works correctly, you need to perform several
+To make the component works correctly, you need to perform following
 steps.
 
 ### Add `ImageDetailView` widget into your xml layout
@@ -17,14 +17,15 @@ steps.
     android:layout_height="match_parent" />
 ```
 ### Initialize the component
-Call `init()` builder function in `onCreate()` method in order to setup
-the component.
+Call type-safe `init()` builder function in `onCreate()` method that
+allows creating Kotlin-based domain-specific language (DSL) suitable for
+configuring the component.
 
-**Optional items**:
+**Optional properties**:
 - `url: String`
-  - Url of the displayed image that the user wants to display
+  - Url of the displayed image that a user wants to display
 - `imageLoader: ImageLoader` 
-  -   Defines a way how to upload picture's urls to `ImageView`s.
+  - Defines the way how to upload picture's urls to `ImageView`s.
      
 ```kotlin
 imageDetail.init {

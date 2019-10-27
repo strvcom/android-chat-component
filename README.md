@@ -1,6 +1,7 @@
 # Chat component
 
-Chat component SDK is designed to simplify the development of chat functionality. It has a customizable solution that is easily extendable.
+Chat component SDK is designed to simplify the development of a chat
+functionality. It has a customizable easily extendable solution.
 
 #### Technical details
   
@@ -16,23 +17,23 @@ Chat component SDK is designed to simplify the development of chat functionality
 #### Features
 - **Hook up to the selected backed support**
 - **Ready-to-use and customizable UI**
-  - Conversations list
-  - Messages list
-  - Sending widget
-  - Image detail widget
+  - [Conversations list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_conversations.md)
+  - [Messages list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_messages.md)
+  - [Sending widget](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_send_widget.md)
+  - [Image detail widget](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_image_detail.md)
 - **Various types of messages**
   - Text message
   - Image message (from camera or gallery)
 - **Notification about the state of an image upload**
-- **Show Timestamp on tap**
+- **Tap to show the timestamp of the sent message**
 
 ## Adding the Chat component SDK to your project
 
 ``` //todo change later
  implementation 'com.strv.chat.component::chat-component-core:1.0.0'
 ```
-The base module you should use **if you want to have completely custom
-backend implementation**. You will be forced to implement all the
+You should use the core module **if you want to have custom backend
+implementation**. In this case, you will be forced to implement all the
 required interfaces by yourself.
 
 #### Firestore
@@ -40,11 +41,14 @@ required interfaces by yourself.
 ``` //todo change later
  implementation 'com.strv.chat.component::chat-component-firestore:1.0.0'
 ```
-The module you should use **if you want to use the default Cloud
-Firestore implementation** for your backend.
+You should use firestore module **if you want to use the default [Cloud
+Firestore](https://firebase.google.com/docs/firestore/) implementation**
+for your backend.
 
 ##### Firestore structure
-The database structure required for using the default Firestore implementation is described in [Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore.md).
+The database structure required for using the default Firestore
+implementation, is described in
+[Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore.md).
 
 #### Firebase Realtime Database
 
@@ -52,8 +56,9 @@ The database structure required for using the default Firestore implementation i
  implementation 'com.strv.chat.component::chat-component-firebase:1.0.0'
 ```
 
-The module you should use **if you want to use the default Realtime
-Database implementation** for your backend.
+You should use firebase module **if you want to use the default
+[Firebase Realtime Database](https://firebase.google.com/docs/database)
+implementation** for your backend.
 
 
 #### Firebase Cloud Storage
@@ -62,13 +67,14 @@ Database implementation** for your backend.
 'com.strv.chat.component::chat-component-storage:1.0.0'
 ```
 
-The module you should use **if you want to use the default Firebase
-Cloud implementation** as your media storage.
+You should use storage module **if you want to use the default [Firebase
+Cloud](https://firebase.google.com/docs/firestore) implementation** as
+your media storage.
 
 ### Initializing Chat component 
 
-Use `ChatComponent.init()` function to configure and initialize the
-component in your application.
+Use `ChatComponent.init()` function to configure and initialize the Chat
+component SDK in your application.
 
 ```kotlin
 class App : Application() {
@@ -95,32 +101,31 @@ class App : Application() {
 ```
 
 ## Task interface
-`Task` API is widely used in SDK to **represents asynchronous method
-calls**.
+`Task` API is widely used in Chat component SDK to represent a **promise
+that computation will be done**. It is a wrapper around a **result of
+an asynchronous call**.
 
-There are three implementations of Task API:
+There are three kinds of Task:
 - `Task<Result, Error>` 
   - Represents a **single result of an asynchronous call** that returns
-    `<Result>` type in case of success and `<Error>` in case of an
+    `<Result>` type in case of success and `<Error>` in case of
     error.
 - `ProgressTask<Result, Error>`
-  - Represents a **single result of an
-  asynchronous call that periodically notify about its progress** and
-  returns `<Result>` type in case of success and `<Error>` in case of an
-  error.
+  - Represents a **single result of an asynchronous call and
+    periodically notifies about progress of the call**. It returns
+    `<Result>` type in case of success and `<Error>` in case of error.
 - `ObservableTask<Result, Error>`
-  - Represents a **stream with real time
-  updates** of the result of type `<Result>`. Returns `<Error>` when an
-  error occurs.
+  - Represents a **stream with real time updates** of the result of type
+    `<Result>`. Returns `<Error>` when an error occurs.
 
 #### Handling task results
 
 #### `Task<Result, Error>` 
 
-To be notified when the task succeeds **succeeds**, call `onSuccess`: 
+To be notified when the task **succeeds**, call `onSuccess`: 
 ```kotlin
 task.onSuccess { result ->
-    Log.d("TAG", "Task completed successfully with result: $result")
+    Log.d("TAG", "Task completed successfully with a result: $result")
 }
 ```
 
@@ -133,10 +138,10 @@ task.onError { error ->
 
 #### `ProgressTask<Result, Error>` 
 
-To be notified when the task succeeds **succeeds**, call `onSuccess`: 
+To be notified when the task **succeeds**, call `onSuccess`: 
 ```kotlin
 progressTask.onSuccess { result ->
-    Log.d("TAG", "Task completed successfully with result: $result")
+    Log.d("TAG", "Task completed successfully with a result: $result")
 }
 ```
 
@@ -147,7 +152,7 @@ progressTask.onError { error ->
 }
 ```
 
-To be periodically notified about the **progress**, call `onProgress`:
+To be repeatedly notified about the **progress**, call `onProgress`:
 ```kotlin
 progressTask.onProgress { progress ->
     Log.d("TAG", "Task progress is: $progress")
@@ -156,7 +161,7 @@ progressTask.onProgress { progress ->
 
 #### `ObservableTask<Result, Error>` 
 
-To **subscribe** to the source od data, call `onNext`" 
+To **subscribe** to the source of data, call `onNext`" 
 ```kotlin
 observableTask.onNext { result ->
     Log.d("TAG", "Task has a new result: $result")
@@ -250,6 +255,7 @@ fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
 ```
 
 ### Task operators
-Task operators were created to provide users smooth possibility to
-**transform task data**. You can find the list of supported operators here.
-//todo link
+Task operators were created to provide to the users smooth possibility
+to **transform task data**. You can find the list of the supported
+operators
+[here](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/chat-component-core/src/main/java/com/strv/chat/core/domain/task/operators.kt).

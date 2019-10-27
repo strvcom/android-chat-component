@@ -1,11 +1,11 @@
 # Conversation list
 
 Conversation list is a customizable component that displays
-conversations of the user and listens for realtime updates.
+conversations of a user and listens for realtime updates.
 
 ## How to use
 
-To make the component works correctly, you need to perform several
+To make the component work correctly, you need to perform following
 steps.
 
 ### Add `ConversationRecyclerView` widget into your xml layout
@@ -17,17 +17,18 @@ steps.
     android:layout_height="match_parent" />
 ```
 ### Initialize the component
-Call `init()` builder function in `onCreate()` method in order to setup
-the component.
+Call type-safe `init()` builder function in `onCreate()` method that
+allows creating Kotlin-based domain-specific language (DSL) suitable for
+configuring the component.
 
-**Optional items**:
+**Optional properties**:
 - `imageLoader: ImageLoader` 
   -   Defines a way how to upload picture's urls to `ImageView`s.
 - `onItemClick: OnClickAction<ConversationItemView>`
-  -  Defines an action that is performed after the user clicks on a
+  -  Defines an action that is performed after a user clicks on a
      conversation.
 - `viewHolderProvider: ConversationViewHolderProvider` 
-  - Allows to add custom implementations of `ViewHolders`.
+  - Allows to add a custom implementations of `ViewHolders`.
      
 ```kotlin
 conversationRecyclerView.init {
@@ -39,11 +40,11 @@ conversationRecyclerView.init {
 ```
 
 ### Get realtime updates
-`ConversationRecyclerView` **is not lifecycle-aware**. You must manually
-configure when to start observing data and when to stop by calling
+`ConversationRecyclerView` **is not lifecycle-aware**. You must
+configure manually when to start/stop observing data by calling
 `onStart()` and `onStop()` functions. A recommended way is to start
 listening in `onStart()` method and to stop listening in `onStop()`
-method.
+method of your activity/fragment.
 
 ```kotlin
 override fun onStart() {
@@ -96,5 +97,5 @@ conversationRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
 You can either inherit from `ConversationViewHolder` class or from the
-default `DefaultConversationViewHolder` in case you are not planning to
-rewrite the behaviour from scratch.
+default `DefaultConversationViewHolder` in case if you are not planning
+to rewrite the behaviour from scratch.

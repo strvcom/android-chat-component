@@ -5,7 +5,7 @@ and image messages.
 
 ## How to use
 
-To make the component works correctly, you need to perform several
+To make the component work correctly, you need to perform following
 steps.
 
 ### Add `SendWidget` widget into your xml layout
@@ -17,14 +17,15 @@ steps.
     android:layout_height="wrap_content" />
 ```
 ### Initialize the component
-Call `init()` builder function in `onCreate()` method in order to setup
-the component.
+Call type-safe `init()` builder function in `onCreate()` method that
+allows creating Kotlin-based domain-specific language (DSL) suitable for
+configuring the component.
 
-Minimum **required items** that the component needs are:
+Minimum **required properties** that the component needs to be set:
 - `conversationId: String` 
   -   `id` of the related conversation
 - `newFileProvider: FileProvider`
-  - Defines a way of retrieving file Uri for saving a camera output that
+  - Defines a way of retrieving file uri for saving a camera output that
     is used to send as an image message
      
 ```kotlin
@@ -35,13 +36,13 @@ sendWidget.init {
 ```
 
 ### Send an image message
-The Android Camera application encodes result of the image capture
-action to `onActivityResult()`. Thus is your responsibility to handle
+The Android Camera application encodes the result of an image capture
+action to `onActivityResult()`. Thus, is your responsibility to handle
 `REQUEST_IMAGE_CAPTURE` request code in `onActivityResult()` method.
 
 In case of successful processing of the image, Send widget API contains
-method `uploadImage(uri: Uri)` which will **start a foreground service
-that uploads the image on the server and notify the user about the
+method `uploadImage(uri: Uri)` which will **start a service that uploads
+the image on the server and shows a notification that notifies about the
 progress and the result of the upload**.
 
 ## Customization
@@ -52,11 +53,11 @@ progress and the result of the upload**.
 
 
 ### Notification configuration
-- `largeIconRes: Int` - custom large icon that is shown in the ticker
+- `largeIconRes: Int` - custom large icon resource id that is shown in the ticker
   and notification
-- `smallIconProgressRes: Int` - custom small icon to use in the
+- `smallIconProgressRes: Int` - custom small icon resource id to use in the
   notification layouts in a progress state
-- `smallIconSuccessRes: Int` - custom small icon to use in the
+- `smallIconSuccessRes: Int` - custom small icon resource id to use in the
   notification layouts in a success state
-- `smallIconErrorRes: Int` - custom small icon to use in the
+- `smallIconErrorRes: Int` - custom small icon resource id to use in the
   notification layouts in an error state
