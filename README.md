@@ -1,7 +1,10 @@
 # Chat component
 
-Chat component SDK is designed to simplify the development of a chat
-functionality. It has a customizable easily extendable solution.
+Chat component SDK is a collection of modules that can be added to any
+project to simplify development of basic chat functionality. It is an
+easily extendable solution that is built on top of
+[Firebase](https://firebase.google.com/) and allows easy UI
+customization.
 
 #### Technical details
   
@@ -15,7 +18,7 @@ functionality. It has a customizable easily extendable solution.
 - **API Level 21+** (compatible with 85% of Android devices)
 
 #### Features
-- **Hook up to the selected backed support**
+- **Hook up to the selected backend support**
 - **Ready-to-use and customizable UI**
   - [Conversations list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_conversations.md)
   - [Messages list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_messages.md)
@@ -88,9 +91,13 @@ class App : Application() {
             this,
             //configuration
             Configuration(
+                //ChatClient - provides interactions with the message source of data
                 chatClient,
+                //ConversationClient - provides interactions with the conversation source of data
                 conversationClient,
+                //MemberClient - provides information about the current user and other members
                 memberClient,
+                //MediaClient - provides interaction with a storage service
                 mediaClient,
                 //notification configuration - for a complete list of available attributes see //todo link
                 serviceConfig(CHANNEL_ID)
@@ -181,9 +188,12 @@ You can convert any existing callback-based API to the Task API via
 - `observableTask`
 - `progressTask` 
 
-functions:
+functions.
 
-#### `Task<Result, Error>` 
+#### `task` 
+In this function, both `invokeSuccess` and `invokeError` can be used to
+complete the task with a success or an error state. Repeated invocation 
+of any completing function is ignored.
 ```kotlin
 interface Callback<T> {
     fun onSuccess(result: T)
@@ -202,7 +212,10 @@ fun <T> taskCallback(block: (Callback<T>) -> Unit): Task<T, Throwable> = task<T,
     })
 }
 ```
-#### `ProgressTask<Result, Error>` 
+#### `observableTask` 
+In this function, `invokeNext` can be used to emit a value to the stream
+behind. `invokeError` completes the task with an error state. Repeated
+invocation of `invokeError` function is ignored.
 ```kotlin
 fun subscribe(): ObservableTask<List<Entity>, Throwable> =
     observableTask<List<Entity>, Throwable>(::unsubscribe) {
@@ -224,7 +237,11 @@ fun subscribe(): ObservableTask<List<Entity>, Throwable> =
             }
     }
 ```
-#### `ObservableTask<Result, Error>` 
+#### `progressTask` 
+In this function, `invokeProgress` can be used to notify about the
+progress of the asynchronous call. `invokeSuccess` and `invokeError`
+complete the task with a success or an error state. Repeated invocation 
+of any completing function is ignored.
 ```kotlin
 fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
     progressTask<DownloadUrl, Throwable> {

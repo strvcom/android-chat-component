@@ -17,9 +17,9 @@ steps.
     android:layout_height="match_parent" />
 ```
 ### Initialize the component
-Call type-safe `init()` builder function in `onCreate()` method that
-allows creating Kotlin-based domain-specific language (DSL) suitable for
-configuring the component.
+Call type-safe `init()` builder function in `onCreate()` method
+of your Activity that allows creating Kotlin-based domain-specific
+language (DSL) suitable for configuring the component.
 
 **Optional properties**:
 - `imageLoader: ImageLoader` 
@@ -97,5 +97,5 @@ conversationRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
 You can either inherit from `ConversationViewHolder` class or from the
-default `DefaultConversationViewHolder` in case if you are not planning
-to rewrite the behaviour from scratch.
+default `DefaultConversationViewHolder` in case you are not planning
+to rewrite the behavior from scratch.

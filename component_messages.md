@@ -17,9 +17,9 @@ steps.
     android:layout_height="match_parent" />
 ```
 ### Initialize the component
-Call type-safe `init()` builder function in `onCreate()` method that
-allows creating Kotlin-based domain-specific language (DSL) suitable for
-configuring the component.
+Call type-safe `init()` builder function in `onCreate()` method of your
+Activity that allows creating Kotlin-based domain-specific language
+(DSL) suitable for configuring the component.
 
 **Optional properties**:
 - `imageLoader: ImageLoader` 
@@ -128,7 +128,7 @@ chatRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
 You can either inherit from `ChatViewHolder<T : ChatItemView>` class or
-from one of the default `ViewHolder`s in case if you are not planning to
+from one of the default `ViewHolder`s in case you are not planning to
 rewrite the behaviour from scratch:
 - `DefaultHeaderViewHolder` - header item view
 - `DefaultMyMessageViewHolder` - outgoing text message item view

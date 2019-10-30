@@ -17,9 +17,9 @@ steps.
     android:layout_height="wrap_content" />
 ```
 ### Initialize the component
-Call type-safe `init()` builder function in `onCreate()` method that
-allows creating Kotlin-based domain-specific language (DSL) suitable for
-configuring the component.
+Call type-safe `init()` builder function in `onCreate()` method of your
+Activity that allows creating Kotlin-based domain-specific language
+(DSL) suitable for configuring the component.
 
 Minimum **required properties** that the component needs to be set:
 - `conversationId: String` 
@@ -37,8 +37,9 @@ sendWidget.init {
 
 ### Send an image message
 The Android Camera application encodes the result of an image capture
-action to `onActivityResult()`. Thus, is your responsibility to handle
-`REQUEST_IMAGE_CAPTURE` request code in `onActivityResult()` method.
+action to `onActivityResult()`. Thus, it is your responsibility to
+handle `REQUEST_IMAGE_CAPTURE` request code in `onActivityResult()`
+method.
 
 In case of successful processing of the image, Send widget API contains
 method `uploadImage(uri: Uri)` which will **start a service that uploads
