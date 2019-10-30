@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Task
 import strv.ktools.logE
 
 @RequiresApi(Build.VERSION_CODES.O)

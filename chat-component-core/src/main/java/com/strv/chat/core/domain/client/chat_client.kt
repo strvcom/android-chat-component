@@ -1,7 +1,7 @@
 package com.strv.chat.core.domain.client
 
-import com.strv.chat.core.domain.ObservableTask
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.ObservableTask
+import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.model.IMessageModel
 import com.strv.chat.core.domain.model.MessageInputModel
 import java.util.Date

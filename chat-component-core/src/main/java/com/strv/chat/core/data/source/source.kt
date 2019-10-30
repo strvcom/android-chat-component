@@ -1,8 +1,8 @@
 package com.strv.chat.core.data.source
 
 import com.strv.chat.core.data.entity.SourceEntity
-import com.strv.chat.core.domain.ObservableTask
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.ObservableTask
+import com.strv.chat.core.domain.task.Task
 
 interface DocumentSource<Entity : SourceEntity> {
 

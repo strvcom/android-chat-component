@@ -66,7 +66,7 @@ class ChatActivity : AppCompatActivity(), FileProvider {
 
         chatRecyclerView.init {
             imageLoader = loader
-            onMessageClick = { itemView ->
+            onItemClick = { itemView ->
                 when (itemView) {
                     is ChatItemView.MyImageMessage -> openImageDetail(itemView.imageUrl)
                     is ChatItemView.OtherImageMessage -> openImageDetail(itemView.imageUrl)

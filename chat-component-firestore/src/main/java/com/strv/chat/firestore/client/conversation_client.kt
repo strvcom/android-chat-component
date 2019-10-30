@@ -2,13 +2,13 @@ package com.strv.chat.firestore.client
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.client.ConversationClient
-import com.strv.chat.core.domain.flatMap
-import com.strv.chat.core.domain.map
 import com.strv.chat.core.domain.model.IMemberMetaModel
 import com.strv.chat.core.domain.model.IMemberModel
-import com.strv.chat.core.domain.task
+import com.strv.chat.core.domain.task.flatMap
+import com.strv.chat.core.domain.task.map
+import com.strv.chat.core.domain.task.task
 import com.strv.chat.firestore.CONVERSATIONS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 import com.strv.chat.firestore.entity.MEMBERS_META

@@ -20,13 +20,13 @@ import com.strv.chat.core.core.ui.extensions.notification
 import com.strv.chat.core.core.ui.extensions.progress
 import com.strv.chat.core.core.ui.extensions.smallIcon
 import com.strv.chat.core.core.ui.extensions.toBitmap
-import com.strv.chat.core.domain.Disposable
-import com.strv.chat.core.domain.Task
+import com.strv.chat.core.domain.task.Disposable
+import com.strv.chat.core.domain.task.Task
 import com.strv.chat.core.domain.client.DownloadUrl
 import com.strv.chat.core.domain.collect
-import com.strv.chat.core.domain.flatMap
 import com.strv.chat.core.domain.model.MessageInputModel
 import com.strv.chat.core.domain.model.MessageInputModel.ImageInputModel.ImageModel
+import com.strv.chat.core.domain.task.flatMap
 import strv.ktools.logD
 import strv.ktools.logE
 import java.util.LinkedList
