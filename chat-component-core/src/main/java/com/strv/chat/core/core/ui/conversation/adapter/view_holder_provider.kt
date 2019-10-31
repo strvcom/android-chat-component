@@ -9,6 +9,13 @@ import com.strv.chat.core.core.ui.extensions.LayoutId
 
 typealias ConversationVHConstructor = (ViewGroup, LayoutId) -> ConversationViewHolder
 
+/**
+ * Holds all possible ViewHolder configurations and allows to add a custom implementations of ViewHolder.
+ *
+ * In case that one property is not filled, the default implementation will be used.
+ *
+ * @conversationVHConfig [ConversationViewHolder] configuration.
+ */
 class ConversationViewHolderProvider(
     private val conversationVHConfig: ConversationVHConfig =
         ConversationVHConfig(CONVERSATION.id) { parent, _ ->
@@ -18,6 +25,9 @@ class ConversationViewHolderProvider(
         }
 ) {
 
+    /**
+     * Returns a [ConversationViewHolder] based on [viewType].
+     */
     internal fun holder(
         parent: ViewGroup,
         viewType: Int,
@@ -32,6 +42,9 @@ class ConversationViewHolderProvider(
             null -> throw IllegalStateException("Wrong message view type.")
         }
 
+    /**
+     * Applies style for [Styleable].
+     */
     @Suppress("UNCHECKED_CAST")
     private fun checkStyle(holder: ConversationViewHolder, style: ConversationRecyclerViewStyle?) {
         if (style != null && holder is Styleable<*>) {
@@ -40,11 +53,24 @@ class ConversationViewHolderProvider(
     }
 }
 
+/**
+ * Container holding configuration for creating a [ConversationViewHolder].
+ *
+ * @param layoutId layout resource id.
+ * @param constructor function that returns a new [ConversationViewHolder] object.
+ *
+ * @constructor Creates a new configuration for creating a [ConversationViewHolder].
+ */
 class ConversationVHConfig(
     layoutId: LayoutId,
     constructor: ConversationVHConstructor
 ) {
 
+    /**
+     * Creates a new [ConversationViewHolder] object.
+     *
+     * @return [ConversationViewHolder]
+     */
     val viewHolder: (ViewGroup) -> ConversationViewHolder = { group ->
         constructor(group, layoutId)
     }

@@ -3,14 +3,14 @@ package com.strv.chat.firestore.source
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ListenerRegistration
 import com.strv.chat.core.data.entity.SourceEntity
-import com.strv.chat.core.data.source.DocumentSource
+import com.strv.chat.core.data.source.Source
 import com.strv.chat.core.domain.task.observableTask
 import com.strv.chat.core.domain.task.task
 
-internal data class FirestoreDocumentSource<Entity : SourceEntity>(
+internal data class FirestoreSource<Entity : SourceEntity>(
     private val documentReference: DocumentReference,
     private val clazz: Class<Entity>
-) : DocumentSource<Entity> {
+) : Source<Entity> {
 
     private var listenerRegistration: ListenerRegistration? = null
 

@@ -1,6 +1,8 @@
 package com.strv.chat.core.core.ui.view
 
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -11,9 +13,19 @@ const val DIALOG_PHOTO_PICKER = "photo_picker"
 private const val ARGUMENT_TITLE = "title"
 private const val ARGUMENT_ITEMS = "items"
 
-class ItemListDialogFragment : DialogFragment() {
+/**
+ * Dialog displaying a list of items.
+ */
+internal class ItemListDialogFragment : DialogFragment() {
 
     companion object {
+
+        /**
+         * Returns [Intent] for starting the dialog.
+         *
+         * @param title Title of the dialog.
+         * @param items Items to display.
+         */
         fun newInstance(title: String?, items: Array<String>) = ItemListDialogFragment().apply {
             arguments = Bundle().apply {
                 putString(ARGUMENT_TITLE, title)
@@ -22,9 +34,19 @@ class ItemListDialogFragment : DialogFragment() {
         }
     }
 
+    /**
+     * Title displayed in the dialog.
+     */
     private var title: String? = null
+
+    /**
+     * List of items to be displayed in the dialog as the content.
+     */
     private lateinit var items: Array<String>
 
+    /**
+     * Action performed after clicking on an item from [items].
+     */
     private var onClick: OnClickAction<Int>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +62,7 @@ class ItemListDialogFragment : DialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         // cancelable on touch outside
-         dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setCanceledOnTouchOutside(true)
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
@@ -63,10 +85,16 @@ class ItemListDialogFragment : DialogFragment() {
             create()
         }
 
+    /**
+     * Setter an action performed after clicking on an item from [items].
+     */
     fun onClick(onClick: OnClickAction<Int>) {
         this.onClick = onClick
     }
 
+    /**
+     * Processes bundle arguments.
+     */
     private fun processArguments(arguments: Bundle) {
         title = arguments.getString(ARGUMENT_TITLE)
         items = arguments.getStringArray(ARGUMENT_ITEMS) ?: arrayOf()

@@ -36,9 +36,21 @@ private const val ARGUMENT_SENDER_ID = "sender_id"
 private const val ARGUMENT_CONVERSATION_ID = "conversation_id"
 private const val ARGUMENT_SERVICE_ID = "service_id"
 
+/**
+ * Uploads the image on the server and shows a notification that notifies about the progress and the result of the upload.
+ */
 class UploadPhotoService : IntentService("UploadPhotoService") {
 
     companion object {
+
+        /**
+         * Returns [Intent] for starting the service
+         *
+         * @param context [Context].
+         * @param fileUri Uri of the file to upload.
+         * @param senderId Id of the sender.
+         * @param conversationId Id of the superior conversation.
+         */
         fun newIntent(context: Context, fileUri: String, senderId: String, conversationId: String) =
             Intent(context, UploadPhotoService::class.java).apply {
                 putExtra(ARGUMENT_PHOTO_URI, fileUri)
@@ -48,11 +60,24 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
             }
     }
 
+    /**
+     * List of disposable entities
+     */
     private val disposable = LinkedList<Disposable>()
 
+    /**
+     * Uri of the image
+     */
     private lateinit var uri: Uri
 
+    /**
+     * Id of the superior conversation where the image is snet
+     */
     private lateinit var conversationId: String
+
+    /**
+     * Sender of the message
+     */
     private lateinit var senderId: String
 
     override fun onHandleIntent(intent: Intent?) {
@@ -88,6 +113,9 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
         super.onDestroy()
     }
 
+    /**
+     * Uploads the image on the server and shows a notification that notifies about changes
+     */
     private fun uploadImage(startId: Int, name: String, bitmap: Bitmap) =
         chatComponent.mediaClient().uploadUrl(name)
             .flatMap { url ->
@@ -105,6 +133,9 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
                 showNotification(startId, doneNotification())
             }
 
+    /**
+     * Sends an image message to the conversation.
+     */
     private fun sendImageMessage(messageUrl: DownloadUrl): Task<String, Throwable> =
         sendMessage(
             MessageInputModel.ImageInputModel(
@@ -114,16 +145,25 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
             )
         )
 
+    /**
+     * Sends a message to the conversation.
+     */
     private fun sendMessage(message: MessageInputModel) =
         chatComponent.chatClient().sendMessage(message)
 
 
+    /**
+     * Shows a push notification
+     */
     private fun showNotification(notificationId: Int, notification: Notification) {
         NotificationManagerCompat
             .from(this)
             .notify(notificationId, notification)
     }
 
+    /**
+     * Shows a push notification that notifies about progress state
+     */
     private fun uploadingNotification(progress: Int = 0) =
         notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(
@@ -142,6 +182,9 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
             }
         }
 
+    /**
+     * Shows a push notification that notifies about an error.
+     */
     private fun errorNotification() =
         notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(
@@ -155,6 +198,9 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
             autoCancel = true
         }
 
+    /**
+     * Shows a push notification that notifies about success.
+     */
     private fun doneNotification() =
         notification(chatComponent.channelId()) {
             largeIcon = requireNotNull(

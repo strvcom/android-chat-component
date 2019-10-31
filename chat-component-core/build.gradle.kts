@@ -1,6 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     id("com.android.library")
     kotlin("android")
+    id("org.jetbrains.dokka")
 }
 
 android {
@@ -19,4 +22,11 @@ dependencies {
     implementation(Dependencies.Androidx.recyclerView)
     implementation(Dependencies.Androidx.constraintLayout)
     implementation(Dependencies.Androidx.ktx)
+}
+
+tasks {
+    val dokka by getting(DokkaTask::class) {
+        outputFormat = "html"
+        outputDirectory = "$buildDir/docs"
+    }
 }

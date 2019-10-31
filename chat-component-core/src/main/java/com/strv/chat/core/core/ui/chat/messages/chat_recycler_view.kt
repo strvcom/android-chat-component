@@ -3,6 +3,7 @@ package com.strv.chat.core.core.ui.chat.messages
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.View.OnLayoutChangeListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
@@ -13,48 +14,71 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatAdapter
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewHolderProvider
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.domain.task.Disposable
 import com.strv.chat.core.domain.ImageLoader
-import com.strv.chat.core.domain.task.ObservableTask
 import com.strv.chat.core.domain.collect
 import com.strv.chat.core.domain.model.IMemberModel
+import com.strv.chat.core.domain.task.Disposable
+import com.strv.chat.core.domain.task.ObservableTask
 import com.strv.chat.core.domain.task.map
 import strv.ktools.logE
 import java.util.Date
 import java.util.LinkedList
 
+/**
+ * Customizable component that displays messages of a selected conversation and listens for realtime updates.
+ */
 class ChatRecyclerView : RecyclerView {
 
+    /**
+     * [ChatViewHolderProvider] setter.
+     */
     var viewHolderProvider: ChatViewHolderProvider
         get() = throw UnsupportedOperationException("")
         set(value) {
             _viewHolderProvider = value
         }
 
+    /**
+     * Sets an action that is performed when the user clicks on a message.
+     */
     var onItemClick: OnClickAction<ChatItemView>
         get() = throw UnsupportedOperationException("")
         set(value) {
             _onItemClick = value
         }
 
+    /**
+     * [ImageLoader] setter.
+     */
     var imageLoader: ImageLoader
         get() = throw UnsupportedOperationException("")
         set(value) {
             _imageLoader = value
         }
 
+    //private properties
     private var _viewHolderProvider: ChatViewHolderProvider =
         chatComponent.chatViewHolderProvider()
 
     private var _onItemClick: OnClickAction<ChatItemView>? = null
+
     private var _imageLoader: ImageLoader? = null
 
+    /**
+     * List of disposable entities.
+     */
     private val disposable = LinkedList<Disposable>()
 
+    /**
+     * @see [RecyclerView.Adapter].
+     */
     private var chatAdapter: ChatAdapter
         get() = super.getAdapter() as ChatAdapter
         private set(value) = super.setAdapter(value)
 
+    /**
+     * Ensures that the layout scrolls down when the first bunch of messages is loaded.
+     */
     private val onFirstLayoutChangeListener = object : OnLayoutChangeListener {
         override fun onLayoutChange(
             p0: View?,
@@ -76,6 +100,9 @@ class ChatRecyclerView : RecyclerView {
         }
     }
 
+    /**
+     * Ensures that the layout adapts when visibility of a soft keyboard changes.
+     */
     private val onLayoutChangeListener =
         OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom && chatAdapter.itemCount.compareTo(0) == 1) {
@@ -83,8 +110,12 @@ class ChatRecyclerView : RecyclerView {
             }
         }
 
+    /**
+     * Style of the view.
+     */
     private var style: ChatRecyclerViewStyle? = null
 
+    //constructors
     constructor(context: Context) : super(context) {
         init()
     }
@@ -101,6 +132,9 @@ class ChatRecyclerView : RecyclerView {
         init(attrs)
     }
 
+    /**
+     * Type-safe builder that allows creating Kotlin-based domain-specific languages (DSLs) suitable for configuring [ChatRecyclerView] in a semi-declarative way.
+     */
     fun init(builder: ChatRecyclerView.() -> Unit) {
         builder()
 
@@ -118,6 +152,16 @@ class ChatRecyclerView : RecyclerView {
         }
     }
 
+    /**
+     * Starts listening to the message source.
+     *
+     * A recommended way is to start listening in onStart() method of your activity/fragment or as soon as you receive [conversationId] and [otherMembers] list.
+     *
+     * @param conversationId Id of the superior conversation.
+     * @param otherMembers Other members of the conversation.
+     *
+     * @return [ObservableTask] that emits a List<[ChatItemView]> in case of success, an error otherwise
+     */
     fun onStart(
         conversationId: String,
         otherMembers: List<IMemberModel>
@@ -157,10 +201,18 @@ class ChatRecyclerView : RecyclerView {
         }
     }
 
+    /**
+     * Stops listening to the message source and cleans unused resources.
+     */
     fun onStop() {
         disposable.collect(Disposable::dispose)
     }
 
+    /**
+     * Implements paging functionality.
+     *
+     * Listening for realtime changes is not supported for additional messages.
+     */
     private fun loadMoreMessages(
         startAfter: Date,
         conversationId: String,
@@ -187,6 +239,9 @@ class ChatRecyclerView : RecyclerView {
         }
     }
 
+    /**
+     * It is called when the messages, the component is listening to, change.
+     */
     private fun onMessagesChanged(items: List<ChatItemView>) {
         chatAdapter.run {
             submitList(items)
@@ -197,6 +252,9 @@ class ChatRecyclerView : RecyclerView {
         }
     }
 
+    /**
+     * Initialization of the component called from its constructor.
+     */
     private fun init(attrs: AttributeSet? = null) {
         addOnLayoutChangeListener(onFirstLayoutChangeListener)
 

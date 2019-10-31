@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Styleable
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.Header
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyImageMessage
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.OtherImageMessage
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.OtherTextMessage
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.HEADER
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.MY_IMAGE_MESSAGE
 import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.MY_TEXT_MESSAGE
@@ -18,26 +23,37 @@ import com.strv.chat.core.core.ui.chat.messages.adapter.ChatViewType.OTHER_TEXT_
 import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.ON_CLICK_ACTION
 import com.strv.chat.core.core.ui.extensions.OnClickAction
-import com.strv.chat.core.core.ui.view.RelativeTimeTextView
+import com.strv.chat.core.core.ui.view.RelativeDateTextView
 import com.strv.chat.core.core.ui.view.TimeTextView
 import com.strv.chat.core.domain.IMAGE_LOADER
 import com.strv.chat.core.domain.ImageLoader
 import strv.ktools.logE
 
+/**
+ * Default ViewHolder for [Header] type.
+ *
+ * @property textDate [TextView] that displays the sent date of a message.
+ */
 open class DefaultHeaderViewHolder(parent: ViewGroup) :
     HeaderViewHolder(parent, HEADER.id) {
 
-    protected val textDate = itemView.findViewById<RelativeTimeTextView>(R.id.tv_date)
+    protected val textDate = itemView.findViewById<RelativeDateTextView>(R.id.tv_date)
 
     override fun bind(
-        item: ChatItemView.Header,
+        item: Header,
         imageLoader: ImageLoader?,
-        onClickAction: OnClickAction<ChatItemView.Header>?
+        onClickAction: OnClickAction<Header>?
     ) {
         textDate.date = item.sentDate
     }
 }
 
+/**
+ * Default ViewHolder for [MyTextMessage] type.
+ *
+ * @property textMessage [TextView] that displays the text of a message.
+ * @property textDate [TextView] that displays the sent date of a message.
+ */
 open class DefaultMyMessageViewHolder(parent: ViewGroup) :
     MyTextMessageViewHolder(parent, MY_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
@@ -45,9 +61,9 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
     protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(
-        item: ChatItemView.MyTextMessage,
+        item: MyTextMessage,
         imageLoader: ImageLoader?,
-        onClickAction: OnClickAction<ChatItemView.MyTextMessage>?
+        onClickAction: OnClickAction<MyTextMessage>?
     ) {
         textMessage.text = item.text
 
@@ -68,7 +84,13 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
     }
 }
 
-
+/**
+ * Default ViewHolder for [OtherTextMessage] type.
+ *
+ * @property textMessage [TextView] that displays the text of a message.
+ * @property imageIcon [ImageView] that displays the image of the sender.
+ * @property textDate [TextView] that displays the sent date of a message.
+ */
 open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     OtherTextMessageViewHolder(parent, OTHER_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
@@ -77,9 +99,9 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(
-        item: ChatItemView.OtherTextMessage,
+        item: OtherTextMessage,
         imageLoader: ImageLoader?,
-        onClickAction: OnClickAction<ChatItemView.OtherTextMessage>?
+        onClickAction: OnClickAction<OtherTextMessage>?
     ) {
         imageLoader?.loadAvatar(imageIcon, item.sender.userPhotoUrl)
             ?: logE("$IMAGE_LOADER is not defined")
@@ -102,6 +124,12 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
     }
 }
 
+/**
+ * Default ViewHolder for [MyImageMessage] type.
+ *
+ * @property image [ImageView] that displays an image message.
+ * @property textDate [TextView] that displays the sent date of a message.
+ */
 open class DefaultMyImageViewHolder(parent: ViewGroup) :
     MyImageViewHolder(parent, MY_IMAGE_MESSAGE.id) {
 
@@ -109,9 +137,9 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
     protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(
-        item: ChatItemView.MyImageMessage,
+        item: MyImageMessage,
         imageLoader: ImageLoader?,
-        onClickAction: OnClickAction<ChatItemView.MyImageMessage>?
+        onClickAction: OnClickAction<MyImageMessage>?
     ) {
         imageLoader?.loadImageMessage(image, item.imageUrl) ?: logE("$IMAGE_LOADER is not defined")
 
@@ -130,6 +158,13 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
     }
 }
 
+/**
+ * Default ViewHolder for [OtherImageMessage] type.
+ *
+ * @property imageIcon [ImageView] that displays the image of the sender.
+ * @property image [ImageView] that displays an image message.
+ * @property textDate [TextView] that displays the sent date of a message.
+ */
 open class DefaultOtherImageViewHolder(parent: ViewGroup) :
     OtherImageViewHolder(parent, OTHER_IMAGE_MESSAGE.id) {
 
@@ -138,9 +173,9 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
     protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
 
     override fun bind(
-        item: ChatItemView.OtherImageMessage,
+        item: OtherImageMessage,
         imageLoader: ImageLoader?,
-        onClickAction: OnClickAction<ChatItemView.OtherImageMessage>?
+        onClickAction: OnClickAction<OtherImageMessage>?
     ) {
         imageLoader?.loadAvatar(imageIcon, item.sender.userPhotoUrl)
             ?: logE("$IMAGE_LOADER is not defined")
@@ -162,6 +197,9 @@ open class DefaultOtherImageViewHolder(parent: ViewGroup) :
     }
 }
 
+/**
+ * ViewHolder for progress item view.
+ */
 internal class ProgressViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(
         ChatViewType.PROGRESS.id, parent, false

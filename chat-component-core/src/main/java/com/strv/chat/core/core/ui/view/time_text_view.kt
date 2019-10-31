@@ -7,8 +7,14 @@ import com.strv.chat.core.R
 import java.text.SimpleDateFormat
 import java.util.Date
 
+/**
+ * Components that displays time of a date.
+ */
 class TimeTextView : TextView {
 
+    /**
+     * Date to be displayed in its time representation.
+     */
     var date: Date? = null
         set(value) {
             value?.let { date ->
@@ -17,6 +23,7 @@ class TimeTextView : TextView {
             field = value
         }
 
+    //constructors
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -27,6 +34,14 @@ class TimeTextView : TextView {
         defStyleAttr
     )
 
+    /**
+     * Returns time of the date.
+     *
+     * @param date Date to get time of.
+     *
+     * @return If [date] represents time within one minute, returns "Now.
+     *         Otherwise returns the date in "HH:mm" format.
+     */
     private fun getTime(date: Date): String {
         val now = Date()
         val diff = now.time - date.time

@@ -10,7 +10,7 @@ import com.strv.chat.core.domain.model.ITextMessageModel
 import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 
-object ChatItemViewCreator :
+internal object ChatItemViewCreator :
     Creator<ChatItemView, ChatItemViewConfiguration> {
 
     override val create: ChatItemViewConfiguration.() -> ChatItemView = {
@@ -64,7 +64,7 @@ object ChatItemViewCreator :
     }
 }
 
-class ChatItemViewConfiguration(
+internal class ChatItemViewConfiguration(
     val currentUserId: String,
     val message: IMessageModel,
     val otherMembers: List<IMemberModel>

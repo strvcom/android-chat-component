@@ -1,9 +1,9 @@
 package com.strv.chat.core.core.ui.extensions
 
-import android.app.PendingIntent
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.core.app.NotificationCompat
+
+// Extension properties for the notification DSL builder
 
 internal inline var NotificationCompat.Builder.largeIcon: Bitmap
     get() = throw UnsupportedOperationException("")

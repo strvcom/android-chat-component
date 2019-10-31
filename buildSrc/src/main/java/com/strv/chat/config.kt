@@ -11,6 +11,8 @@ object Versions {
     const val versionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + versionBuild
     const val versionName = "$versionMajor.$versionMinor.$versionPatch"
 
+    const val dokka = "0.10.0"
+
     object Gradle {
         const val kotlin = "1.3.50"
         const val gradle = "3.5.0"
@@ -39,6 +41,8 @@ object Versions {
 }
 
 object Dependencies {
+
+    const val Dokka = "org.jetbrains.dokka:dokka-gradle-plugin:${Versions.dokka}"
 
     object Gradle {
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Gradle.kotlin}"

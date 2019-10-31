@@ -15,6 +15,17 @@ import com.strv.chat.core.core.ui.extensions.LayoutId
 
 typealias ChatViewHolderConstructor<T> = (ViewGroup, LayoutId) -> ChatViewHolder<T>
 
+/**
+ * Holds all possible ViewHolder configurations and allows to add a custom implementations of ViewHolder.
+ *
+ * In case that one property is not filled, the default implementation will be used.
+ *
+ * @property headerConfig [HeaderViewHolder] configuration.
+ * @property myTextMessageConfig [MyTextMessageViewHolder] configuration.
+ * @property otherTextMessageConfig [OtherImageViewHolder] configuration.
+ * @property myImageMessageConfig [MyImageViewHolder] configuration.
+ * @property otherImageMessageConfig [OtherImageViewHolder] configuration.
+*/
 class ChatViewHolderProvider(
     private val headerConfig: ChatVHConfig<Header> =
         ChatVHConfig(HEADER.id) { parent, _ -> DefaultHeaderViewHolder(parent) },
@@ -36,6 +47,9 @@ class ChatViewHolderProvider(
         }
 ) {
 
+    /**
+     * Returns a [ChatViewHolder] based on [viewType]
+     */
     internal fun holder(
         parent: ViewGroup,
         viewType: Int,
@@ -73,6 +87,9 @@ class ChatViewHolderProvider(
             null -> throw IllegalStateException("Wrong message view type.")
         }
 
+    /**
+     * Applies style to [Styleable].
+     */
     @Suppress("UNCHECKED_CAST")
     private fun checkStyle(holder: ChatViewHolder<*>, style: ChatRecyclerViewStyle?) {
         if (style != null && holder is Styleable<*>) (holder as Styleable<ChatRecyclerViewStyle>).applyStyle(
@@ -81,11 +98,24 @@ class ChatViewHolderProvider(
     }
 }
 
+/**
+ * Container holding configuration for creating a [ChatViewHolder].
+ *
+ * @param layoutId layout resource id.
+ * @param constructor function that returns a new [ChatViewHolder] object.
+ *
+ * @constructor Creates a new configuration for creating a [ChatViewHolder].
+ */
 class ChatVHConfig<T : ChatItemView>(
     layoutId: LayoutId,
     constructor: ChatViewHolderConstructor<T>
 ) {
 
+    /**
+     * Creates a new [ChatViewHolder] object.
+     *
+     * @return [ChatViewHolder]
+     */
     val viewHolder: (ViewGroup) -> ChatViewHolder<T> = { group ->
         constructor(group, layoutId)
     }
