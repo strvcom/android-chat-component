@@ -3,7 +3,10 @@ package com.strv.chat.core.core.ui.chat.messages.adapter
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.extensions.LayoutId
 
-enum class ChatViewType(val id: LayoutId) {
+/**
+ * Represents message UI types.
+ */
+internal enum class ChatViewType(val id: LayoutId) {
     HEADER(R.layout.item_header),
     MY_TEXT_MESSAGE(R.layout.item_my_message),
     OTHER_TEXT_MESSAGE(R.layout.item_other_message),

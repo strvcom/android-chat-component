@@ -12,7 +12,7 @@ import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.core.domain.task.map
 
-object ConversationItemViewCreator :
+internal object ConversationItemViewCreator :
     Creator<ConversationItemView, ConversationItemViewConfiguration> {
 
     override val create: ConversationItemViewConfiguration.() -> ConversationItemView = {
@@ -49,7 +49,7 @@ object ConversationItemViewCreator :
         }
 }
 
-class ConversationItemViewConfiguration(
+internal class ConversationItemViewConfiguration(
     val conversation: IConversationModel,
     val memberClient: MemberClient
 ) : CreatorConfiguration

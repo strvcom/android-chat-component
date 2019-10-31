@@ -6,7 +6,7 @@ import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreMemberMetaEntity
 import com.strv.chat.firestore.entity.NAME
 
-object MemberMetaModelsCreator : Creator<List<IMemberMetaModel>, MemberMetaModelsConfiguration> {
+internal object MemberMetaModelsCreator : Creator<List<IMemberMetaModel>, MemberMetaModelsConfiguration> {
 
     override val create: MemberMetaModelsConfiguration.() -> List<IMemberMetaModel> = {
         membersMeta.map { (id, memberMeta) ->
@@ -19,6 +19,6 @@ object MemberMetaModelsCreator : Creator<List<IMemberMetaModel>, MemberMetaModel
     }
 }
 
-class MemberMetaModelsConfiguration(
+internal class MemberMetaModelsConfiguration(
     val membersMeta: Map<String, FirestoreMemberMetaEntity>
 ) : CreatorConfiguration

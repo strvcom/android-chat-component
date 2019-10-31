@@ -9,7 +9,7 @@ import com.strv.chat.firestore.entity.NAME
 import com.strv.chat.firestore.entity.PHOTO_URL
 import com.strv.chat.firestore.model.FirestoreMemberModel
 
-object MemberModelCreator : Creator<IMemberModel, MemberModelConfiguration> {
+internal object MemberModelCreator : Creator<IMemberModel, MemberModelConfiguration> {
 
     override val create: MemberModelConfiguration.() -> IMemberModel = {
         FirestoreMemberModel(
@@ -20,6 +20,6 @@ object MemberModelCreator : Creator<IMemberModel, MemberModelConfiguration> {
     }
 }
 
-class MemberModelConfiguration(
+internal class MemberModelConfiguration(
     val member: FirestoreMemberEntity
 ) : CreatorConfiguration

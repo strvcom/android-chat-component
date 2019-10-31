@@ -14,6 +14,11 @@ import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewSty
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.ImageLoader
 
+/**
+ * Root component of the SDK.
+ *
+ * Allows entry configuration of the SDK and acts like a service locator.
+ */
 class ChatComponent private constructor(
     private val configuration: Configuration,
     private val resourceProvider: ChatComponentResourceProvider
@@ -27,11 +32,20 @@ class ChatComponent private constructor(
             chatComponent = instance
         }
 
+        /**
+         * Initializes the SDK.
+         *
+         * Must be called so that the SDK works correctly.
+         *
+         * @param app Application.
+         * @param configuration Wrapper for all components that the library uses.
+         */
         fun init(app: Application, configuration: Configuration) {
             setInstance(ChatComponent(configuration, ChatComponentResourceProvider(app)))
         }
     }
 
+    //method shortcuts
     internal val currentUserId = memberClient().currentUserId()
 
     internal fun chatClient() = configuration.chatClient
@@ -45,6 +59,9 @@ class ChatComponent private constructor(
     internal fun smallIconSuccessRes() = configuration.serviceConfig.smallIconSuccessRes
     internal fun smallIconErrorRes() = configuration.serviceConfig.smallIconErrorRes
 
+    internal fun string(resId: Int) = resourceProvider.string[resId]
+
+    //DI
     internal fun chatAdapter(
         chatViewHolderProvider: ChatViewHolderProvider,
         imageLoader: ImageLoader?,
@@ -63,6 +80,4 @@ class ChatComponent private constructor(
         ConversationAdapter(conversationViewHolderProvider, imageLoader, onClickAction, style)
 
     internal fun conversationViewHolderProvider() = ConversationViewHolderProvider()
-
-    internal fun string(resId: Int) = resourceProvider.string[resId]
 }

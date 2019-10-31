@@ -10,7 +10,7 @@ import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewSty
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.ImageLoader
 
-class ConversationAdapter(
+internal class ConversationAdapter(
     private val conversationViewHolderProvider: ConversationViewHolderProvider,
     private val imageLoader: ImageLoader? = null,
     private val onConversationClick: OnClickAction<ConversationItemView>? = null,
@@ -55,10 +55,23 @@ class ConversationAdapter(
     override fun getItemCount(): Int =
         differ.currentList.size
 
+    /**
+     * Pass a new list to the AsyncListDiffer. Adapter updates will be computed on a background
+     * thread.
+     *
+     * @param newList The new List.
+     */
     fun submitList(list: List<ConversationItemView>) {
         differ.submitList(list)
     }
 
+    /**
+     * Get an item based on index.
+     *
+     * @param position position of the item in the list.
+     *
+     * @return item with index [position].
+     */
     fun getItem(position: Int): ConversationItemView =
         differ.currentList[position]
 }

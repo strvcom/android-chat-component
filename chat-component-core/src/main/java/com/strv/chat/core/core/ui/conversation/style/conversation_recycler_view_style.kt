@@ -6,12 +6,23 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Style
+import com.strv.chat.core.core.ui.conversation.ConversationRecyclerView
+import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 
 class ConversationRecyclerViewStyle private constructor(
     context: Context
 ) : Style(context) {
 
     companion object {
+
+        /**
+         * Applies style to [ConversationRecyclerView].
+         *
+         * @param context [Context].
+         * @param attrs [AttributeSet] of [ConversationRecyclerView].
+         *
+         * @return [ConversationRecyclerViewStyle]
+         */
         fun parse(context: Context, attrs: AttributeSet): ConversationRecyclerViewStyle {
             val style = ConversationRecyclerViewStyle(context)
             val typedArray =
@@ -24,6 +35,9 @@ class ConversationRecyclerViewStyle private constructor(
             return style
         }
 
+        /**
+         * Applies style to [ConversationItemView.title].
+         */
         private fun parseTitle(typedArray: TypedArray, style: ConversationRecyclerViewStyle) {
             style.titleTextColor = typedArray.getColor(
                 R.styleable.ConversationRecyclerView_crv_titleTextColor,
@@ -41,6 +55,9 @@ class ConversationRecyclerViewStyle private constructor(
             )
         }
 
+        /**
+         * Applies style to [ConversationItemView.message].
+         */
         private fun parseMessage(typedArray: TypedArray, style: ConversationRecyclerViewStyle) {
             style.messageTextColor = typedArray.getColor(
                 R.styleable.ConversationRecyclerView_crv_messageTextColor,
@@ -59,6 +76,7 @@ class ConversationRecyclerViewStyle private constructor(
         }
     }
 
+    //style attributes
     var titleTextSize: Int = -1
     var titleTextColor: Int = -1
     var titleTextStyle: Int = -1
@@ -67,6 +85,7 @@ class ConversationRecyclerViewStyle private constructor(
     var messageTextColor: Int = -1
     var messageTextStyle: Int = -1
 
+    //private methods
     private fun defaultTitleColor() =
         systemPrimaryTextColor()
 

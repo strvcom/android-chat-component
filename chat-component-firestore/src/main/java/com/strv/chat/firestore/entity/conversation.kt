@@ -7,14 +7,14 @@ import com.google.firebase.firestore.ServerTimestamp
 import com.strv.chat.core.data.entity.ID
 import com.strv.chat.core.data.entity.SourceEntity
 
-const val LAST_MESSAGE = "last_message"
-const val MESSAGE_ID = "message_id"
-const val MEMBERS = "members"
-const val MEMBERS_META = "members_meta"
-const val MEMBER_NAME = "name"
-const val SEEN = "seen"
+internal const val LAST_MESSAGE = "last_message"
+internal const val MESSAGE_ID = "message_id"
+internal const val MEMBERS = "members"
+internal const val MEMBERS_META = "members_meta"
+internal const val MEMBER_NAME = "name"
+internal const val SEEN = "seen"
 
-data class FirestoreConversationEntity(
+internal data class FirestoreConversationEntity(
     @get:PropertyName(ID) @set:PropertyName(ID) override var id: String? = null,
     @get:PropertyName(LAST_MESSAGE) @set:PropertyName(LAST_MESSAGE) var lastMessage: FirestoreMessageEntity? = null,
     @get:PropertyName(MEMBERS) @set:PropertyName(MEMBERS) var members: List<String>? = null,
@@ -30,7 +30,7 @@ data class FirestoreConversationEntity(
     )
 }
 
-data class FirestoreSeenEntity(
+internal data class FirestoreSeenEntity(
     @get:PropertyName(MESSAGE_ID) @set:PropertyName(MESSAGE_ID) var messageId: String? = null,
     @ServerTimestamp var timestamp: Timestamp? = null
 ) {
@@ -41,7 +41,7 @@ data class FirestoreSeenEntity(
     )
 }
 
-data class FirestoreMemberMetaEntity(
+internal data class FirestoreMemberMetaEntity(
     @get:PropertyName(MEMBER_NAME) @set:PropertyName(MEMBER_NAME) var name: String? = null
 ) {
 

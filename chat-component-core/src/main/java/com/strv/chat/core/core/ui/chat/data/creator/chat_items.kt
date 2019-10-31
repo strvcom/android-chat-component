@@ -8,7 +8,7 @@ import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.core.domain.runNonEmpty
 
-object ChatItemViewListCreator :
+internal object ChatItemViewListCreator :
     Creator<List<ChatItemView>, ChatItemViewListConfiguration> {
 
     override val create: ChatItemViewListConfiguration.() -> List<ChatItemView> = {
@@ -25,6 +25,9 @@ object ChatItemViewListCreator :
             .let { items -> addHeaders(items) }
     }
 
+    /**
+     * Groups messages based on [sentDate] and adds them [ChatItemView.Header].
+     */
     private fun addHeaders(messageModels: List<ChatItemView>): List<ChatItemView> =
         messageModels.fold(listOf<ChatItemView>()) { acc, chatItemView ->
             if (acc.isNotEmpty() && !acc.last().sentDate.isDayEqual(chatItemView.sentDate)) {
@@ -37,7 +40,7 @@ object ChatItemViewListCreator :
         }
 }
 
-class ChatItemViewListConfiguration(
+internal class ChatItemViewListConfiguration(
     val currentUserId: String,
     val messages: List<IMessageModel>,
     val otherMembers: List<IMemberModel>

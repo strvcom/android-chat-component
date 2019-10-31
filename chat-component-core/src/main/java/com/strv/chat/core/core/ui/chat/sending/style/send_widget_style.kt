@@ -4,12 +4,22 @@ import android.content.Context
 import android.util.AttributeSet
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Style
+import com.strv.chat.core.core.ui.chat.sending.SendWidget
 
 class SendWidgetStyle private constructor(
     context: Context
 ) : Style(context) {
 
     companion object {
+
+        /**
+         * Applies style to [SendWidget].
+         *
+         * @param context [Context].
+         * @param attrs AttributeSet of [SendWidget].
+         *
+         * @return [SendWidgetStyle]
+         */
         fun parse(context: Context, attrs: AttributeSet): SendWidgetStyle {
             val style = SendWidgetStyle(context)
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SendWidget)
@@ -33,11 +43,13 @@ class SendWidgetStyle private constructor(
         }
     }
 
+    //style attributes
     var backgroundColor: Int = -1
     var sendIconTint: Int = -1
     var filterColorActivated: Int = -1
     var filterColorNormal: Int = -1
 
+    //private methods
     private fun defaultBackgroundColor() =
         systemBackgroundColor()
 

@@ -2,7 +2,7 @@ package com.strv.chat.storage
 
 import com.google.firebase.storage.FirebaseStorage
 
-const val IMAGE_REFERENCE = "images"
+internal const val IMAGE_REFERENCE = "images"
 
-fun path(firebaseStorage: FirebaseStorage, path: String) =
+internal fun path(firebaseStorage: FirebaseStorage, path: String) =
     firebaseStorage.reference.child(path)

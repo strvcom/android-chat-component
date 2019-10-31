@@ -13,8 +13,14 @@ import java.util.Locale
 
 private const val DAY = 60000 * 60 * 24
 
-class RelativeTimeTextView : TextView {
+/**
+ * Components that displays a relative date text representation.
+ */
+class RelativeDateTextView : TextView {
 
+    /**
+     * Date to be displayed in a relative date representation.
+     */
     var date: Date? = null
         set(value) {
             value?.let { date ->
@@ -23,6 +29,7 @@ class RelativeTimeTextView : TextView {
             field = value
         }
 
+    //constructors
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -33,6 +40,17 @@ class RelativeTimeTextView : TextView {
         defStyleAttr
     )
 
+    /**
+     * Returns a relative date representation.
+     *
+     * @param date Date to display.
+     *
+     * @return If [date] represents today, returns "Today".
+     *         If [date] represents yesterday, returns "Yesterday".
+     *         If [date] represents a day within in a week, returns the name of the day.
+     *         Otherwise, returns the date in "MMM d, yyyy" format.
+     *
+     */
     private fun getRelativeString(date: Date): String {
         val now = Date()
         val diff = now.time - date.time

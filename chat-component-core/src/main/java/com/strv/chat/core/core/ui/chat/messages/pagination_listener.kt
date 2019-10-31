@@ -3,8 +3,8 @@ package com.strv.chat.core.core.ui.chat.messages
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PaginationListener(
-    val layoutManager: LinearLayoutManager
+internal abstract class PaginationListener(
+    private val layoutManager: LinearLayoutManager
 ) : RecyclerView.OnScrollListener() {
 
     private var previousTotal = 0
@@ -35,8 +35,18 @@ abstract class PaginationListener(
         }
     }
 
+    /**
+     * Loads more items with the specified offset.
+     *
+     * @param offset Number of items to skip.
+     */
     protected abstract fun loadMoreItems(offset: Int)
 
+    /**
+     * Keeps information about the loading state.
+     *
+     * @return true if more items are loading false otherwise.
+     */
     protected abstract fun isLoading(): Boolean
 
 }

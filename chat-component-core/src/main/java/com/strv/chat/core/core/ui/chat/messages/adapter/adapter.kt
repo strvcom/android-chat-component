@@ -9,13 +9,14 @@ import com.strv.chat.core.core.ui.chat.messages.style.ChatRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.ImageLoader
 
-class ChatAdapter(
+internal class ChatAdapter(
     private val chatViewHolderProvider: ChatViewHolderProvider,
     private val imageLoader: ImageLoader? = null,
     private val onClickAction: OnClickAction<ChatItemView>? = null,
     private val style: ChatRecyclerViewStyle? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    // Displays loading indicator at the top of the list if it is true
     var loading: Boolean = false
         set(value) {
             if (field) {
@@ -91,13 +92,31 @@ class ChatAdapter(
             }
         }
 
+    /**
+     * Pass a new list to the AsyncListDiffer. Adapter updates will be computed on a background
+     * thread.
+     *
+     * @param newList The new List.
+     */
     fun submitList(list: List<ChatItemView>) {
         differ.submitList(list)
     }
 
+    /**
+     * Get the current List.
+     *
+     * @return current List.
+     */
     fun getItems() =
         differ.currentList
 
+    /**
+     * Get an item based on index.
+     *
+     * @param position position of the item in the list.
+     *
+     * @return item with index [position].
+     */
     fun getItem(position: Int): ChatItemView =
         differ.currentList[position]
 }

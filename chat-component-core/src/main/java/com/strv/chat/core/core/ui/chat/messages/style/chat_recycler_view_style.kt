@@ -7,12 +7,24 @@ import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Style
+import com.strv.chat.core.core.ui.chat.messages.ChatRecyclerView
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyTextMessage
+import com.strv.chat.core.core.ui.chat.data.ChatItemView.OtherTextMessage
 
 class ChatRecyclerViewStyle private constructor(
     context: Context
 ) : Style(context) {
 
     companion object {
+
+        /**
+         * Applies style to [ChatRecyclerView].
+         *
+         * @param context [Context].
+         * @param attrs [AttributeSet] of [ChatRecyclerView].
+         *
+         * @return [ChatRecyclerViewStyle].
+         */
         fun parse(context: Context, attrs: AttributeSet): ChatRecyclerViewStyle {
             val style = ChatRecyclerViewStyle(context)
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ChatRecyclerView)
@@ -30,6 +42,9 @@ class ChatRecyclerViewStyle private constructor(
             return style
         }
 
+        /**
+         * Applies style to [MyTextMessage] view types.
+         */
         private fun parseMyTextMessage(typedArray: TypedArray, style: ChatRecyclerViewStyle) {
             style.myTextMessageBackground = typedArray.getResourceId(
                 R.styleable.ChatRecyclerView_chrv_myTextMessageBackground,
@@ -62,6 +77,9 @@ class ChatRecyclerViewStyle private constructor(
             )
         }
 
+        /**
+         * Applies style to [OtherTextMessage] view types.
+         */
         private fun parseOtherTextMessage(typedArray: TypedArray, style: ChatRecyclerViewStyle) {
             style.otherTextMessageBackground = typedArray.getResourceId(
                 R.styleable.ChatRecyclerView_chrv_otherTextMessageBackground,
@@ -95,6 +113,7 @@ class ChatRecyclerViewStyle private constructor(
         }
     }
 
+    //style attributes
     var textMessageTextSize: Int = -1
 
     var myTextMessageBackground: Int = -1
@@ -143,6 +162,7 @@ class ChatRecyclerViewStyle private constructor(
                 requireNotNull(drawable(otherTextMessageBackground)) { "Drawable resource is not defined" }
             }
 
+    //private methods
     private fun defaultTextSize() =
         dimension(R.dimen.text_message_text_size)
 

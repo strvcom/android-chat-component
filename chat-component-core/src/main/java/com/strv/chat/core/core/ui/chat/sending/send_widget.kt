@@ -26,23 +26,40 @@ import com.strv.chat.core.domain.provider.FileProvider
 import strv.ktools.logD
 import strv.ktools.logE
 
+/**
+ * Customizable component for entering and sending text and image messages.
+ */
 class SendWidget : ConstraintLayout {
 
+    /**
+     * Setter of the id of the related conversation.
+     */
     var conversationId: String?
         get() = throw UnsupportedOperationException("")
         set(value) {
             _conversationId = value
         }
 
+    /**
+     * [FileProvider] setter.
+     */
     var newFileProvider: FileProvider?
         get() = throw UnsupportedOperationException("")
         set(value) {
             _newFileProvider = value
         }
 
+    /**
+     * Id of the related conversation.
+     */
     private var _conversationId: String? = null
+
+    /**
+     * Defines a way of retrieving file uri for saving a camera output that is used to send as an image message.
+     */
     private var _newFileProvider: FileProvider? = null
 
+    //views
     private val buttonSend by lazy {
         findViewById<ImageButton>(R.id.ib_send)
     }
@@ -59,6 +76,7 @@ class SendWidget : ConstraintLayout {
         findViewById<ImageButton>(R.id.ib_image)
     }
 
+    //constructors
     constructor(context: Context) : super(context) {
         init(context)
     }
@@ -75,10 +93,18 @@ class SendWidget : ConstraintLayout {
         init(context, attrs)
     }
 
+    /**
+     * Type-safe builder that allows creating Kotlin-based domain-specific languages (DSLs) suitable for configuring [SendWidget] in a semi-declarative way.
+     */
     fun init(builder: SendWidget.() -> Unit) {
         builder()
     }
 
+    /**
+     * Start a service that uploads the image on the server and notifies the user about the progress and the result of the upload.
+     *
+     * @param uri Uri of the image.
+     */
     fun uploadImage(uri: Uri) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(
@@ -101,6 +127,9 @@ class SendWidget : ConstraintLayout {
         }
     }
 
+    /**
+     * Sets onClickListener for [buttonSend] so that a message is sent after click.
+     */
     private fun buttonSendListener() {
         buttonSend.setOnClickListener {
             if (editInput.text.isNotBlank()) {
@@ -110,12 +139,18 @@ class SendWidget : ConstraintLayout {
         }
     }
 
+    /**
+     * Sets onClickListener for [buttonImage] so that a image picker dialog is shown after click.
+     */
     private fun buttonCameraListener() {
         buttonImage.setOnClickListener {
             showPhotoPickerDialog()
         }
     }
 
+    /**
+     * Shows a image picker dialog, where a user can select either form "Take photo" by camera or "Select from library".
+     */
     private fun showPhotoPickerDialog() {
         selector(
             chatComponent.string(R.string.choose_photo),
@@ -133,6 +168,9 @@ class SendWidget : ConstraintLayout {
         }.show((context as FragmentActivity).supportFragmentManager, DIALOG_PHOTO_PICKER)
     }
 
+    /**
+     * Sends a text message.
+     */
     private fun sendTextMessage(userId: String, message: String) {
         sendMessage(
             MessageInputModel.TextInputModel(
@@ -143,6 +181,9 @@ class SendWidget : ConstraintLayout {
         )
     }
 
+    /**
+     * Sends a message.
+     */
     private fun sendMessage(message: MessageInputModel) {
         chatComponent.chatClient().sendMessage(message)
             .onError { error ->
@@ -152,6 +193,9 @@ class SendWidget : ConstraintLayout {
             }
     }
 
+    /**
+     * Applies style.
+     */
     private fun applyStyle(style: SendWidgetStyle) {
         setBackgroundColor(style.backgroundColor)
         buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
@@ -159,6 +203,12 @@ class SendWidget : ConstraintLayout {
         buttonImage.setColorFilter(style.filterColorNormal)
     }
 
+
+    /**
+     * Checks if all necessary properties are set before starting using the component.
+     *
+     * @throws IllegalArgumentException if a property is not set.
+     */
     private fun validateForNull() {
         fun throwError(fieldName: String) {
             throw IllegalArgumentException("$fieldName must be defined")
@@ -168,6 +218,9 @@ class SendWidget : ConstraintLayout {
         if (_newFileProvider == null) throwError(::_newFileProvider.name)
     }
 
+    /**
+     * Initialization of the component called from its constructor.
+     */
     private fun init(context: Context, attrs: AttributeSet? = null) {
         LayoutInflater.from(context).inflate(R.layout.layout_send_widget, this)
 

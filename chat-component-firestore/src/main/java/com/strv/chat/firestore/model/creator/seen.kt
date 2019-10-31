@@ -8,7 +8,7 @@ import com.strv.chat.firestore.entity.MESSAGE_ID
 import com.strv.chat.firestore.entity.TIMESTAMP
 import com.strv.chat.firestore.model.FirestoreSeenModel
 
-object SeenModelCreator : Creator<ISeenModel, SeenModelConfiguration> {
+internal object SeenModelCreator : Creator<ISeenModel, SeenModelConfiguration> {
 
     override val create: SeenModelConfiguration.() -> ISeenModel = {
         FirestoreSeenModel(
@@ -18,6 +18,6 @@ object SeenModelCreator : Creator<ISeenModel, SeenModelConfiguration> {
     }
 }
 
-class SeenModelConfiguration(
+internal class SeenModelConfiguration(
     val seen: FirestoreSeenEntity
 ) : CreatorConfiguration

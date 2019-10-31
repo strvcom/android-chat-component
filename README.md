@@ -188,7 +188,7 @@ You can convert any existing callback-based API to the Task API via
 - `observableTask`
 - `progressTask` 
 
-functions.
+builder functions.
 
 #### `task` 
 In this function, both `invokeSuccess` and `invokeError` can be used to

@@ -8,34 +8,34 @@ import com.strv.chat.core.data.entity.ID
 import com.strv.chat.core.data.entity.SourceEntity
 import strv.ktools.logE
 
-const val SENDER_ID = "sender_id"
-const val TIMESTAMP = "timestamp"
-const val MESSAGE_TYPE = "message_type"
-const val DATA = "data"
-const val MESSAGE = "message"
-const val IMAGE = "image"
-const val WIDTH = "width"
-const val HEIGHT = "height"
-const val ORIGINAL = "original"
+internal const val SENDER_ID = "sender_id"
+internal const val TIMESTAMP = "timestamp"
+internal const val MESSAGE_TYPE = "message_type"
+internal const val DATA = "data"
+internal const val MESSAGE = "message"
+internal const val IMAGE = "image"
+internal const val WIDTH = "width"
+internal const val HEIGHT = "height"
+internal const val ORIGINAL = "original"
 
-const val KEY_TEXT_TYPE = "text"
-const val KEY_IMAGE_TYPE = "image"
+internal const val KEY_TEXT_TYPE = "text"
+internal const val KEY_IMAGE_TYPE = "image"
 
 @Retention(AnnotationRetention.SOURCE)
 @StringDef(KEY_TEXT_TYPE, KEY_IMAGE_TYPE)
-annotation class MessageType
+internal annotation class MessageType
 
-enum class MeesageTypeEnum(val key: String) {
+internal enum class MeesageTypeEnum(val key: String) {
     TEXT_TYPE(KEY_TEXT_TYPE),
     IMAGE_TYPE(KEY_IMAGE_TYPE)
 }
 
-fun messageType(key: String): MeesageTypeEnum =
+internal fun messageType(key: String): MeesageTypeEnum =
     enumValues<MeesageTypeEnum>().first {
         it.key.equals(key, true)
     }
 
-data class FirestoreMessageEntity(
+internal data class FirestoreMessageEntity(
     @get:PropertyName(ID) @set:PropertyName(ID) override var id: String? = null,
     @get:PropertyName(SENDER_ID) @set:PropertyName(SENDER_ID) var senderId: String? = null,
     @get:PropertyName(MESSAGE_TYPE) @set:PropertyName(MESSAGE_TYPE) @MessageType var messageType: String? = null,
@@ -63,7 +63,7 @@ data class FirestoreMessageEntity(
     )
 }
 
-data class FirestoreDataEntity(
+internal data class FirestoreDataEntity(
     var message: String? = null,
     var image: FirestoreImageDataEntity? = null
 ) {
@@ -77,7 +77,7 @@ data class FirestoreDataEntity(
     )
 }
 
-data class FirestoreImageDataEntity(
+internal data class FirestoreImageDataEntity(
     var width: Double? = null,
     var height: Double? = null,
     var original: String? = null
