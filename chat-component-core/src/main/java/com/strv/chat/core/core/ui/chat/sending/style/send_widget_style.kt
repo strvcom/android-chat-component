@@ -28,14 +28,15 @@ class SendWidgetStyle private constructor(
                 R.styleable.SendWidget_sw_backgroundColor,
                 style.defaultBackgroundColor()
             )
+
             style.sendIconTint =
                 typedArray.getColor(R.styleable.SendWidget_sw_sendIconTint, style.defaultIconTint())
 
             style.filterColorNormal =
-                style.defaultControlNormalColor()
+                typedArray.getColor(R.styleable.SendWidget_sw_messageOptionIconColorNormal, style.defaultControlNormalColor())
 
             style.filterColorActivated =
-                style.defaultControlActivatedColor()
+                typedArray.getColor(R.styleable.SendWidget_sw_messageOptionIconColorActivated, style.defaultControlActivatedColor())
 
             typedArray.recycle()
 
@@ -45,7 +46,9 @@ class SendWidgetStyle private constructor(
 
     //style attributes
     var backgroundColor: Int = -1
+
     var sendIconTint: Int = -1
+
     var filterColorActivated: Int = -1
     var filterColorNormal: Int = -1
 
