@@ -5,7 +5,7 @@ import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreMemberEntity
 
-object MemberModelsCreator : Creator<List<IMemberModel>, MemberModelsConfiguration> {
+internal object MemberModelsCreator : Creator<List<IMemberModel>, MemberModelsConfiguration> {
 
     override val create: MemberModelsConfiguration.() -> List<IMemberModel> = {
         members.map { entity ->
@@ -14,6 +14,6 @@ object MemberModelsCreator : Creator<List<IMemberModel>, MemberModelsConfigurati
     }
 }
 
-class MemberModelsConfiguration(
+internal class MemberModelsConfiguration(
     val members: List<FirestoreMemberEntity>
 ) : CreatorConfiguration

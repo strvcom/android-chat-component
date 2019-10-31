@@ -18,7 +18,7 @@ import com.strv.chat.firestore.model.FirestoreTextMessageModel
 import strv.ktools.logE
 import java.util.Date
 
-object MessageModelCreator : Creator<IMessageModel, MessageModelConfiguration> {
+internal object MessageModelCreator : Creator<IMessageModel, MessageModelConfiguration> {
 
     override val create: MessageModelConfiguration.() -> IMessageModel = {
         when (messageType(requireNotNull(message.messageType) { "$MESSAGE_TYPE must be specified" })) {
@@ -45,6 +45,6 @@ object MessageModelCreator : Creator<IMessageModel, MessageModelConfiguration> {
         )
 }
 
-class MessageModelConfiguration(
+internal class MessageModelConfiguration(
     val message: FirestoreMessageEntity
 ) : CreatorConfiguration

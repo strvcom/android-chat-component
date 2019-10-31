@@ -11,7 +11,7 @@ import com.strv.chat.firestore.entity.SEEN
 import com.strv.chat.firestore.model.FirestoreConversationModel
 import strv.ktools.logE
 
-object ConversationModelCreator : Creator<IConversationModel, ConversationModelConfiguration> {
+internal object ConversationModelCreator : Creator<IConversationModel, ConversationModelConfiguration> {
 
     override val create: ConversationModelConfiguration.() -> IConversationModel = {
         FirestoreConversationModel(
@@ -27,6 +27,6 @@ object ConversationModelCreator : Creator<IConversationModel, ConversationModelC
     }
 }
 
-class ConversationModelConfiguration(
+internal class ConversationModelConfiguration(
     val conversation: FirestoreConversationEntity
 ) : CreatorConfiguration

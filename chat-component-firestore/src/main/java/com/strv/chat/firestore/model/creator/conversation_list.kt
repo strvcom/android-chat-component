@@ -5,7 +5,7 @@ import com.strv.chat.core.domain.model.creator.Creator
 import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreConversationEntity
 
-object ConversationModelListCreator :
+internal object ConversationModelListCreator :
     Creator<List<IConversationModel>, ConversationModelListConfiguration> {
 
     override val create: ConversationModelListConfiguration.() -> List<IConversationModel> = {
@@ -15,6 +15,6 @@ object ConversationModelListCreator :
     }
 }
 
-class ConversationModelListConfiguration(
+internal class ConversationModelListConfiguration(
     val conversations: List<FirestoreConversationEntity>
 ) : CreatorConfiguration

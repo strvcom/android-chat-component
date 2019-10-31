@@ -25,7 +25,7 @@ import com.strv.chat.firestore.model.creator.MessageModelListConfiguration
 import com.strv.chat.firestore.model.creator.MessageModelListCreator
 import java.util.Date
 
-class FirestoreChatClient(
+internal class FirestoreChatClient(
     val firebaseDb: FirebaseFirestore
 ) : ChatClient {
 
@@ -93,6 +93,7 @@ class FirestoreChatClient(
             }
         }
 
+    //private methods
     private fun newMessage(
         batch: WriteBatch,
         messageDocument: DocumentReference,

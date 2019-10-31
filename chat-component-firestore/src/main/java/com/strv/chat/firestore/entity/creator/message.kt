@@ -8,7 +8,7 @@ import com.strv.chat.firestore.entity.FirestoreImageDataEntity
 import com.strv.chat.firestore.entity.FirestoreMessageEntity
 import com.strv.chat.firestore.entity.MeesageTypeEnum
 
-object MessageEntityCreator : Creator<FirestoreMessageEntity, MessageEntityConfiguration> {
+internal object MessageEntityCreator : Creator<FirestoreMessageEntity, MessageEntityConfiguration> {
 
     override val create: MessageEntityConfiguration.() -> FirestoreMessageEntity = {
         FirestoreMessageEntity(
@@ -46,7 +46,7 @@ object MessageEntityCreator : Creator<FirestoreMessageEntity, MessageEntityConfi
         )
 }
 
-class MessageEntityConfiguration(
+internal class MessageEntityConfiguration(
     val id: String,
     val messageInputModel: MessageInputModel
 ) : CreatorConfiguration

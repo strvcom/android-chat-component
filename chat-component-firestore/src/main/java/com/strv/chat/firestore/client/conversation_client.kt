@@ -20,7 +20,7 @@ import com.strv.chat.firestore.listSource
 import com.strv.chat.firestore.model.creator.ConversationModelListConfiguration
 import com.strv.chat.firestore.model.creator.ConversationModelListCreator
 
-class FirestoreConversationClient(
+internal class FirestoreConversationClient(
     val firebaseDb: FirebaseFirestore
 ) : ConversationClient {
 
@@ -88,6 +88,7 @@ class FirestoreConversationClient(
                 ConversationModelListCreator.create(ConversationModelListConfiguration(conversation))
             }
 
+    //private methods
     private fun firestoreListSource(source: Query) =
         source.listSource<FirestoreConversationEntity>()
 }

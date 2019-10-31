@@ -4,10 +4,10 @@ import com.google.firebase.firestore.PropertyName
 import com.strv.chat.core.data.entity.ID
 import com.strv.chat.core.data.entity.SourceEntity
 
-const val NAME = "name"
-const val PHOTO_URL = "url"
+internal const val NAME = "name"
+internal const val PHOTO_URL = "url"
 
-data class FirestoreMemberEntity(
+internal data class FirestoreMemberEntity(
     @get:PropertyName(ID) @set:PropertyName(ID) override var id: String? = null,
     @get:PropertyName(NAME) @set:PropertyName(NAME) var name: String? = null,
     @get:PropertyName(PHOTO_URL) @set:PropertyName(PHOTO_URL) var photoUrl: String? = null

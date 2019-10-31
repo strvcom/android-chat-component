@@ -16,7 +16,7 @@ import com.strv.chat.firestore.model.creator.MemberModelsConfiguration
 import com.strv.chat.firestore.model.creator.MemberModelsCreator
 import com.strv.chat.firestore.source
 
-class FirestoreMemberClient(
+internal class FirestoreMemberClient(
     private val firebaseDb: FirebaseFirestore,
     private val currentUserId: String
 ) : MemberClient {
@@ -57,6 +57,7 @@ class FirestoreMemberClient(
             MemberModelsCreator.create(MemberModelsConfiguration(memberEntityList))
         }
 
+    //private methods
     private fun firestoreDocumentSource(documentReference: DocumentReference) =
         documentReference.source<FirestoreMemberEntity>()
 }

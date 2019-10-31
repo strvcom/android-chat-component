@@ -8,10 +8,11 @@ import com.strv.chat.firestore.entity.LAST_MESSAGE
 import com.strv.chat.firestore.entity.MEMBERS
 import com.strv.chat.firestore.entity.TIMESTAMP
 
-const val CONVERSATIONS_COLLECTION = "conversations"
-const val USERS_COLLECTION = "users"
-const val MESSAGES_COLLECTION = "messages"
+internal const val CONVERSATIONS_COLLECTION = "conversations"
+internal const val USERS_COLLECTION = "users"
+internal const val MESSAGES_COLLECTION = "messages"
 
+//firestore queries
 internal fun firestoreMember(
     firestoreDb: FirebaseFirestore,
     userId: String
