@@ -25,5 +25,17 @@ tasks {
     val dokka by getting(DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/docs"
+
+        configuration {
+            perPackageOption {
+                prefix = "com.strv.chat.firestore.di"
+                suppress = false
+            }
+
+            perPackageOption {
+                prefix = "com.strv.chat.firestore"
+                suppress = true
+            }
+        }
     }
 }

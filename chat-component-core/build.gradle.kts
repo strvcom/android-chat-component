@@ -28,5 +28,24 @@ tasks {
     val dokka by getting(DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/docs"
+
+        configuration {
+            perPackageOption {
+                prefix = "com.strv.chat.core.core.ui.chat.data.creator"
+                suppress = true
+            }
+            perPackageOption {
+                prefix = "com.strv.chat.core.core.ui.conversation.data.creator"
+                suppress = true
+            }
+            perPackageOption {
+                prefix = "com.strv.chat.core.core.ui.data.creator"
+                suppress = true
+            }
+            perPackageOption {
+                prefix = "strv.ktools"
+                suppress = true
+            }
+        }
     }
 }

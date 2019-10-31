@@ -21,7 +21,7 @@ fun firestoreChatClient(firebaseDb: FirebaseFirestore): ChatClient =
     FirestoreChatClient(firebaseDb)
 
 /**
- * Returns a ConversationClient] instance implemented above Firestore database.
+ * Returns a ConversationClient instance implemented above Firestore database.
  *
  * @param firebaseDb Cloud Firestore database.
  *

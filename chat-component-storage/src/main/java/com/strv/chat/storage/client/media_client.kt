@@ -14,7 +14,7 @@ import com.strv.chat.core.domain.task.task
 import strv.ktools.logD
 import java.io.ByteArrayOutputStream
 
-class CloudStorageMediaClient(
+internal class CloudStorageMediaClient(
     val firebaseStorage: FirebaseStorage
 ) : MediaClient {
 
