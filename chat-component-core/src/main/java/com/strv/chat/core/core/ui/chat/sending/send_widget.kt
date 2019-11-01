@@ -202,6 +202,7 @@ class SendWidget : ConstraintLayout {
         buttonImage.setImageDrawable(style.imageOptionIcon())
 
         buttonText.setColorFilter(style.filterColorActivated)
+        editInput.hint = style.hintText
     }
 
     /**

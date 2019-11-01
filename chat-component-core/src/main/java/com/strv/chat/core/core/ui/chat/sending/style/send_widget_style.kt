@@ -66,6 +66,11 @@ class SendWidgetStyle private constructor(
                     style.defaultControlActivatedColor()
                 )
 
+            style.hintText =
+                typedArray.getString(
+                    R.styleable.SendWidget_sw_hint
+                ) ?: style.defaultHint()
+
             typedArray.recycle()
 
             return style
@@ -83,6 +88,7 @@ class SendWidgetStyle private constructor(
 
     var filterColorActivated: Int = -1
     var backgroundColor: Int = -1
+    var hintText: String = ""
 
     fun sendIcon() =
         if (sendIcon == defaultSendIcon()) {
@@ -101,7 +107,8 @@ class SendWidgetStyle private constructor(
 
     fun textOptionIcon() =
         if (textOptionIcon == defaultTextOptionIcon()) {
-            val tint = if (filterColorNormal == -1) defaultControlNormalColor() else filterColorNormal
+            val tint =
+                if (filterColorNormal == -1) defaultControlNormalColor() else filterColorNormal
 
             drawable(textOptionIcon)?.also { drawable ->
                 DrawableCompat.setTint(drawable, tint)
@@ -116,7 +123,8 @@ class SendWidgetStyle private constructor(
 
     fun imageOptionIcon() =
         if (imageOptionIcon == defaultImageOptionIcon()) {
-            val tint = if (filterColorNormal == -1) defaultControlNormalColor() else filterColorNormal
+            val tint =
+                if (filterColorNormal == -1) defaultControlNormalColor() else filterColorNormal
 
             drawable(imageOptionIcon)?.also { drawable ->
                 DrawableCompat.setTint(drawable, tint)
@@ -150,6 +158,9 @@ class SendWidgetStyle private constructor(
 
     private fun defaultControlActivatedColor() =
         systemControlActivatedColor()
+
+    private fun defaultHint() =
+        string(R.string.write_your_message)
 
 }
 
