@@ -1,7 +1,6 @@
 package com.strv.chat.core.core.ui.chat.sending
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
@@ -19,7 +18,6 @@ import com.strv.chat.core.core.ui.extensions.openCamera
 import com.strv.chat.core.core.ui.extensions.openGalleryPhotoPicker
 import com.strv.chat.core.core.ui.extensions.reset
 import com.strv.chat.core.core.ui.extensions.selector
-import com.strv.chat.core.core.ui.extensions.tint
 import com.strv.chat.core.core.ui.view.DIALOG_PHOTO_PICKER
 import com.strv.chat.core.domain.model.MessageInputModel
 import com.strv.chat.core.domain.provider.FileProvider
@@ -198,11 +196,31 @@ class SendWidget : ConstraintLayout {
      */
     private fun applyStyle(style: SendWidgetStyle) {
         setBackgroundColor(style.backgroundColor)
-        buttonSend.tint(ColorStateList.valueOf(style.sendIconTint))
-        buttonText.setColorFilter(style.filterColorActivated)
-        buttonImage.setColorFilter(style.filterColorNormal)
-    }
 
+        buttonSend.setImageDrawable(style.sendIcon())
+
+        if (style.inputTextAppearance != -1) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                editInput.setTextAppearance(style.inputTextAppearance)
+            } else {
+                editInput.setTextAppearance(context, style.inputTextAppearance)
+            }
+
+        }
+
+        if (style.imageOptionEnabled) {
+            buttonText.setImageDrawable(style.textOptionIcon())
+            buttonImage.setImageDrawable(style.imageOptionIcon())
+
+            buttonText.setColorFilter(style.filterColorActivated)
+        } else {
+            buttonText.visibility = View.GONE
+            buttonImage.visibility = View.GONE
+        }
+
+        editInput.hint = style.hintText
+    }
 
     /**
      * Checks if all necessary properties are set before starting using the component.

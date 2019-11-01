@@ -7,6 +7,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.strv.chat.core.R
 
@@ -129,6 +130,16 @@ abstract class Style(
      */
     protected fun drawable(@DrawableRes drawable: Int): Drawable? =
         ContextCompat.getDrawable(context, drawable)
+
+    /**
+     * Returns string.
+     *
+     * @param string Resource id of the string.
+     *
+     * @return String data.
+     */
+    protected fun string(@StringRes string: Int): String =
+        resources.getString(string)
 
     /**
      * Returns system color resource id.
