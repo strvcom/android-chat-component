@@ -61,7 +61,8 @@ progress and the result of the upload**.
 - `sw_hint` - custom hint for the input edit text
 - `sw_imageOptionEnabled` - allow/disallow image messages, `true` by
   default
-
+- `sw_inputTextAppearance` - custom message input text appearance from
+  the specified style resource
 
 ### Notification configuration
 - `largeIconRes: Int` - custom large icon resource id that is shown in the ticker

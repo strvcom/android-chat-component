@@ -13,6 +13,7 @@
 
         <attr name="sw_hint" format="string" />
         <attr name="sw_imageOptionEnabled" format="boolean" />
+        <attr name="sw_inputTextAppearance" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ChatRecyclerView">

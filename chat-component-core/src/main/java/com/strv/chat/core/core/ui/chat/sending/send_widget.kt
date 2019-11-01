@@ -199,6 +199,16 @@ class SendWidget : ConstraintLayout {
 
         buttonSend.setImageDrawable(style.sendIcon())
 
+        if (style.inputTextAppearance != -1) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                editInput.setTextAppearance(style.inputTextAppearance)
+            } else {
+                editInput.setTextAppearance(context, style.inputTextAppearance)
+            }
+
+        }
+
         if (style.imageOptionEnabled) {
             buttonText.setImageDrawable(style.textOptionIcon())
             buttonImage.setImageDrawable(style.imageOptionIcon())

@@ -77,6 +77,12 @@ class SendWidgetStyle private constructor(
                     true
                 )
 
+            style.inputTextAppearance =
+                typedArray.getResourceId(
+                    R.styleable.SendWidget_sw_inputTextAppearance,
+                    -1
+                )
+
             typedArray.recycle()
 
             return style
@@ -96,6 +102,8 @@ class SendWidgetStyle private constructor(
     var backgroundColor: Int = -1
     var hintText: String = ""
     var imageOptionEnabled: Boolean = true
+
+    var inputTextAppearance: Int = -1
 
     fun sendIcon() =
         if (sendIcon == defaultSendIcon()) {
