@@ -50,11 +50,14 @@ progress and the result of the upload**.
 
 ### Styling via attributes
 - `app:sw_backgroundColor` - custom component background color
-- `sw_sendIconTint` - custom sendIcon tint
-- `sw_messageOptionIconColorNormal` - custom message-option icons tint
+- `sw_sendIconTint` - custom send button icon tint
+- `sw_messageOptionIconColorNormal` - custom message option icons tint
   in an unselected state
-- `sw_messageOptionIconColorActivated` - custom message-option icons
+- `sw_messageOptionIconColorActivated` - custom message option icons
   tint in a selected state
+- `sw_sendIcon` - custom send button icon
+- `sw_textOptionIcon` - custom text-message option button icon
+- `sw_imageOptionIcon` - custom image-message option button icon
 
 
 ### Notification configuration

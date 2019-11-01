@@ -19,8 +19,6 @@
         android:id="@+id/w_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:sw_sendIconTint="@android:color/holo_orange_dark"
-        app:sw_messageOptionIconColorNormal="@android:color/holo_orange_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

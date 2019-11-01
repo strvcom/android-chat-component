@@ -2,9 +2,14 @@
 <resources>
     <declare-styleable name="SendWidget">
         <attr name="sw_backgroundColor" format="color|reference" />
+
         <attr name="sw_sendIconTint" format="color" />
         <attr name="sw_messageOptionIconColorNormal" format="color" />
         <attr name="sw_messageOptionIconColorActivated" format="color" />
+
+        <attr name="sw_sendIcon" format="reference" />
+        <attr name="sw_textOptionIcon" format="reference" />
+        <attr name="sw_imageOptionIcon" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ChatRecyclerView">
