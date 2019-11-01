@@ -198,10 +198,17 @@ class SendWidget : ConstraintLayout {
         setBackgroundColor(style.backgroundColor)
 
         buttonSend.setImageDrawable(style.sendIcon())
-        buttonText.setImageDrawable(style.textOptionIcon())
-        buttonImage.setImageDrawable(style.imageOptionIcon())
 
-        buttonText.setColorFilter(style.filterColorActivated)
+        if (style.imageOptionEnabled) {
+            buttonText.setImageDrawable(style.textOptionIcon())
+            buttonImage.setImageDrawable(style.imageOptionIcon())
+
+            buttonText.setColorFilter(style.filterColorActivated)
+        } else {
+            buttonText.visibility = View.GONE
+            buttonImage.visibility = View.GONE
+        }
+
         editInput.hint = style.hintText
     }
 

@@ -58,6 +58,9 @@ progress and the result of the upload**.
 - `sw_sendIcon` - custom send button icon
 - `sw_textOptionIcon` - custom text-message option button icon
 - `sw_imageOptionIcon` - custom image-message option button icon
+- `sw_hint` - custom hint for the input edit text
+- `sw_imageOptionEnabled` - allow/disallow image messages, `true` by
+  default
 
 
 ### Notification configuration

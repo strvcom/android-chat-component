@@ -12,6 +12,7 @@
         <attr name="sw_imageOptionIcon" format="reference" />
 
         <attr name="sw_hint" format="string" />
+        <attr name="sw_imageOptionEnabled" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="ChatRecyclerView">

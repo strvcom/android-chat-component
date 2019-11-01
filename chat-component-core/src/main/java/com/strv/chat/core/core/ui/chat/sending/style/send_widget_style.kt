@@ -71,6 +71,12 @@ class SendWidgetStyle private constructor(
                     R.styleable.SendWidget_sw_hint
                 ) ?: style.defaultHint()
 
+            style.imageOptionEnabled =
+                typedArray.getBoolean(
+                    R.styleable.SendWidget_sw_imageOptionEnabled,
+                    true
+                )
+
             typedArray.recycle()
 
             return style
@@ -89,6 +95,7 @@ class SendWidgetStyle private constructor(
     var filterColorActivated: Int = -1
     var backgroundColor: Int = -1
     var hintText: String = ""
+    var imageOptionEnabled: Boolean = true
 
     fun sendIcon() =
         if (sendIcon == defaultSendIcon()) {
