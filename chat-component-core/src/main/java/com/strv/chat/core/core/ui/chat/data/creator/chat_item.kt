@@ -42,13 +42,13 @@ internal object ChatItemViewCreator :
                     ChatItemView.MyImageMessage(
                         message.id,
                         message.sentDate,
-                        message.imageModel.original
+                        message.imageModel.url
                     )
                 } else {
                     ChatItemView.OtherImageMessage(
                         message.id,
                         message.sentDate,
-                        message.imageModel.original,
+                        message.imageModel.url,
                         MemberViewCreator.create(
                             MemberViewConfiguration(
                                 otherMembers.first { member ->

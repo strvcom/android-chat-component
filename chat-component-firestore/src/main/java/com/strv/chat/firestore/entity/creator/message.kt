@@ -39,9 +39,7 @@ internal object MessageEntityCreator : Creator<FirestoreMessageEntity, MessageEn
     private fun imageDataEntity(messageModel: MessageInputModel.ImageInputModel) =
         FirestoreDataEntity(
             image = FirestoreImageDataEntity(
-                messageModel.imageModel.width,
-                messageModel.imageModel.height,
-                messageModel.imageModel.original
+                messageModel.imageModel.url
             )
         )
 }

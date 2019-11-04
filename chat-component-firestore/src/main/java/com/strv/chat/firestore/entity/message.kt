@@ -14,9 +14,7 @@ internal const val MESSAGE_TYPE = "message_type"
 internal const val DATA = "data"
 internal const val MESSAGE = "message"
 internal const val IMAGE = "image"
-internal const val WIDTH = "width"
-internal const val HEIGHT = "height"
-internal const val ORIGINAL = "original"
+internal const val IMAGE_URL = "image_url"
 
 internal const val KEY_TEXT_TYPE = "text"
 internal const val KEY_IMAGE_TYPE = "image"
@@ -64,8 +62,8 @@ internal data class FirestoreMessageEntity(
 }
 
 internal data class FirestoreDataEntity(
-    var message: String? = null,
-    var image: FirestoreImageDataEntity? = null
+    @get:PropertyName(MESSAGE) @set:PropertyName(MESSAGE) var message: String? = null,
+    @get:PropertyName(IMAGE) @set:PropertyName(IMAGE) var image: FirestoreImageDataEntity? = null
 ) {
 
     fun toTextMap() = hashMapOf(
@@ -78,14 +76,10 @@ internal data class FirestoreDataEntity(
 }
 
 internal data class FirestoreImageDataEntity(
-    var width: Double? = null,
-    var height: Double? = null,
-    var original: String? = null
+    @get:PropertyName(IMAGE_URL) @set:PropertyName(IMAGE_URL) var url: String? = null
 ) {
 
     fun toMap() = hashMapOf(
-        WIDTH to (width ?: 0),
-        HEIGHT to (height ?: 0),
-        ORIGINAL to requireNotNull(original) { logE("$ORIGINAL must be specified") }
+        IMAGE_URL to requireNotNull(url) { logE("$IMAGE_URL must be specified") }
     )
 }

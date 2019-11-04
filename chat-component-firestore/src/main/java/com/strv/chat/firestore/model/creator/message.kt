@@ -7,9 +7,9 @@ import com.strv.chat.core.domain.model.creator.CreatorConfiguration
 import com.strv.chat.firestore.entity.FirestoreImageDataEntity
 import com.strv.chat.firestore.entity.FirestoreMessageEntity
 import com.strv.chat.firestore.entity.IMAGE
+import com.strv.chat.firestore.entity.IMAGE_URL
 import com.strv.chat.firestore.entity.MESSAGE_TYPE
 import com.strv.chat.firestore.entity.MeesageTypeEnum
-import com.strv.chat.firestore.entity.ORIGINAL
 import com.strv.chat.firestore.entity.SENDER_ID
 import com.strv.chat.firestore.entity.messageType
 import com.strv.chat.firestore.model.FirestoreImageMessageModel
@@ -39,9 +39,7 @@ internal object MessageModelCreator : Creator<IMessageModel, MessageModelConfigu
 
     private fun imageModel(data: FirestoreImageDataEntity) =
         FirestoreImageModel(
-            data.width ?: 0.0,
-            data.height ?: 0.0,
-            requireNotNull(data.original) { logE("$ORIGINAL must be specified") }
+            requireNotNull(data.url) { logE("$IMAGE_URL must be specified") }
         )
 }
 

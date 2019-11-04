@@ -141,7 +141,7 @@ class UploadPhotoService : IntentService("UploadPhotoService") {
             MessageInputModel.ImageInputModel(
                 senderId = senderId,
                 conversationId = conversationId,
-                imageModel = ImageModel(0.0, 0.0, messageUrl.toString())
+                imageModel = ImageModel(messageUrl.toString())
             )
         )
 
