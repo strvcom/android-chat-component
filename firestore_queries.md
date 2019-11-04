@@ -2,7 +2,7 @@
 
 ### **Code examples of basic queries**
 
-##### To get all conversations for me as a user:
+#### To get all conversations for me as a user:
 
 ```
 fun getFirestoreConversations() = firestoreDb //this is a reference to the firestore database that I'm connected to
@@ -13,7 +13,7 @@ fun getFirestoreConversations() = firestoreDb //this is a reference to the fires
 	    .addOnFailureListener {}
 ```
         
-##### To obtain the last 50 messages for a specific conversation, use a code similar to this:
+#### To obtain the last 50 messages for a specific conversation, use a code similar to this:
 
 ```
 fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firestore database that I'm connected to
@@ -27,7 +27,7 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
         }
 ```
 
-##### To lazy load more messages after you load the 50
+#### To lazy load more messages after you load the 50
 
 This is fairly easy, you just need to keep track of a timestamp of the oldest message that you loaded and then load additional 50 before that
 
@@ -44,7 +44,7 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
         }
 ```
         
-##### Sending a message
+#### Sending a message
 
 The message sending works like this:
  - The conversation between two or more users has to be created beforehand, and the client shouldn't be created by the client (TBD how this will work)
@@ -102,7 +102,7 @@ fun getFirestoreUser() = firestoreDb  // this is a reference to the firestore da
 
 ### **Code examples of additional queries**
 
-##### Create a conversation:
+#### Create a conversation:
 ``` 
 val conversationCollection = firestoreDb.collection("conversations")
 val conversationDocument = conversationCollection.document() // creates an empty document 
@@ -112,7 +112,7 @@ conversationDocument.set(conversationData) // set data to the document
 	.addOnFailureListener {}
 ```
 
-##### Update a member:
+#### Update a member:
 ```
 firestoreDb  // this is a reference to the firestore database that I'm connected to
     .collection("users")  // here I want to look through collection of users
