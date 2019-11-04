@@ -46,20 +46,11 @@ sealed class MessageInputModel(
          * Represents a structure of image data.
          */
         data class ImageModel(
-            /**
-             * Width of the image in pixels.
-             */
-            val width: Double,
-
-            /**
-             * Height of the image in pixels.
-             */
-            val height: Double,
 
             /**
              * Url of the image.
              */
-            val original: String
+            val url: String
         )
     }
 }

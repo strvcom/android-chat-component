@@ -3,7 +3,7 @@ package com.strv.chat.firestore.model
 import com.strv.chat.core.domain.model.IImageMessageModel
 import com.strv.chat.core.domain.model.IImageModel
 import com.strv.chat.core.domain.model.ITextMessageModel
-import java.util.*
+import java.util.Date
 
 internal data class FirestoreTextMessageModel(
     override val id: String,
@@ -20,7 +20,5 @@ internal data class FirestoreImageMessageModel(
 ) : IImageMessageModel
 
 internal data class FirestoreImageModel(
-    override val width: Double,
-    override val height: Double,
-    override val original: String
+    override val url: String
 ): IImageModel

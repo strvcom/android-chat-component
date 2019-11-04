@@ -5,7 +5,7 @@ import com.strv.chat.core.data.entity.ID
 import com.strv.chat.core.data.entity.SourceEntity
 
 internal const val NAME = "name"
-internal const val PHOTO_URL = "url"
+internal const val PHOTO_URL = "image_url"
 
 internal data class FirestoreMemberEntity(
     @get:PropertyName(ID) @set:PropertyName(ID) override var id: String? = null,
