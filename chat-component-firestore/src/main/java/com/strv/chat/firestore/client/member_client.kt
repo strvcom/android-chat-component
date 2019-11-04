@@ -9,6 +9,8 @@ import com.strv.chat.core.domain.task.map
 import com.strv.chat.core.domain.task.task
 import com.strv.chat.firestore.USERS_COLLECTION
 import com.strv.chat.firestore.entity.FirestoreMemberEntity
+import com.strv.chat.firestore.entity.creator.MemberEntityConfiguration
+import com.strv.chat.firestore.entity.creator.MemberEntityCreator
 import com.strv.chat.firestore.firestoreMember
 import com.strv.chat.firestore.model.creator.MemberModelConfiguration
 import com.strv.chat.firestore.model.creator.MemberModelCreator
@@ -56,6 +58,18 @@ internal class FirestoreMemberClient(
         }.map { memberEntityList ->
             MemberModelsCreator.create(MemberModelsConfiguration(memberEntityList))
         }
+
+    override fun updateMember(
+        memberModel: IMemberModel
+    ): Task<String, Throwable> = task {
+        firestoreMember(firebaseDb, memberModel.memberId)
+            .update(MemberEntityCreator.create(MemberEntityConfiguration(memberModel)).toMap())
+            .addOnSuccessListener {
+                invokeSuccess(memberModel.memberId)
+            }.addOnFailureListener { error ->
+                invokeError(error)
+            }
+    }
 
     //private methods
     private fun firestoreDocumentSource(documentReference: DocumentReference) =

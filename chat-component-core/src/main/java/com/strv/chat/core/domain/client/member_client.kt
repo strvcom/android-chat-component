@@ -32,4 +32,13 @@ interface MemberClient {
      * @return [Task] with List<[IMemberModel]> in case of success.
      */
     fun members(memberIds: List<String>): Task<List<IMemberModel>, Throwable>
+
+    /**
+     * Updates a member.
+     *
+     * @param memberModel structure representing how the member with [IMemberModel.memberId] should be updated.
+     *
+     * @return [Task] with memberId in case of success.
+     */
+    fun updateMember(memberModel: IMemberModel): Task<String, Throwable>
 }
