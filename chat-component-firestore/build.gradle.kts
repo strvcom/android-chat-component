@@ -19,6 +19,9 @@ dependencies {
     implementation(project(":chat-component-core"))
 
     api(Dependencies.Firebase.firestore)
+
+    testImplementation(Dependencies.Test.junit)
+    testImplementation(Dependencies.Test.mockk)
 }
 
 tasks {

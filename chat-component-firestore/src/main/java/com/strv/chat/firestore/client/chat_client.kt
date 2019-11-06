@@ -93,6 +93,10 @@ internal class FirestoreChatClient(
             }
         }
 
+    //internal modifier to be visible for testing
+    internal fun firestoreListSource(source: Query) =
+        source.listSource<FirestoreMessageEntity>()
+
     //private methods
     private fun newMessage(
         batch: WriteBatch,
@@ -161,7 +165,4 @@ internal class FirestoreChatClient(
             ).toMap()
         )
     }
-
-    private fun firestoreListSource(source: Query) =
-        source.listSource<FirestoreMessageEntity>()
 }

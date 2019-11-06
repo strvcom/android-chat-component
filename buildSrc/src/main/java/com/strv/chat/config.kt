@@ -8,7 +8,8 @@ object Versions {
     const val versionPatch = 0 // max two digits
     const val versionBuild = 0 // max three digits
 
-    const val versionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + versionBuild
+    const val versionCode =
+        versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + versionBuild
     const val versionName = "$versionMajor.$versionMinor.$versionPatch"
 
     const val dokka = "0.10.0"
@@ -37,6 +38,11 @@ object Versions {
         const val storage = "19.1.0"
     }
 
+    object Test {
+        const val junit = "4.12"
+        const val mockk = "1.9.3"
+    }
+
     const val koin = "2.0.1"
 }
 
@@ -47,7 +53,8 @@ object Dependencies {
     object Gradle {
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Gradle.kotlin}"
         const val gradle = "com.android.tools.build:gradle:${Versions.Gradle.gradle}"
-        const val googleServices = "com.google.gms:google-services:${Versions.Gradle.googleServices}"
+        const val googleServices =
+            "com.google.gms:google-services:${Versions.Gradle.googleServices}"
     }
 
     object Androidx {
@@ -57,10 +64,13 @@ object Dependencies {
         const val constraintLayout =
             "androidx.constraintlayout:constraintlayout:${Versions.Androidx.constraintLayout}"
         const val ktx = "androidx.core:core-ktx:${Versions.Androidx.ktx}"
-        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Androidx.lifecycle}"
+        const val viewModel =
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Androidx.lifecycle}"
         const val liveData = "androidx.lifecycle:lifecycle-livedata:${Versions.Androidx.lifecycle}"
-        const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime:${Versions.Androidx.lifecycle}"
-        const val lifecycleCompiler =  "androidx.lifecycle:lifecycle-compiler:${Versions.Androidx.lifecycle}"
+        const val lifecycleRuntime =
+            "androidx.lifecycle:lifecycle-runtime:${Versions.Androidx.lifecycle}"
+        const val lifecycleCompiler =
+            "androidx.lifecycle:lifecycle-compiler:${Versions.Androidx.lifecycle}"
     }
 
     object Glide {
@@ -78,5 +88,10 @@ object Dependencies {
     object Koin {
         const val library = "org.koin:koin-android:${Versions.koin}"
         const val viewmodel = "org.koin:koin-androidx-viewmodel:${Versions.koin}"
+    }
+
+    object Test {
+        const val junit = "junit:junit:${Versions.Test.junit}"
+        const val mockk = "io.mockk:mockk:${Versions.Test.mockk}"
     }
 }
