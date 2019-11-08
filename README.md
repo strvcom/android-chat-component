@@ -58,17 +58,6 @@ In order to run the sample app you need to add your own
 [`google-services.json`](https://firebase.google.com/docs/android/setup#add-config-file)
 file to the app-level directory of the `app` module.
 
-#### Firebase Realtime Database
-
-``` //todo change later
- implementation 'com.strv.chat.component::chat-component-firebase:1.0.0'
-```
-
-You should use firebase module **if you want to use the default
-[Firebase Realtime Database](https://firebase.google.com/docs/database)
-implementation** for your backend.
-
-
 #### Firebase Cloud Storage
 
 ```//todo change later implementation
