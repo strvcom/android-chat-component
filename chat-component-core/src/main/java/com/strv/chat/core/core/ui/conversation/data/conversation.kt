@@ -22,4 +22,31 @@ class ConversationItemView(
     val message: String,
     val sentDate: Date,
     val otherMemberIds: List<String>
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ConversationItemView
+
+        if (id != other.id) return false
+        if (unread != other.unread) return false
+        if (title != other.title) return false
+        if (message != other.message) return false
+        if (sentDate != other.sentDate) return false
+        if (otherMemberIds != other.otherMemberIds) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + unread.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + message.hashCode()
+        result = 31 * result + sentDate.hashCode()
+        result = 31 * result + otherMemberIds.hashCode()
+        return result
+    }
+}

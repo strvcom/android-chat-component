@@ -41,12 +41,11 @@ open class DefaultConversationViewHolder(
         onClickAction: OnClickAction<ConversationItemView>?
     ) {
 
-        imageLoader?.loadAvatar(imageIcon, null) ?: logE("$IMAGE_LOADER is not defined")
-
         item.pictureTask
             .onSuccess { imageUrl ->
                 imageLoader?.loadAvatar(imageIcon, imageUrl) ?: logE("$IMAGE_LOADER is not defined")
             }.onError { error ->
+                imageLoader?.loadAvatar(imageIcon, null) ?: logE("$IMAGE_LOADER is not defined")
                 logE(error.localizedMessage ?: "Unknown error")
             }
 
