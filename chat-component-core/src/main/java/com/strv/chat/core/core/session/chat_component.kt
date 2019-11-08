@@ -1,6 +1,7 @@
 package com.strv.chat.core.core.session
 
 import android.app.Application
+import com.strv.chat.core.BuildConfig
 import com.strv.chat.core.core.session.config.Configuration
 import com.strv.chat.core.core.ui.ChatComponentResourceProvider
 import com.strv.chat.core.core.ui.chat.data.ChatItemView
@@ -13,6 +14,7 @@ import com.strv.chat.core.core.ui.conversation.data.ConversationItemView
 import com.strv.chat.core.core.ui.conversation.style.ConversationRecyclerViewStyle
 import com.strv.chat.core.core.ui.extensions.OnClickAction
 import com.strv.chat.core.domain.ImageLoader
+import strv.ktools.setLogEnabled
 
 /**
  * Root component of the SDK.
@@ -42,6 +44,8 @@ class ChatComponent private constructor(
          */
         fun init(app: Application, configuration: Configuration) {
             setInstance(ChatComponent(configuration, ChatComponentResourceProvider(app)))
+
+            setLogEnabled(BuildConfig.BUILD_TYPE == "debug")
         }
     }
 
