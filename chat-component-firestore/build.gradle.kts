@@ -8,6 +8,7 @@ plugins {
 }
 
 group = groupId
+version = Versions.versionName
 
 android {
     compileSdkVersion(Versions.targetSdk)
@@ -15,6 +16,8 @@ android {
     defaultConfig {
         minSdkVersion(Versions.minSdk)
         targetSdkVersion(Versions.targetSdk)
+        versionCode = Versions.versionCode
+        versionName = Versions.versionName
 
         consumerProguardFiles("consumer-rules.pro")
     }
