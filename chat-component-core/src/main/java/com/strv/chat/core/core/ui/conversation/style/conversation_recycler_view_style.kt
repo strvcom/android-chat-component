@@ -68,11 +68,6 @@ class ConversationRecyclerViewStyle private constructor(
                 R.styleable.ConversationRecyclerView_crv_messageTextSize,
                 style.defaultMessageSize()
             )
-
-            style.messageTextStyle = typedArray.getInt(
-                R.styleable.ConversationRecyclerView_crv_messageTextStyle,
-                style.defaultMessageStyle()
-            )
         }
     }
 
@@ -83,7 +78,6 @@ class ConversationRecyclerViewStyle private constructor(
 
     var messageTextSize: Int = -1
     var messageTextColor: Int = -1
-    var messageTextStyle: Int = -1
 
     //private methods
     private fun defaultTitleColor() =
@@ -100,7 +94,4 @@ class ConversationRecyclerViewStyle private constructor(
 
     private fun defaultMessageSize() =
         dimension(R.dimen.conversation_message_text_size)
-
-    private fun defaultMessageStyle() =
-        Typeface.NORMAL
 }
