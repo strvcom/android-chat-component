@@ -56,12 +56,19 @@ class ChatRecyclerView : RecyclerView {
             _imageLoader = value
         }
 
-    //private properties
-    private var _viewHolderProvider: ChatViewHolderProvider =
-        chatComponent.chatViewHolderProvider()
+    /**
+     * Allows to add custom implementations of [RecyclerView.ViewHolder].
+     */
+    private var _viewHolderProvider: ChatViewHolderProvider? = null
 
+    /**
+     * Action that is performed after the user clicks on a conversation.
+     */
     private var _onItemClick: OnClickAction<ChatItemView>? = null
 
+    /**
+     * Defines a way how to upload picture's urls to ImageViews.
+     */
     private var _imageLoader: ImageLoader? = null
 
     /**
@@ -148,7 +155,7 @@ class ChatRecyclerView : RecyclerView {
 
         if (adapter == null) {
             adapter =
-                chatComponent.chatAdapter(_viewHolderProvider, _imageLoader, _onItemClick, style)
+                chatComponent.chatAdapter(_viewHolderProvider ?: chatComponent.chatViewHolderProvider(), _imageLoader, _onItemClick, style)
         }
     }
 
