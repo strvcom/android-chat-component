@@ -56,8 +56,7 @@ class ConversationRecyclerView : RecyclerView {
     /**
      * Allows to add custom implementations of [RecyclerView.ViewHolder].
      */
-    private var _viewHolderProvider: ConversationViewHolderProvider =
-        chatComponent.conversationViewHolderProvider()
+    private var _viewHolderProvider: ConversationViewHolderProvider? = null
 
     /**
      * Defines a way how to upload picture's urls to ImageViews.
@@ -113,7 +112,7 @@ class ConversationRecyclerView : RecyclerView {
         if (adapter == null) {
             adapter =
                 chatComponent.conversationAdapter(
-                    _viewHolderProvider,
+                    _viewHolderProvider ?: chatComponent.conversationViewHolderProvider(),
                     _imageLoader,
                     _onItemClick,
                     style
@@ -123,7 +122,7 @@ class ConversationRecyclerView : RecyclerView {
 
     /**
      * Starts listening to the conversation source.
-     * 
+     *
      * A recommended way is to start listening in onStart() method of your activity/fragment.
      *
      * @return [ObservableTask] that emits List<[ConversationItemView]> in case of success, an error otherwise.
