@@ -67,7 +67,7 @@ override fun onStop() {
 ## Customization
 
 ### Styling via attributes
-- `app:chrv_textMessageTextSize` - custom outgoing text message text
+- `app:chrv_textMessageTextSize` - custom text message text
   size
 - `app:chrv_myTextMessageBackground` - custom outgoing text message
   background
@@ -85,16 +85,14 @@ override fun onStop() {
   backgroud
 - `app:chrv_otherTextMessageBackgroundColor` - custom incoming text
   message background color
-- `app:chrv_myTextMessageCornerRadius` - custom incoming text message
+- `app:chrv_otherTextMessageCornerRadius` - custom incoming text message
   corner radius
-- `app:chrv_myTextMessageStrokeColor` - custom incoming text message
+- `app:chrv_otherTextMessageStrokeColor` - custom incoming text message
   stroke color
 - `app:chrv_otherTextMessageStrokeWidth` - custom incoming text message
   stroke width
 - `app:chrv_otherTextMessageTextColor` - custom incoming text message
   text color
-- `app:chrv_otherTextMessageTextSize` - custom incoming text message
-  text size
 
 ### Create your own holder
 You can define your own holder classes with the help of
@@ -127,12 +125,18 @@ val viewHolderProvider = ChatViewHolderProvider(
 chatRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
-You can either inherit from `ChatViewHolder<T : ChatItemView>` class or
-from one of the default `ViewHolder`s in case you are not planning to
+You can either inherit from following classes:
+- `HeaderViewHolder` - header item view
+- `MyTextMessageViewHolder` - outgoing text message item view
+- `OtherTextMessageViewHolder` - incoming text message item view 
+- `MyImageMessageViewHolder` - outgoing image message item view
+- `OtherImageMessageViewHolder` - incoming image message item view
+
+or from one of the default `ViewHolder`s in case you are not planning to
 rewrite the behaviour from scratch:
 - `DefaultHeaderViewHolder` - header item view
-- `DefaultMyMessageViewHolder` - outgoing text message item view
+- `DefaultMyTextMessageViewHolder` - outgoing text message item view
 - `DefaultOtherMessageViewHolder` - incoming text message item view
-- `DefaultMyImageViewHolder` - outgoing image message item view
-- `DefaultOtherImageViewHolder` - incoming image message item view
+- `DefaultMyImageMessageViewHolder` - outgoing image message item view
+- `DefaultOtherImageMessageViewHolder` - incoming image message item view
 

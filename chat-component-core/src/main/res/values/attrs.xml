@@ -38,11 +38,14 @@
     <declare-styleable name="ConversationRecyclerView">
         <attr name="crv_titleTextSize" format="dimension" />
         <attr name="crv_titleTextColor" format="color" />
-        <attr name="crv_titleTextStyle" format="integer" />
+        <attr name="crv_titleTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
 
         <attr name="crv_messageTextSize" format="dimension" />
         <attr name="crv_messageTextColor" format="color" />
-        <attr name="crv_messageTextStyle" format="integer" />
     </declare-styleable>
 
 </resources>

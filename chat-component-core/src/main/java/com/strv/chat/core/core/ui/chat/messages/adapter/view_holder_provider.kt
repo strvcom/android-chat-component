@@ -22,26 +22,26 @@ typealias ChatViewHolderConstructor<T> = (ViewGroup, LayoutId) -> ChatViewHolder
  *
  * @property headerConfig [HeaderViewHolder] configuration.
  * @property myTextMessageConfig [MyTextMessageViewHolder] configuration.
- * @property otherTextMessageConfig [OtherImageViewHolder] configuration.
- * @property myImageMessageConfig [MyImageViewHolder] configuration.
- * @property otherImageMessageConfig [OtherImageViewHolder] configuration.
+ * @property otherTextMessageConfig [OtherImageMessageViewHolder] configuration.
+ * @property myImageMessageConfig [MyImageMessageViewHolder] configuration.
+ * @property otherImageMessageConfig [OtherImageMessageViewHolder] configuration.
 */
 class ChatViewHolderProvider(
     private val headerConfig: ChatVHConfig<Header> =
         ChatVHConfig(HEADER.id) { parent, _ -> DefaultHeaderViewHolder(parent) },
     private val myTextMessageConfig: ChatVHConfig<MyTextMessage> =
-        ChatVHConfig(MY_TEXT_MESSAGE.id) { parent, _ -> DefaultMyMessageViewHolder(parent) },
+        ChatVHConfig(MY_TEXT_MESSAGE.id) { parent, _ -> DefaultMyTextMessageViewHolder(parent) },
     private val otherTextMessageConfig: ChatVHConfig<OtherTextMessage> =
         ChatVHConfig(OTHER_TEXT_MESSAGE.id) { parent, _ ->
-            DefaultOtherMessageViewHolder(
+            DefaultOtherTextMessageViewHolder(
                 parent
             )
         },
     private val myImageMessageConfig: ChatVHConfig<MyImageMessage> =
-        ChatVHConfig(MY_IMAGE_MESSAGE.id) { parent, _ -> DefaultMyImageViewHolder(parent) },
+        ChatVHConfig(MY_IMAGE_MESSAGE.id) { parent, _ -> DefaultMyImageMessageViewHolder(parent) },
     private val otherImageMessageConfig: ChatVHConfig<OtherImageMessage> =
         ChatVHConfig(OTHER_IMAGE_MESSAGE.id) { parent, _ ->
-            DefaultOtherImageViewHolder(
+            DefaultOtherImageMessageViewHolder(
                 parent
             )
         }
