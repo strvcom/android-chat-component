@@ -50,18 +50,18 @@ progress and the result of the upload**.
 
 ### Styling via attributes
 - `app:sw_backgroundColor` - custom component background color
-- `sw_sendIconTint` - custom send button icon tint
-- `sw_messageOptionIconColorNormal` - custom message option icons tint
+- `app:sw_sendIconTint` - custom send button icon tint
+- `app:sw_messageOptionIconColorNormal` - custom message option icons tint
   in an unselected state
-- `sw_messageOptionIconColorActivated` - custom message option icons
+- `app:sw_messageOptionIconColorActivated` - custom message option icons
   tint in a selected state
-- `sw_sendIcon` - custom send button icon
-- `sw_textOptionIcon` - custom text-message option button icon
-- `sw_imageOptionIcon` - custom image-message option button icon
-- `sw_hint` - custom hint for the input edit text
-- `sw_imageOptionEnabled` - allow/disallow image messages, `true` by
+- `app:sw_sendIcon` - custom send button icon
+- `app:sw_textOptionIcon` - custom text-message option button icon
+- `app:sw_imageOptionIcon` - custom image-message option button icon
+- `app:sw_hint` - custom hint for the input edit text
+- `app:sw_imageOptionEnabled` - allow/disallow image messages, `true` by
   default
-- `sw_inputTextAppearance` - custom message input text appearance from
+- `app:sw_inputTextAppearance` - custom message input text appearance from
   the specified style resource
 
 ### Notification configuration
