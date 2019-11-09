@@ -125,12 +125,18 @@ val viewHolderProvider = ChatViewHolderProvider(
 chatRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
-You can either inherit from `ChatViewHolder<T : ChatItemView>` class or
-from one of the default `ViewHolder`s in case you are not planning to
+You can either inherit from following classes:
+- `HeaderViewHolder` - header item view
+- `MyTextMessageViewHolder` - outgoing text message item view
+- `OtherTextMessageViewHolder` - incoming text message item view 
+- `MyImageMessageViewHolder` - outgoing image message item view
+- `OtherImageMessageViewHolder` - incoming image message item view
+
+or from one of the default `ViewHolder`s in case you are not planning to
 rewrite the behaviour from scratch:
 - `DefaultHeaderViewHolder` - header item view
-- `DefaultMyMessageViewHolder` - outgoing text message item view
+- `DefaultMyTextMessageViewHolder` - outgoing text message item view
 - `DefaultOtherMessageViewHolder` - incoming text message item view
-- `DefaultMyImageViewHolder` - outgoing image message item view
-- `DefaultOtherImageViewHolder` - incoming image message item view
+- `DefaultMyImageMessageViewHolder` - outgoing image message item view
+- `DefaultOtherImageMessageViewHolder` - incoming image message item view
 

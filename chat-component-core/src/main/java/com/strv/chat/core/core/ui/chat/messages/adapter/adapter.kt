@@ -66,12 +66,12 @@ internal class ChatAdapter(
                 imageLoader,
                 onClickAction
             )
-            is MyImageViewHolder -> holder.bind(
+            is MyImageMessageViewHolder -> holder.bind(
                 getItem(position) as ChatItemView.MyImageMessage,
                 imageLoader,
                 onClickAction
             )
-            is OtherImageViewHolder -> holder.bind(
+            is OtherImageMessageViewHolder -> holder.bind(
                 getItem(position) as ChatItemView.OtherImageMessage,
                 imageLoader,
                 onClickAction

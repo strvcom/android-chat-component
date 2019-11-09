@@ -50,7 +50,7 @@ abstract class OtherTextMessageViewHolder(
 /**
  * ViewHolder for [MyImageMessage] type.
  */
-abstract class MyImageViewHolder(
+abstract class MyImageMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
 ) : ChatViewHolder<MyImageMessage>(parent, layoutId)
@@ -58,7 +58,7 @@ abstract class MyImageViewHolder(
 /**
  * ViewHolder for [OtherImageMessage] type.
  */
-abstract class OtherImageViewHolder(
+abstract class OtherImageMessageViewHolder(
     parent: ViewGroup,
     layoutId: Int
 ) : ChatViewHolder<OtherImageMessage>(parent, layoutId)
