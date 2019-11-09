@@ -32,8 +32,18 @@ customization.
 
 ## Adding the Chat component SDK to your project
 
+Add `JitPack` repository:
+```
+repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+   }
+```
+
+#### Core features
+
 ``` 
-//todo add
+com.github.strvcom:android-research-chat-component:chat-component-core:v1.0-beta.1
 ```
 You should use the core module **if you want to have custom backend
 implementation**. In this case, you will be forced to implement all the

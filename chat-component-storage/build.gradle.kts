@@ -4,7 +4,10 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("org.jetbrains.dokka")
+    id("com.github.dcendents.android-maven")
 }
+
+group = groupId
 
 android {
     compileSdkVersion(Versions.targetSdk)

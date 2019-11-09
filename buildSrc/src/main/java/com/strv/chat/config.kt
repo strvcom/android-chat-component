@@ -1,3 +1,5 @@
+const val groupId = "com.github.strvcom:android-research-chat-component"
+
 object Versions {
 
     const val targetSdk = 29
@@ -44,6 +46,8 @@ object Versions {
     }
 
     const val koin = "2.0.1"
+
+    const val maven = "2.1"
 }
 
 object Dependencies {
@@ -94,4 +98,6 @@ object Dependencies {
         const val junit = "junit:junit:${Versions.Test.junit}"
         const val mockk = "io.mockk:mockk:${Versions.Test.mockk}"
     }
+
+    const val maven = "com.github.dcendents:android-maven-gradle-plugin:${Versions.maven}"
 }
