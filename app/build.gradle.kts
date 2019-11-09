@@ -30,9 +30,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":chat-component-core"))
-    implementation(project(":chat-component-firestore"))
-    implementation(project(":chat-component-storage"))
+    implementation(project(":core"))
+    implementation(project(":firestore"))
+    implementation(project(":storage"))
 
     implementation(kotlin("stdlib", Versions.Gradle.kotlin))
     implementation(Dependencies.Androidx.appcompat)
