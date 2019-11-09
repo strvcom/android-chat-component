@@ -18,6 +18,8 @@ android {
         targetSdkVersion(Versions.targetSdk)
         versionCode = Versions.versionCode
         versionName = Versions.versionName
+
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -31,9 +33,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":chat-component-core"))
+    implementation(project(":core"))
 
-    api(Dependencies.Firebase.storage)
+    api(Dependencies.Firebase.firestore)
+
+    testImplementation(Dependencies.Test.junit)
+    testImplementation(Dependencies.Test.mockk)
 }
 
 tasks {
@@ -43,12 +48,12 @@ tasks {
 
         configuration {
             perPackageOption {
-                prefix = "com.strv.chat.storage.di"
+                prefix = "com.strv.chat.firestore.di"
                 suppress = false
             }
 
             perPackageOption {
-                prefix = "com.strv.chat.storage"
+                prefix = "com.strv.chat.firestore"
                 suppress = true
             }
         }
