@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="spacing_4">4dp</dimen>
+    <dimen name="spacing_6">6dp</dimen>
+    <dimen name="spacing_24">24dp</dimen>
+    <dimen name="spacing_8">8dp</dimen>
+    <dimen name="spacing_2">2dp</dimen>
+    <dimen name="spacing_16">16dp</dimen>
+
+    <dimen name="dimen_icon_large">68dp</dimen>
+    <dimen name="dimen_icon">40dp</dimen>
+    <dimen name="dimen_icon_small">32dp</dimen>
+
+    <dimen name="text_message_text_size">12sp</dimen>
+    <dimen name="text_message_corner_radius">20dp</dimen>
+    <dimen name="text_message_stroke_width">2dp</dimen>
+    <dimen name="conversation_title_text_size">20sp</dimen>
+    <dimen name="conversation_message_text_size">14sp</dimen>
+
+</resources>

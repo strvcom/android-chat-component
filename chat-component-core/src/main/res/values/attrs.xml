@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SendWidget">
+        <attr name="sw_backgroundColor" format="color|reference" />
+
+        <attr name="sw_sendIconTint" format="color" />
+        <attr name="sw_messageOptionIconColorNormal" format="color" />
+        <attr name="sw_messageOptionIconColorActivated" format="color" />
+
+        <attr name="sw_sendIcon" format="reference" />
+        <attr name="sw_textOptionIcon" format="reference" />
+        <attr name="sw_imageOptionIcon" format="reference" />
+
+        <attr name="sw_hint" format="string" />
+        <attr name="sw_imageOptionEnabled" format="boolean" />
+        <attr name="sw_inputTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ChatRecyclerView">
+        <attr name="chrv_textMessageTextSize" format="dimension" />
+
+        <attr name="chrv_myTextMessageBackground" format="reference" />
+        <attr name="chrv_myTextMessageCornerRadius" format="dimension" />
+        <attr name="chrv_myTextMessageStrokeColor" format="color" />
+        <attr name="chrv_myTextMessageStrokeWidth" format="dimension" />
+        <attr name="chrv_myTextMessageBackgroundColor" format="color" />
+        <attr name="chrv_myTextMessageTextColor" format="color" />
+
+        <attr name="chrv_otherTextMessageBackground" format="reference" />
+        <attr name="chrv_otherTextMessageCornerRadius" format="dimension" />
+        <attr name="chrv_otherTextMessageStrokeColor" format="color" />
+        <attr name="chrv_otherTextMessageStrokeWidth" format="dimension" />
+        <attr name="chrv_otherTextMessageBackgroundColor" format="color" />
+        <attr name="chrv_otherTextMessageTextColor" format="color" />
+        <attr name="chrv_otherTextMessageTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="ConversationRecyclerView">
+        <attr name="crv_titleTextSize" format="dimension" />
+        <attr name="crv_titleTextColor" format="color" />
+        <attr name="crv_titleTextStyle" format="integer" />
+
+        <attr name="crv_messageTextSize" format="dimension" />
+        <attr name="crv_messageTextColor" format="color" />
+        <attr name="crv_messageTextStyle" format="integer" />
+    </declare-styleable>
+
+</resources>

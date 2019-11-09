@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="send_widget_divider">#20AAAE9D</color>
+    <color name="my_message_text">#ffffff</color>
+    <color name="other_message_background">#F5F4F4</color>
+
+</resources>

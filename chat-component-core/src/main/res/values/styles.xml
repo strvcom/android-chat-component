@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.Chat.Component.Date" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">@dimen/text_message_text_size</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+</resources>

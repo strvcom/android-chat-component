@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">library</string>
+    <string name="now">Now</string>
+    <string name="write_your_message">Write your message…</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="uploading_photo">Uploading photo…</string>
+    <string name="photo_was_not_uploaded">Photo was not uploaded</string>
+    <string name="photo_was_uploaded">Photo was uploaded</string>
+    <string name="choose_photo">Choose photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="select_from_library">Select from library</string>
+    <string name="select_photo">Select photo</string>
+    <string name="user_has_sent_picture">User has sent a picture</string>
+    <string name="error">Error</string>
+</resources>
