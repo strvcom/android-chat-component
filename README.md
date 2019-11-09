@@ -20,10 +20,10 @@ customization.
 #### Features
 - **Hook up to the selected backend support**
 - **Ready-to-use and customizable UI**
-  - [Conversations list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_conversations.md)
-  - [Messages list](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_messages.md)
-  - [Sending widget](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_send_widget.md)
-  - [Image detail widget](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/component_image_detail.md)
+  - [Conversations list](https://github.com/strvcom/android-research-chat-component/blob/master/component_conversations.md)
+  - [Messages list](https://github.com/strvcom/android-research-chat-component/blob/master/component_messages.md)
+  - [Sending widget](https://github.com/strvcom/android-research-chat-component/blob/master/component_send_widget.md)
+  - [Image detail widget](https://github.com/strvcom/android-research-chat-component/blob/master/component_image_detail.md)
 - **Various types of messages**
   - Text message
   - Image message (from camera or gallery)
@@ -32,8 +32,8 @@ customization.
 
 ## Adding the Chat component SDK to your project
 
-``` //todo change later
- implementation 'com.strv.chat.component::chat-component-core:1.0.0'
+``` 
+//todo add
 ```
 You should use the core module **if you want to have custom backend
 implementation**. In this case, you will be forced to implement all the
@@ -42,7 +42,7 @@ required interfaces by yourself.
 #### Firestore
 
 ``` //todo change later
- implementation 'com.strv.chat.component::chat-component-firestore:1.0.0'
+//todo add
 ```
 You should use firestore module **if you want to use the default [Cloud
 Firestore](https://firebase.google.com/docs/firestore/) implementation**
@@ -51,7 +51,7 @@ for your backend.
 ##### Firestore structure
 The database structure required for using the default Firestore
 implementation, is described in
-[Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore.md).
+[Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore_structure.md).
 
 ##### Sample app
 In order to run the sample app you need to add your own
@@ -61,7 +61,7 @@ file to the app-level directory of the `app` module.
 #### Firebase Cloud Storage
 
 ```//todo change later implementation
-'com.strv.chat.component::chat-component-storage:1.0.0'
+//todo add
 ```
 
 You should use storage module **if you want to use the default [Firebase
@@ -93,7 +93,7 @@ class App : Application() {
                 memberClient,
                 //MediaClient - provides interaction with a storage service
                 mediaClient,
-                //notification configuration - for a complete list of available attributes see //todo link
+                //notification configuration - for a complete list of available attributes see Notification configuration in Send widget section
                 serviceConfig(CHANNEL_ID)
             )
         )
@@ -269,4 +269,4 @@ fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
 Task operators were created to provide to the users smooth possibility
 to **transform task data**. You can find the list of the supported
 operators
-[here](https://github.com/strvcom/android-research-chat-component/blob/feature/readme/chat-component-core/src/main/java/com/strv/chat/core/domain/task/operators.kt).
+[here](https://github.com/strvcom/android-research-chat-component/blob/master/chat-component-core/src/main/java/com/strv/chat/core/domain/task/operators.kt).
