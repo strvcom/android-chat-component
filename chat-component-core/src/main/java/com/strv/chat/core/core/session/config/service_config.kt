@@ -29,10 +29,10 @@ class ServiceConfig private constructor(
      * @property smallIconErrorRes Custom small icon resource id to use in the notification layouts in an error state.
      */
     class Builder(
-        private var largeIconRes: Int? = null,
-        private var smallIconProgressRes: Int? = null,
-        private var smallIconSuccessRes: Int? = null,
-        private var smallIconErrorRes: Int? = null
+        var largeIconRes: Int? = null,
+        var smallIconProgressRes: Int? = null,
+        var smallIconSuccessRes: Int? = null,
+        var smallIconErrorRes: Int? = null
     ) {
 
         /**

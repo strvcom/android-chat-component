@@ -66,6 +66,5 @@ open class DefaultConversationViewHolder(
 
         textLastMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.messageTextSize.toFloat())
         textLastMessage.setTextColor(style.messageTextColor)
-        textLastMessage.setTypeface(null, style.messageTextStyle)
     }
 }

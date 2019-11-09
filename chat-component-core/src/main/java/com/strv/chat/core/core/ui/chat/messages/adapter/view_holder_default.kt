@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.strv.chat.core.R
 import com.strv.chat.core.core.ui.Styleable
-import com.strv.chat.core.core.ui.chat.data.ChatItemView
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.Header
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyImageMessage
 import com.strv.chat.core.core.ui.chat.data.ChatItemView.MyTextMessage
@@ -54,7 +53,7 @@ open class DefaultHeaderViewHolder(parent: ViewGroup) :
  * @property textMessage [TextView] that displays the text of a message.
  * @property textDate [TextView] that displays the sent date of a message.
  */
-open class DefaultMyMessageViewHolder(parent: ViewGroup) :
+open class DefaultMyTextMessageViewHolder(parent: ViewGroup) :
     MyTextMessageViewHolder(parent, MY_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
     protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
@@ -91,7 +90,7 @@ open class DefaultMyMessageViewHolder(parent: ViewGroup) :
  * @property imageIcon [ImageView] that displays the image of the sender.
  * @property textDate [TextView] that displays the sent date of a message.
  */
-open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
+open class DefaultOtherTextMessageViewHolder(parent: ViewGroup) :
     OtherTextMessageViewHolder(parent, OTHER_TEXT_MESSAGE.id), Styleable<ChatRecyclerViewStyle> {
 
     protected val textMessage = itemView.findViewById<TextView>(R.id.tv_message)
@@ -130,8 +129,8 @@ open class DefaultOtherMessageViewHolder(parent: ViewGroup) :
  * @property image [ImageView] that displays an image message.
  * @property textDate [TextView] that displays the sent date of a message.
  */
-open class DefaultMyImageViewHolder(parent: ViewGroup) :
-    MyImageViewHolder(parent, MY_IMAGE_MESSAGE.id) {
+open class DefaultMyImageMessageViewHolder(parent: ViewGroup) :
+    MyImageMessageViewHolder(parent, MY_IMAGE_MESSAGE.id) {
 
     protected val image = itemView.findViewById<ImageView>(R.id.iv_photo)
     protected val textDate = itemView.findViewById<TimeTextView>(R.id.tv_message_date)
@@ -165,8 +164,8 @@ open class DefaultMyImageViewHolder(parent: ViewGroup) :
  * @property image [ImageView] that displays an image message.
  * @property textDate [TextView] that displays the sent date of a message.
  */
-open class DefaultOtherImageViewHolder(parent: ViewGroup) :
-    OtherImageViewHolder(parent, OTHER_IMAGE_MESSAGE.id) {
+open class DefaultOtherImageMessageViewHolder(parent: ViewGroup) :
+    OtherImageMessageViewHolder(parent, OTHER_IMAGE_MESSAGE.id) {
 
     protected val imageIcon = itemView.findViewById<ImageView>(R.id.iv_user_icon)
     protected val image = itemView.findViewById<ImageView>(R.id.iv_photo)

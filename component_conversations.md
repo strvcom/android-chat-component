@@ -73,7 +73,6 @@ override fun onStop() {
 - `app:crv_titleTextStyle` - custom title fond style
 - `app:crv_messageTextSize` - custom message text size
 - `app:crv_messageTextColor` - custom message text color
-- `app:crv_messageTextStyle` - custom title fond style
 
 
 ### Create your own holder
