@@ -67,7 +67,7 @@ override fun onStop() {
 ## Customization
 
 ### Styling via attributes
-- `app:chrv_textMessageTextSize` - custom outgoing text message text
+- `app:chrv_textMessageTextSize` - custom text message text
   size
 - `app:chrv_myTextMessageBackground` - custom outgoing text message
   background
@@ -85,16 +85,14 @@ override fun onStop() {
   backgroud
 - `app:chrv_otherTextMessageBackgroundColor` - custom incoming text
   message background color
-- `app:chrv_myTextMessageCornerRadius` - custom incoming text message
+- `app:chrv_otherTextMessageCornerRadius` - custom incoming text message
   corner radius
-- `app:chrv_myTextMessageStrokeColor` - custom incoming text message
+- `app:chrv_otherTextMessageStrokeColor` - custom incoming text message
   stroke color
 - `app:chrv_otherTextMessageStrokeWidth` - custom incoming text message
   stroke width
 - `app:chrv_otherTextMessageTextColor` - custom incoming text message
   text color
-- `app:chrv_otherTextMessageTextSize` - custom incoming text message
-  text size
 
 ### Create your own holder
 You can define your own holder classes with the help of
