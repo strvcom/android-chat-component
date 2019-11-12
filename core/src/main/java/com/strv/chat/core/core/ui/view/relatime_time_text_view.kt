@@ -3,7 +3,7 @@ package com.strv.chat.core.core.ui.view
 import android.content.Context
 import android.text.format.DateUtils
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.strv.chat.core.R
 import com.strv.chat.core.core.session.ChatComponent.Companion.chatComponent
 import java.text.SimpleDateFormat
@@ -16,7 +16,7 @@ private const val DAY = 60000 * 60 * 24
 /**
  * Components that displays a relative date text representation.
  */
-class RelativeDateTextView : TextView {
+class RelativeDateTextView : AppCompatTextView {
 
     /**
      * Date to be displayed in a relative date representation.
