@@ -1,4 +1,4 @@
-const val groupId = "com.github.strvcom:android-research-chat-component"
+const val groupId = "com.github.strvcom.android-research-chat-component"
 
 object Versions {
 
