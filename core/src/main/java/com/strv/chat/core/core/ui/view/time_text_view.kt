@@ -2,7 +2,7 @@ package com.strv.chat.core.core.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.strv.chat.core.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -10,7 +10,7 @@ import java.util.Date
 /**
  * Components that displays time of a date.
  */
-class TimeTextView : TextView {
+class TimeTextView : AppCompatTextView {
 
     /**
      * Date to be displayed in its time representation.

@@ -33,8 +33,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-
+    api(project(":core"))
     api(Dependencies.Firebase.firestore)
 
     testImplementation(Dependencies.Test.junit)
