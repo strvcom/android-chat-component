@@ -45,7 +45,7 @@ allprojects {
 #### Core features
 
 ``` 
-com.github.strvcom.android-research-chat-component:core:1.0.0-beta01
+implementation "com.github.strvcom.android-research-chat-component:core:1.0.0-beta01"
 ```
 You should use the core module **if you want to have custom backend
 implementation**. In this case, you will be forced to implement all the
@@ -54,7 +54,7 @@ required interfaces by yourself.
 #### Firestore
 
 ``` 
-com.github.strvcom.android-research-chat-component:firestore:1.0.0-beta01
+implementation "com.github.strvcom.android-research-chat-component:firestore:1.0.0-beta01"
 ```
 You should use firestore module **if you want to use the default [Cloud
 Firestore](https://firebase.google.com/docs/firestore/) implementation**
@@ -73,7 +73,7 @@ file to the app-level directory of the `app` module.
 #### Firebase Cloud Storage
 
 ```
-com.github.strvcom.android-research-chat-component:storage:1.0.0-beta01
+implementation "com.github.strvcom.android-research-chat-component:storage:1.0.0-beta01"
 ```
 
 You should use storage module **if you want to use the default [Firebase
