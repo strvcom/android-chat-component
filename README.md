@@ -282,3 +282,6 @@ Task operators were created to provide to the users smooth possibility
 to **transform task data**. You can find the list of the supported
 operators
 [here](https://github.com/strvcom/android-research-chat-component/blob/master/chat-component-core/src/main/java/com/strv/chat/core/domain/task/operators.kt).
+
+## License
+See the [LICENSE](https://github.com/strvcom/android-research-chat-component/blob/dev/LICENSE.md) file for license rights and limitations (APLv2).
