@@ -1,1 +1,1 @@
-include(":app", ":core", ":firestore", ":storage")
+include(":sample", ":core", ":firestore", ":storage")
