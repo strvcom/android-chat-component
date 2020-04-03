@@ -5,7 +5,7 @@ selected conversation and listens for realtime updates.
 
 ## How to use
 
-To make the component works correctly, you need to perform following
+To make the component work correctly, you need to perform the following
 steps.
 
 ### Add `ChatRecyclerView` widget into your xml layout
@@ -23,12 +23,12 @@ Activity that allows creating Kotlin-based domain-specific language
 
 **Optional properties**:
 - `imageLoader: ImageLoader` 
-  -   Defines a way how to upload picture's urls to `ImageView`s.
+  -   Defines how to upload a picture's url to `ImageView`s.
 - `onItemClick: OnClickAction<ChatItemView>`
-  -  Defines an action that is performed after a user clicks on a
+  -  Defines the action that is performed after a user clicks on a
      message.
 - `viewHolderProvider: ChatViewHolderProvider`
-  - Allows to add a custom implementations of `ViewHolders`.
+  - Allows the adding of custom implementations of `ViewHolders`.
      
 ```kotlin
 chatRecyclerView.init {
@@ -37,10 +37,10 @@ chatRecyclerView.init {
 ```
 
 ### Get realtime updates
-`ChatRecyclerView` **is not lifecycle-aware**. You have to configure
-manually when to start or stop observing data by calling `onStart()`,
+`ChatRecyclerView` **is not lifecycle-aware**. You have to manually configure
+ when to start or stop observing data by calling `onStart()`,
 with `conversationId` and `members` provided, and `onStop()` functions
-respectively. A recommended way is to start listening in `onStart()`
+respectively. It is recommended to start listening in `onStart()`
 method or as soon as you receive a `conversationId` and a list of
 members and to stop listening in `onStop()` method of your
 activity/fragment.
@@ -125,7 +125,7 @@ val viewHolderProvider = ChatViewHolderProvider(
 chatRecyclerView.viewHolderProvider = viewHolderProvider
 ```
 
-You can either inherit from following classes:
+You can either inherit from the following classes:
 - `HeaderViewHolder` - header item view
 - `MyTextMessageViewHolder` - outgoing text message item view
 - `OtherTextMessageViewHolder` - incoming text message item view 
@@ -133,7 +133,7 @@ You can either inherit from following classes:
 - `OtherImageMessageViewHolder` - incoming image message item view
 
 or from one of the default `ViewHolder`s in case you are not planning to
-rewrite the behaviour from scratch:
+rewrite the behavior from scratch:
 - `DefaultHeaderViewHolder` - header item view
 - `DefaultMyTextMessageViewHolder` - outgoing text message item view
 - `DefaultOtherMessageViewHolder` - incoming text message item view
