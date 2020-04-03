@@ -29,7 +29,7 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
 
 #### To lazy load more messages after you load the 50
 
-This is fairly easy, you just need to keep track of a timestamp of the oldest message that you loaded and then load additional 50 before that
+This is fairly easy, you just need to keep track of the timestamp of the oldest message that you loaded and then load the additional 50 before that
 
 ```
 fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firestore database that I'm connected to
@@ -46,14 +46,14 @@ fun getFirestoreChatMessages() = firestoreDb //this is a reference to the firest
         
 #### Sending a message
 
-The message sending works like this:
+Message sending works like this:
  - The conversation between two or more users has to be created beforehand, and the client shouldn't be created by the client (TBD how this will work)
 If a user sends a message, the client (Android/iOS) has to complete three writes to Firestore:
  1) creates a message with the respective data
  2) overwrites the last message in the conversation they just added 
  3) set the last seen message of the sending user to the one just sent in the `seen` sub-collection 
 
-These three actions are executed atomically in a transaction (or so called batch write action)
+These three actions are executed atomically in a transaction (or so-called batch write action)
 ```
 val writeBatch = firestoreDb.batch()
 
@@ -74,7 +74,7 @@ writeBatch.commit()
 ```
 
 #### Setting a message as read
-If a user sees a message, an appropriate document in the `seen` collection needs to be updated.
+If a user sees a message, the appropriate document in the `seen` collection needs to be updated.
 This is the function I'm using to achieve that
 ```
 fun setMessageAsRead() { 
@@ -89,8 +89,8 @@ fun setMessageAsRead() {
 
 #### Loading user data
 
-The data of the users will be downloaded periodically (by default not more often than once per hour) to keep it up to date and saved into a local database with a timestamp of the last update.
-The connection to the user's collection will never be opened for longer periods and only for the one-time request.
+The data of the users will be downloaded periodically (by default not more often than once per hour) to keep it up to date and saved in a local database with a timestamp of the last update.
+The connection to the user's collection will never be opened for longer periods, only for the one-time request.
 
 ```
 fun getFirestoreUser() = firestoreDb  // this is a reference to the firestore database that I'm connected to
