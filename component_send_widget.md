@@ -5,7 +5,7 @@ and image messages.
 
 ## How to use
 
-To make the component work correctly, you need to perform following
+To make the component work correctly, you need to perform the following
 steps.
 
 ### Add `SendWidget` widget into your xml layout
@@ -25,7 +25,7 @@ Minimum **required properties** that the component needs to be set:
 - `conversationId: String` 
   -   `id` of the related conversation
 - `newFileProvider: FileProvider`
-  - Defines a way of retrieving file uri for saving a camera output that
+  - Defines a way of retrieving file uri for saving the camera output that
     is used to send as an image message
      
 ```kotlin
@@ -38,11 +38,11 @@ sendWidget.init {
 ### Send an image message
 The Android Camera application encodes the result of an image capture
 action to `onActivityResult()`. Thus, it is your responsibility to
-handle `REQUEST_IMAGE_CAPTURE` request code in `onActivityResult()`
+handle the `REQUEST_IMAGE_CAPTURE` request code in `onActivityResult()`
 method.
 
-In case of successful processing of the image, Send widget API contains
-method `uploadImage(uri: Uri)` which will **start a service that uploads
+In case of successful processing of the image, Send widget API contains the
+method `uploadImage(uri: Uri)`, which will **start a service that uploads
 the image on the server and shows a notification that notifies about the
 progress and the result of the upload**.
 
