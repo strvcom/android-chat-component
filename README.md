@@ -1,9 +1,8 @@
 # Chat component
-
 Chat component SDK is a collection of modules that can be added to any
-project to simplify development of basic chat functionality. It is an
+project to simplify the development of basic chat functionality. It is an
 easily extendable solution that is built on top of
-[Firebase](https://firebase.google.com/) and allows easy UI
+[Firebase](https://firebase.google.com/) and allows for easy UI
 customization.
 
 #### Technical details
@@ -49,7 +48,7 @@ implementation "com.github.strvcom.android-research-chat-component:core:1.0.0-be
 ```
 You should use the core module **if you want to have custom backend
 implementation**. In this case, you will be forced to implement all the
-required interfaces by yourself.
+required interfaces on your own.
 
 #### Firestore
 
@@ -62,11 +61,11 @@ for your backend.
 
 ##### Firestore structure
 The database structure required for using the default Firestore
-implementation, is described in
+implementation is described in
 [Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore_structure.md).
 
 ##### Sample app
-In order to run the sample app you need to add your own
+In order to run the sample app, you need to add your own
 [`google-services.json`](https://firebase.google.com/docs/android/setup#add-config-file)
 file to the app-level directory of the `app` module.
 
@@ -278,8 +277,8 @@ fun uploadImage(bitmap: Bitmap, uploadUrl: String, contentType: String) =
 ```
 
 ### Task operators
-Task operators were created to provide to the users smooth possibility
-to **transform task data**. You can find the list of the supported
+Task operators were created to provide users with the option
+to smoothly **transform task data**. You can find the list of the supported
 operators
 [here](https://github.com/strvcom/android-research-chat-component/blob/master/chat-component-core/src/main/java/com/strv/chat/core/domain/task/operators.kt).
 
