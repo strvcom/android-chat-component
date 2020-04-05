@@ -5,7 +5,7 @@ url.
 
 ## How to use
 
-To make the component works correctly, you need to perform following
+To make the component work correctly, you need to perform the following
 steps.
 
 ### Add `ImageDetailView` widget into your xml layout
@@ -23,9 +23,9 @@ configuring the component.
 
 **Optional properties**:
 - `url: String`
-  - Url of the displayed image that a user wants to display
+  - Url of the displayed image that a user wants to display.
 - `imageLoader: ImageLoader` 
-  - Defines the way how to upload picture's urls to `ImageView`s.
+  - Defines how to upload a picture's url to `ImageView`s.
      
 ```kotlin
 imageDetail.init {
