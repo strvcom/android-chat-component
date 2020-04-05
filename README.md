@@ -1,5 +1,4 @@
 # Chat component
-Hello
 Chat component SDK is a collection of modules that can be added to any
 project to simplify the development of basic chat functionality. It is an
 easily extendable solution that is built on top of
