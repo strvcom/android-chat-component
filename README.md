@@ -65,6 +65,11 @@ The database structure required for using the default Firestore
 implementation, is described in
 [Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore_structure.md).
 
+#### Extension methods
+There are two convenient extension methods for an Activity available to simplify work with opening a camera and gallery in case only the basic functionality is required:
+- `Activity.openCamera(imageUri: Uri)`
+- `Activity.openGalleryPhotoPicker(title: String)`
+
 ##### Sample app
 In order to run the sample app you need to add your own
 [`google-services.json`](https://firebase.google.com/docs/android/setup#add-config-file)
