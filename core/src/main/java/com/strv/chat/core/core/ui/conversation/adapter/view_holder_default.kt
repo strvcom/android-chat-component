@@ -30,10 +30,10 @@ open class DefaultConversationViewHolder(
 ) : ConversationViewHolder(parent, R.layout.item_conversation),
     Styleable<ConversationRecyclerViewStyle> {
 
-    private val imageIcon = itemView.findViewById<ImageView>(R.id.iv_photo)
-    private val textTitle = itemView.findViewById<TextView>(R.id.tv_title)
-    private val textLastMessage = itemView.findViewById<TextView>(R.id.tv_message)
-    private val textDate = itemView.findViewById<TimeTextView>(R.id.tv_date)
+    protected val imageIcon: ImageView = itemView.findViewById(R.id.iv_photo)
+    protected val textTitle: TextView = itemView.findViewById(R.id.tv_title)
+    protected val textLastMessage: TextView = itemView.findViewById(R.id.tv_message)
+    protected val textDate: TimeTextView = itemView.findViewById(R.id.tv_date)
 
     override fun bind(
         item: ConversationItemView,
