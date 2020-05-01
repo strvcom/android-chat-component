@@ -66,7 +66,7 @@ implementation, is described in
 [Firestore docs](https://github.com/strvcom/android-research-chat-component/blob/master/firestore_structure.md).
 
 #### Extension methods
-There are two convenient extension methods for an Activity available to simplify work with opening a camera and gallery in case only the basic functionality is required:
+There are two convenient extension methods for an Activity in [activity.kt](https://github.com/strvcom/android-chat-component/blob/5d1303568169b8c5f9c1266c235e1d78286d9566/core/src/main/java/com/strv/chat/core/core/ui/extensions/activity.kt#L25) available to simplify work with opening a camera and gallery in case only the basic functionality is required:
 - `Activity.openCamera(imageUri: Uri)`
 - `Activity.openGalleryPhotoPicker(title: String)`
 
