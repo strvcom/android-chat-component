@@ -16,11 +16,13 @@ const val REQUEST_IMAGE_CAPTURE = 1000
 const val REQUEST_IMAGE_GALLERY = 1001
 
 /**
- * Opens a default camera app.
+ * Opens a default camera app and saves the taken image to a provided Uri
+ *
+ * @param imageUri - uri where the take image will be stored
  *
  * @receiver [Activity].
  */
-internal fun Activity.openCamera(imageUri: Uri) {
+fun Activity.openCamera(imageUri: Uri) {
     Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
         resolveActivity(packageManager)?.let {
             putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -32,9 +34,11 @@ internal fun Activity.openCamera(imageUri: Uri) {
 /**
  * Opens a default image picker.
  *
+ * @param title of the gallery picker
+ *
  * @receiver [Activity]
  */
-internal fun Activity.openGalleryPhotoPicker(title: String) =
+fun Activity.openGalleryPhotoPicker(title: String) =
     startActivityForResult(
         Intent.createChooser(
             Intent(Intent.ACTION_PICK).apply {
